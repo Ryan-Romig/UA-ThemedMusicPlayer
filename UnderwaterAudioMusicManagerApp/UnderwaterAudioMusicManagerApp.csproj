@@ -7,13 +7,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="blue.jpeg" />
+    <None Remove="bluebackground.jpg" />
     <None Remove="close.jpeg" />
     <None Remove="forward.png" />
     <None Remove="headerLogo.png" />
+    <None Remove="icons8-circled-play-64.png" />
+    <None Remove="icons8-delete-24.png" />
+    <None Remove="icons8-forward-64.png" />
+    <None Remove="icons8-pause-64.png" />
+    <None Remove="icons8-play-64.png" />
+    <None Remove="icons8-plus-48.png" />
+    <None Remove="icons8-restart-48.png" />
+    <None Remove="icons8-reverse-64.png" />
+    <None Remove="icons8-reverse64.png" />
+    <None Remove="icons8-shuffle-64.png" />
+    <None Remove="left-chevron %281%29.png" />
     <None Remove="logo.png" />
     <None Remove="pause.png" />
+    <None Remove="play-button.png" />
     <None Remove="play.png" />
+    <None Remove="playButton.png" />
     <None Remove="rewind.png" />
+    <None Remove="right-chevron %281%29.png" />
     <None Remove="whiteLogo.png" />
   </ItemGroup>
 
@@ -66,13 +82,29 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="blue.jpeg" />
+    <Resource Include="bluebackground.jpg" />
     <Resource Include="close.jpeg" />
     <Resource Include="forward.png" />
     <Resource Include="headerLogo.png" />
+    <Resource Include="icons8-circled-play-64.png" />
+    <Resource Include="icons8-delete-24.png" />
+    <Resource Include="icons8-forward-64.png" />
+    <Resource Include="icons8-pause-64.png" />
+    <Resource Include="icons8-play-64.png" />
+    <Resource Include="icons8-plus-48.png" />
+    <Resource Include="icons8-restart-48.png" />
+    <Resource Include="icons8-reverse-64.png" />
+    <Resource Include="icons8-reverse64.png" />
+    <Resource Include="icons8-shuffle-64.png" />
+    <Resource Include="left-chevron (1).png" />
     <Resource Include="logo.png" />
     <Resource Include="pause.png" />
+    <Resource Include="play-button.png" />
     <Resource Include="play.png" />
+    <Resource Include="playButton.png" />
     <Resource Include="rewind.png" />
+    <Resource Include="right-chevron (1).png" />
     <Resource Include="whiteLogo.png" />
   </ItemGroup>
 
