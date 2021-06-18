@@ -23,6 +23,10 @@ functionality for shuffle button
 save playlist capability
 many much more to come
 
-
+With music added
 ![Capture2](https://user-images.githubusercontent.com/46287392/122614768-20182300-d03c-11eb-84d2-44fa5661084c.PNG)
+without music added
 ![Capture](https://user-images.githubusercontent.com/46287392/122614644-e7784980-d03b-11eb-88fd-76aa231c1bd8.PNG)
+shuffle on, resized to mobile size
+![moble](https://user-images.githubusercontent.com/46287392/122623913-d1c24e80-d052-11eb-8f2b-c279bd37ba4c.PNG)
+
