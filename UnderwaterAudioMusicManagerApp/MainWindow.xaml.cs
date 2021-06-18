@@ -171,46 +171,105 @@ namespace UnderwaterAudioMusicManagerApp
         }
 
         public static WindowsMediaPlayer player = new WindowsMediaPlayer();
+        WMPLib.IWMPPlaylist playlist = player.playlistCollection.newPlaylist("myplaylist");
         String[] songFileName, songFilePath;
         bool isPlayingSong = false;
-        private void playSong()
+
+
+        Dictionary<string, Track> songList = new Dictionary<string, Track>();
+        
+
+        //private void playSong()
+        //{
+        //    if (playlistBox.Items.Count <= 0)
+        //    { return; }
+
+        //    else
+        //    {
+        //        //checks to see if song is playing and you selected an item
+        //        if (isPlayingSong == false && playlistBox.SelectedItem != null)
+        //        {
+        //            //allows playing from previous pause location
+        //            if (player.URL == songFilePath[playlistBox.SelectedIndex])
+        //            {
+
+        //                player.URL = songFilePath[playlistBox.SelectedIndex];
+        //                player.controls.play();
+        //                isPlayingSong = true;
+        //            }
+        //            else // checks to see if user has selected a different song to play
+        //            {
+        //                player.URL = songFilePath[playlistBox.SelectedIndex];
+        //                player.controls.play();
+        //                isPlayingSong = true;
+        //            }
+
+        //        }
+        //        else // pauses when the button is pressed while playing music
+        //        {
+        //            player.controls.pause();
+        //            isPlayingSong = false;
+        //        }
+
+        //    }
+
+
+        //}
+        private void swapPlayToPauseButton()
         {
-            if (playlistBox.Items.Count <= 0)
-            { return; }
+            playButton.Visibility = Visibility.Collapsed;
+            pauseButton.Visibility = Visibility.Visible;
 
-            else
-            {
-                //checks to see if song is playing and you selected an item
-                if (isPlayingSong == false && playlistBox.SelectedItem != null)
-                {
-                    //allows playing from previous pause location
-                    if (player.URL == songFilePath[playlistBox.SelectedIndex].ToString())
-                    {
-                        player.controls.play();
-                        isPlayingSong = true;
-                    }
-                    else // checks to see if user has selected a different song to play
-                    {
-                        player.URL = songFilePath[playlistBox.SelectedIndex];
-                        player.controls.play();
-                        isPlayingSong = true;
-                    }
+        }
+        private void swapPauseToPlayButton()
+        {
+            playButton.Visibility = Visibility.Visible;
+            pauseButton.Visibility = Visibility.Collapsed;
 
-                }
-                else // pauses when the button is pressed while playing music
-                {
-                    player.controls.pause();
-                    isPlayingSong = false;
-                }
-
-            }
-
+        }
+        private void startPlaying() //queue the start playing
+        {
+            loadSongIntoPlayer(searchForSelectedFile(songList));
+            player.controls.play();
+            isPlayingSong = true;
 
         }
 
-        private void rewindButton_Click(object sender, RoutedEventArgs e)
+
+        private string searchForSelectedFile(Dictionary<string, Track> list)
+        {
+            if (list.ContainsKey(playlistBox.SelectedItem.ToString()))
+            {
+                string songFilePath = list[playlistBox.SelectedItem.ToString()].filePath;
+                return songFilePath;
+            }
+            return "";
+        }
+        //----get file name and load into player head which will be the song played when the play button is pressed-----
+        //------runs when user clicks on a song from the list
+        private void loadSongIntoPlayer(string filePath)
         {
             
+            player.URL = filePath;
+        }
+
+
+
+        private void rewindButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (playlistBox.SelectedIndex < 0)
+            {
+                return;
+            }
+            else
+            {
+                playlistBox.SelectedIndex = playlistBox.SelectedIndex - 1;
+                if (isPlayingSong)
+                {
+                    startPlaying();
+                }
+            }
+           
         }
 
         private void closeButton_Click(object sender, RoutedEventArgs e)
@@ -220,48 +279,160 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void forwardButton_Click(object sender, RoutedEventArgs e)
         {
-
+            playlistBox.SelectedIndex = playlistBox.SelectedIndex + 1;
+            if (isPlayingSong)
+            {
+                startPlaying();
+            }
         }
+        
 
     
 
         private void importButton_Click(object sender, RoutedEventArgs e)
         {
+            openImportDialog();
+
+
+           
+
+        }
+
+        private void openImportDialog()
+        {
             OpenFileDialog openFilePopup = new OpenFileDialog();
             openFilePopup.Multiselect = true;
-
-     
-    
-
             if (openFilePopup.ShowDialog() == true)
             {
                 songFileName = openFilePopup.SafeFileNames;
                 songFilePath = openFilePopup.FileNames;
-                for (int i = 0; i < songFileName.Length; i++)
-                {
-                    playlistBox.Items.Add(System.IO.Path.GetFileNameWithoutExtension(songFileName[i]).ToString());
-                }
-            }
 
+                for(int i= 0; i < songFilePath.Length; i++)
+                {
+                    Track track = new Track();
+                    track.fileName = System.IO.Path.GetFileNameWithoutExtension(songFileName[i]);
+                    track.filePath = songFilePath[i];
+                    if(songList.ContainsKey(track.fileName) != true)
+                    {
+                        songList.Add(track.fileName.ToString(), track);
+                        playlistBox.Items.Add(track.fileName.ToString());
+                        WMPLib.IWMPMedia media;
+                        media = player.newMedia(track.filePath);
+                        playlist.appendItem(media);
+
+
+                    }
+                    
+                }
+
+            }
+        }
+
+        private void pauseSong()
+        {
+
+            player.controls.pause();
+            isPlayingSong = false;
         }
 
         private void pauseButton_Click(object sender, RoutedEventArgs e)
         {
-            playButton.Visibility = Visibility.Visible;
-            pauseButton.Visibility = Visibility.Collapsed;
-            playSong();
+            if
+                (isPlayingSong)
+            {
+                pauseSong();
+                swapPauseToPlayButton();
+
+            }
+
+            
         }
+        public bool isShuffle;
+        private void swapShuffleIcons()
+        {
+            if (isShuffle)
+            {
+                shuffleButton.Visibility = Visibility.Visible;
+                shuffleButtonOn.Visibility = Visibility.Collapsed;
+            }
+            else if(isShuffle == false)
+            {
+                shuffleButton.Visibility = Visibility.Collapsed;
+                shuffleButtonOn.Visibility = Visibility.Visible;
+            }
+            
+        }
+        private void toggleShuffle()
+        {
+            if(isShuffle)
+            {
+                swapShuffleIcons();
+                isShuffle = false;
+                
+                
+
+            }
+            else if(isShuffle == false)
+            {
+
+                swapShuffleIcons();
+                player.settings.setMode("shuffle", true);
+                isShuffle = true;
+                
+
+
+
+
+            }
+
+        }
+        private void shuffleButton_Click(object sender, RoutedEventArgs e)
+        {
+            toggleShuffle();
            
+        }
+
+
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            playSong();
-            if (isPlayingSong == true)
+            if(playlistBox.Items.Count == 0 )
             {
-                playButton.Visibility = Visibility.Collapsed;
-                pauseButton.Visibility = Visibility.Visible;
-                
+                return;
             }
+            else
+            {
+                if (player.URL == songFilePath[playlistBox.SelectedIndex].ToString())
+                {
+                    player.controls.play();
+                    isPlayingSong = true;
+                    swapPlayToPauseButton();
+                }
+                else
+                {
+                    if (isPlayingSong == false)
+                    {
+                        if (player.URL == songFilePath[playlistBox.SelectedIndex].ToString())
+                        {
+                            player.controls.play();
+                            isPlayingSong = true;
+                            swapPlayToPauseButton();
+                        }
+                        else
+                        {
+                            startPlaying();
+                            swapPlayToPauseButton();
+                        }
+
+                    }
+                    else if (isPlayingSong == true)
+                    {
+                        swapPauseToPlayButton();
+                    }
+                }
+            }
+            
+           
 
         }
     }
