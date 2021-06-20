@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WMPLib;
+using System.Windows.Threading;
 
 namespace UnderwaterAudioMusicManagerApp
 {
@@ -163,58 +164,21 @@ namespace UnderwaterAudioMusicManagerApp
         public MainWindow()
         {
             InitializeComponent();
+            //borderless window stuff. dont touch
             SourceInitialized += (s, e) =>
             {
                 IntPtr handle = (new WindowInteropHelper(this)).Handle;
                 HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
-            };    
+            };
         }
 
         public static WindowsMediaPlayer player = new WindowsMediaPlayer();
-        WMPLib.IWMPPlaylist playlist = player.playlistCollection.newPlaylist("myplaylist");
         String[] songFileName, songFilePath;
         bool isPlayingSong = false;
-
-
         Dictionary<string, Track> songList = new Dictionary<string, Track>();
         
 
-        //private void playSong()
-        //{
-        //    if (playlistBox.Items.Count <= 0)
-        //    { return; }
-
-        //    else
-        //    {
-        //        //checks to see if song is playing and you selected an item
-        //        if (isPlayingSong == false && playlistBox.SelectedItem != null)
-        //        {
-        //            //allows playing from previous pause location
-        //            if (player.URL == songFilePath[playlistBox.SelectedIndex])
-        //            {
-
-        //                player.URL = songFilePath[playlistBox.SelectedIndex];
-        //                player.controls.play();
-        //                isPlayingSong = true;
-        //            }
-        //            else // checks to see if user has selected a different song to play
-        //            {
-        //                player.URL = songFilePath[playlistBox.SelectedIndex];
-        //                player.controls.play();
-        //                isPlayingSong = true;
-        //            }
-
-        //        }
-        //        else // pauses when the button is pressed while playing music
-        //        {
-        //            player.controls.pause();
-        //            isPlayingSong = false;
-        //        }
-
-        //    }
-
-
-        //}
+        
         private void swapPlayToPauseButton()
         {
             playButton.Visibility = Visibility.Collapsed;
@@ -227,21 +191,23 @@ namespace UnderwaterAudioMusicManagerApp
             pauseButton.Visibility = Visibility.Collapsed;
 
         }
+
         private void startPlaying() //queue the start playing
         {
+           
             loadSongIntoPlayer(searchForSelectedFile(songList));
             player.controls.play();
             isPlayingSong = true;
-
+            trackDurationTextBox.Text = player.currentMedia.durationString;
+            trackProgressBar.Maximum = Convert.ToDouble(player.currentMedia.durationString); 
         }
-
 
         private string searchForSelectedFile(Dictionary<string, Track> list)
         {
             if (list.ContainsKey(playlistBox.SelectedItem.ToString()))
             {
-                string songFilePath = list[playlistBox.SelectedItem.ToString()].filePath;
-                return songFilePath;
+                return list[playlistBox.SelectedItem.ToString()].filePath;
+                
             }
             return "";
         }
@@ -254,7 +220,15 @@ namespace UnderwaterAudioMusicManagerApp
         }
 
 
+        private void selectPreviousSong()
+        {
+            if(playlistBox.SelectedIndex !< 0)
+            {
+                playlistBox.SelectedIndex--;
 
+            }
+            
+        }
         private void rewindButton_Click(object sender, RoutedEventArgs e)
         {
             if (playlistBox.SelectedIndex < 0)
@@ -263,7 +237,7 @@ namespace UnderwaterAudioMusicManagerApp
             }
             else
             {
-                playlistBox.SelectedIndex = playlistBox.SelectedIndex - 1;
+                selectPreviousSong();
                 if (isPlayingSong)
                 {
                     startPlaying();
@@ -276,10 +250,19 @@ namespace UnderwaterAudioMusicManagerApp
         {
             Close();
         }
+        private void selectNextSong()
+        {
+            if (playlistBox.SelectedIndex >= 0)
+            {
+                playlistBox.SelectedIndex++;
+
+            }
+            
+        }
 
         private void forwardButton_Click(object sender, RoutedEventArgs e)
         {
-            playlistBox.SelectedIndex = playlistBox.SelectedIndex + 1;
+            selectNextSong();
             if (isPlayingSong)
             {
                 startPlaying();
@@ -294,7 +277,6 @@ namespace UnderwaterAudioMusicManagerApp
             openImportDialog();
 
 
-           
 
         }
 
@@ -318,9 +300,6 @@ namespace UnderwaterAudioMusicManagerApp
                         playlistBox.Items.Add(track.fileName.ToString());
                         WMPLib.IWMPMedia media;
                         media = player.newMedia(track.filePath);
-                        playlist.appendItem(media);
-
-
                     }
                     
                 }
@@ -393,6 +372,41 @@ namespace UnderwaterAudioMusicManagerApp
         }
 
 
+
+        private void trackProgressSlider_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (player.playState == WMPLib.WMPPlayState.wmppsPlaying)
+            {
+                double secondsOfSongEqualToOnePercent = (double)player.currentMedia.duration / 100;
+                
+                player.controls.currentPosition = trackProgressSlider.Value * secondsOfSongEqualToOnePercent;
+
+                
+          
+
+                
+            }
+            trackProgressBar.Value = trackProgressSlider.Value;
+
+
+        }
+
+        private void volumeSlider_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double volume = volumeSlider.Value;
+            player.settings.volume = Convert.ToInt32(volume);
+            
+        }
+
+        private void playlistBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            selectPreviousSong();
+        }
+
+        private void playlistBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            selectNextSong();
+        }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
