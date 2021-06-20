@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WMPLib;
+using System.Windows.Threading;
 
 namespace UnderwaterAudioMusicManagerApp
 {
@@ -38,6 +39,7 @@ namespace UnderwaterAudioMusicManagerApp
 
 
     */
+
     public partial class MainWindow : Window
     {
         private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -51,7 +53,6 @@ namespace UnderwaterAudioMusicManagerApp
             }
             return (IntPtr)0;
         }
-
         private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
         {
             MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
@@ -85,7 +86,6 @@ namespace UnderwaterAudioMusicManagerApp
                 this.y = y;
             }
         }
-
         [StructLayout(LayoutKind.Sequential)]
         public struct MINMAXINFO
         {
@@ -153,68 +153,35 @@ namespace UnderwaterAudioMusicManagerApp
 
         [DllImport("User32")]
         internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
-
-
         //above is for proper borderless window
 
-        
+
 
 
         public MainWindow()
         {
+
+
             InitializeComponent();
+
+
+            //borderless window stuff. dont touch
             SourceInitialized += (s, e) =>
             {
                 IntPtr handle = (new WindowInteropHelper(this)).Handle;
                 HwndSource.FromHwnd(handle).AddHook(new HwndSourceHook(WindowProc));
-            };    
+            };
+            //borderless window stuff. dont touch
         }
 
         public static WindowsMediaPlayer player = new WindowsMediaPlayer();
-        WMPLib.IWMPPlaylist playlist = player.playlistCollection.newPlaylist("myplaylist");
         String[] songFileName, songFilePath;
         bool isPlayingSong = false;
-
-
         Dictionary<string, Track> songList = new Dictionary<string, Track>();
-        
-
-        //private void playSong()
-        //{
-        //    if (playlistBox.Items.Count <= 0)
-        //    { return; }
-
-        //    else
-        //    {
-        //        //checks to see if song is playing and you selected an item
-        //        if (isPlayingSong == false && playlistBox.SelectedItem != null)
-        //        {
-        //            //allows playing from previous pause location
-        //            if (player.URL == songFilePath[playlistBox.SelectedIndex])
-        //            {
-
-        //                player.URL = songFilePath[playlistBox.SelectedIndex];
-        //                player.controls.play();
-        //                isPlayingSong = true;
-        //            }
-        //            else // checks to see if user has selected a different song to play
-        //            {
-        //                player.URL = songFilePath[playlistBox.SelectedIndex];
-        //                player.controls.play();
-        //                isPlayingSong = true;
-        //            }
-
-        //        }
-        //        else // pauses when the button is pressed while playing music
-        //        {
-        //            player.controls.pause();
-        //            isPlayingSong = false;
-        //        }
-
-        //    }
+        string selectedFile;
 
 
-        //}
+
         private void swapPlayToPauseButton()
         {
             playButton.Visibility = Visibility.Collapsed;
@@ -227,33 +194,47 @@ namespace UnderwaterAudioMusicManagerApp
             pauseButton.Visibility = Visibility.Collapsed;
 
         }
+        
         private void startPlaying() //queue the start playing
         {
-            loadSongIntoPlayer(searchForSelectedFile(songList));
-            player.controls.play();
-            isPlayingSong = true;
-
-        }
-
-
-        private string searchForSelectedFile(Dictionary<string, Track> list)
-        {
-            if (list.ContainsKey(playlistBox.SelectedItem.ToString()))
+            try
             {
-                string songFilePath = list[playlistBox.SelectedItem.ToString()].filePath;
-                return songFilePath;
+                if (selectedFile != null){
+                    loadSongIntoPlayer(searchForSelectedFile(selectedFile, songList));
+                    player.controls.play();
+                    isPlayingSong = true;
+                    trackDurationLabel.Content = player.currentMedia.durationString;
+                }
+                
             }
-            return "";
+            catch
+            {
+                Console.WriteLine("failed to load song");
+            }
+            
+            
         }
-        //----get file name and load into player head which will be the song played when the play button is pressed-----
-        //------runs when user clicks on a song from the list
+        private string searchForSelectedFile(string itemName, Dictionary<string, Track> list)
+        {
+            if (itemName != null && list.ContainsKey(itemName.ToString()))
+            {
+                return list[itemName].filePath;
+                
+            }
+            return null;
+        }
         private void loadSongIntoPlayer(string filePath)
         {
             
             player.URL = filePath;
         }
-
-
+        private void selectPreviousSong()
+        {
+            if(playlistBox.SelectedIndex !< 0)
+            {
+                playlistBox.SelectedIndex--;
+            }            
+        }
 
         private void rewindButton_Click(object sender, RoutedEventArgs e)
         {
@@ -263,8 +244,8 @@ namespace UnderwaterAudioMusicManagerApp
             }
             else
             {
-                playlistBox.SelectedIndex = playlistBox.SelectedIndex - 1;
-                if (isPlayingSong)
+                selectPreviousSong();
+                if (player.playState == WMPPlayState.wmppsPlaying)
                 {
                     startPlaying();
                 }
@@ -276,11 +257,19 @@ namespace UnderwaterAudioMusicManagerApp
         {
             Close();
         }
+        private void selectNextSong()
+        {
+            if (playlistBox.SelectedIndex >= 0)
+            {
+                playlistBox.SelectedIndex++;
+            }
+            
+        }
 
         private void forwardButton_Click(object sender, RoutedEventArgs e)
         {
-            playlistBox.SelectedIndex = playlistBox.SelectedIndex + 1;
-            if (isPlayingSong)
+            selectNextSong();
+            if (player.playState == WMPPlayState.wmppsPlaying)
             {
                 startPlaying();
             }
@@ -294,7 +283,6 @@ namespace UnderwaterAudioMusicManagerApp
             openImportDialog();
 
 
-           
 
         }
 
@@ -318,9 +306,6 @@ namespace UnderwaterAudioMusicManagerApp
                         playlistBox.Items.Add(track.fileName.ToString());
                         WMPLib.IWMPMedia media;
                         media = player.newMedia(track.filePath);
-                        playlist.appendItem(media);
-
-
                     }
                     
                 }
@@ -338,7 +323,7 @@ namespace UnderwaterAudioMusicManagerApp
         private void pauseButton_Click(object sender, RoutedEventArgs e)
         {
             if
-                (isPlayingSong)
+                (player.playState == WMPPlayState.wmppsPlaying)
             {
                 pauseSong();
                 swapPauseToPlayButton();
@@ -389,47 +374,107 @@ namespace UnderwaterAudioMusicManagerApp
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
             toggleShuffle();
+            playStateTextBox.Content = player.playState;
            
         }
 
 
 
+        private void trackProgressSlider_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (player.playState == WMPLib.WMPPlayState.wmppsPlaying)
+            {
+                double secondsOfSongEqualToOnePercent = (double)player.currentMedia.duration / 100;
+                
+                player.controls.currentPosition = trackProgressSlider.Value * secondsOfSongEqualToOnePercent;
+
+                
+          
+
+                
+            }
+            trackProgressBar.Value = trackProgressSlider.Value;
+
+
+        }
+
+        private void volumeSlider_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            double volume = volumeSlider.Value;
+            player.settings.volume = Convert.ToInt32(volume);
+            
+        }
+
+        private void playlistBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            selectPreviousSong();
+        }
+
+        private void playlistBox_KeyUp(object sender, KeyEventArgs e)
+        {
+            selectNextSong();
+        }
+
+        private void addFavoritesButton_Click(object sender, RoutedEventArgs e)
+        {
+            favoritesList.Items.Add(selectedFile);
+        }
+
+        private void playlistBox_Clicked(object sender, RoutedEventArgs e)
+        {
+            selectedFile = playlistBox.SelectedItem.ToString();
+        }
+
+        private void favoritesList_Clicked(object sender, RoutedEventArgs e)
+        {
+            selectedFile = favoritesList.SelectedItem.ToString();
+        }
+
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
-            if(playlistBox.Items.Count == 0 )
+            if(playlistBox.SelectedIndex < 0 )
             {
                 return;
             }
             else
             {
-                if (player.URL == songFilePath[playlistBox.SelectedIndex].ToString())
+                try
                 {
-                    player.controls.play();
-                    isPlayingSong = true;
-                    swapPlayToPauseButton();
-                }
-                else
-                {
-                    if (isPlayingSong == false)
+                    loadSongIntoPlayer(searchForSelectedFile(selectedFile, songList));
+                    if (player.URL == songFilePath[playlistBox.SelectedIndex].ToString())
                     {
-                        if (player.URL == songFilePath[playlistBox.SelectedIndex].ToString())
+                        player.controls.play();
+                        isPlayingSong = true;
+                        swapPlayToPauseButton();
+                    }
+                    else
+                    {
+                        if (isPlayingSong == false)
                         {
-                            player.controls.play();
-                            isPlayingSong = true;
-                            swapPlayToPauseButton();
-                        }
-                        else
-                        {
-                            startPlaying();
-                            swapPlayToPauseButton();
-                        }
+                            if (player.URL == songFilePath[playlistBox.SelectedIndex].ToString())
+                            {
+                                player.controls.play();
+                                isPlayingSong = true;
+                                swapPlayToPauseButton();
+                            }
+                            else
+                            {
+                                startPlaying();
+                                swapPlayToPauseButton();
+                            }
 
-                    }
-                    else if (isPlayingSong == true)
-                    {
-                        swapPauseToPlayButton();
+                        }
+                        else if (player.playState == WMPPlayState.wmppsPlaying)
+                        {
+                            swapPauseToPlayButton();
+                        }
                     }
                 }
+                catch
+                {
+                    Console.WriteLine("How dare you") ;
+                }
+                
             }
             
            
