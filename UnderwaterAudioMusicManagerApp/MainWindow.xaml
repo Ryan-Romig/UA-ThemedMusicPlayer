@@ -756,6 +756,9 @@
     </WindowChrome.WindowChrome>
 
     <Grid>
+        <Grid.Background>
+            <ImageBrush ImageSource="/background.jpeg" Stretch="UniformToFill"/>
+        </Grid.Background>
 
         <!--Main Window Grid-->
         <Grid.ColumnDefinitions>
@@ -768,7 +771,7 @@
 
         <!--TitleBar-->
 
-        <Grid Height="40px" Grid.Row="0" Background="#FF494747">
+        <Grid Height="40px" Grid.Row="0">
 
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="332*"/>
@@ -789,7 +792,7 @@
 
 
         <!--Body-->
-        <Grid Grid.Row="1" Background="#FF494747">
+        <Grid Grid.Row="1">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="135"/>
@@ -1059,7 +1062,7 @@
                         <ColumnDefinition Width="639*"/>
                         <ColumnDefinition Width="80*"/>
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="1" x:Name="progressSliderGroup">                     
+                    <Grid Grid.Column="1" x:Name="progressSliderGroup">
 
                         <ProgressBar Grid.Column="1" x:Name="trackProgressBar" BorderBrush="{x:Null}" Margin="0,24,0,25" Opacity="0.35" Foreground="#FFF8971D" Background="{x:Null}" Grid.ColumnSpan="3">
                             <ProgressBar.Effect>
@@ -1071,7 +1074,7 @@
                         <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="trackDurationLabel" Height="26" Width="32">0:00</Label>
                     </Grid>
                 </Grid>
-                   
+
 
 
 

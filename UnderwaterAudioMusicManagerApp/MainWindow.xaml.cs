@@ -216,7 +216,7 @@ namespace UnderwaterAudioMusicManagerApp
         }
         private string searchForSelectedFile(string itemName, Dictionary<string, Track> list)
         {
-            if (list.ContainsKey(itemName.ToString()))
+            if (itemName != null && list.ContainsKey(itemName.ToString()))
             {
                 return list[itemName].filePath;
                 
