@@ -801,6 +801,9 @@
             </Grid.ColumnDefinitions>
 
             <!--Main Content-->
+            <Grid Grid.Column="1">
+                <Label x:Name="playStateTextBox" FontSize="44"></Label>
+            </Grid>
             <Grid  Grid.Row="0" Grid.ColumnSpan="3">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -826,32 +829,71 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" Grid.ColumnSpan="1">
-                                <ListBox BorderThickness="4" x:Name="playlistBox" HorizontalContentAlignment="Center" FontSize="24"  SelectedIndex="0" Foreground="#FF00D1FF" BorderBrush="#FF1C8893" FontFamily="Corbel" KeyDown="playlistBox_KeyDown" KeyUp="playlistBox_KeyUp" Grid.ColumnSpan="3"  Background="{x:Null}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"  >
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="332*"/>
+                                    <RowDefinition Height="27*"/>
+                                </Grid.RowDefinitions>
+                                <ListBox BorderThickness="4" x:Name="playlistBox" HorizontalContentAlignment="Center" FontSize="24"  SelectedIndex="0" Foreground="#FF00D1FF" BorderBrush="#FF1C8893" FontFamily="Corbel"  Background="{x:Null}" Grid.RowSpan="2" GotFocus="playlistBox_Clicked"  >
                                     <ListBox.Effect>
                                         <DropShadowEffect/>
                                     </ListBox.Effect>
                                 </ListBox>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal" Grid.RowSpan="2" >
+                                    <Button Style="{DynamicResource iconButtonStyle}" Height="36px"  HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="importButton" Content="Import" Click="importButton_Click" Background="#FF3FA7D2" BorderBrush="{x:Null}" Width="36"  Grid.Column="1" Grid.Row="1"  >
+                                        <Button.Effect>
+                                            <DropShadowEffect/>
+                                        </Button.Effect>
+                                        <Button.OpacityMask>
+                                            <ImageBrush ImageSource="/icons8-plus-48.png" Stretch="Uniform"/>
+                                        </Button.OpacityMask>
+                                        <Button.Foreground>
+                                            <ImageBrush/>
+                                        </Button.Foreground>
+                                    </Button>
+                                    <Button Style="{DynamicResource ButtonStyle1}" x:Name="importSongsTextButton" Content="Import Songs" VerticalAlignment="Top" Grid.Column="1" Height="32" Grid.Row="1" Click="importButton_Click" Background="{x:Null}" FontFamily="Alef" FontSize="16"/>
+                                </StackPanel>
+
+
                             </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="332*"/>
+                                    <RowDefinition Height="27*"/>
+                                </Grid.RowDefinitions>
+                                <ListBox x:Name="favoritesList" BorderThickness="4" HorizontalContentAlignment="Center" FontSize="24"  SelectedIndex="0" Foreground="#FF00D1FF" BorderBrush="#FF1C8893" FontFamily="Corbel"  Background="{x:Null}" Grid.RowSpan="2" GotFocus="favoritesList_Clicked"  >
+                                    <ListBox.Effect>
+                                        <DropShadowEffect/>
+                                    </ListBox.Effect>
+                                </ListBox>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal"  >
+                                    <Button x:Name="addFavoritesButton" Style="{DynamicResource iconButtonStyle}" Height="36px"  HorizontalAlignment="Left" VerticalAlignment="Top" Content="Import" Click="addFavoritesButton_Click" Background="#FF3FA7D2" BorderBrush="{x:Null}" Width="36"  Grid.Column="1" Grid.Row="1"  >
+                                        <Button.Effect>
+                                            <DropShadowEffect/>
+                                        </Button.Effect>
+                                        <Button.OpacityMask>
+                                            <ImageBrush ImageSource="/icons8-plus-48.png" Stretch="Uniform"/>
+                                        </Button.OpacityMask>
+                                        <Button.Foreground>
+                                            <ImageBrush/>
+                                        </Button.Foreground>
+                                    </Button>
+                                    <Button Style="{DynamicResource ButtonStyle1}" x:Name="addFavoritesTextButton" Content="Add Favorite" VerticalAlignment="Top" Grid.Column="1" Height="32" Grid.Row="1" Click="addFavoritesButton_Click" Background="{x:Null}" FontFamily="Alef" FontSize="16"/>
+                                </StackPanel>
+
+
+                            </Grid>
+
+
+
 
 
 
                         </Grid>
 
 
-                        <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal" >
-                            <Button Style="{DynamicResource iconButtonStyle}" Height="36px"  HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="importButton" Content="Import" Click="importButton_Click" Background="#FF3FA7D2" BorderBrush="{x:Null}" Width="36"  Grid.Column="1" Grid.Row="1"  >
-                                <Button.Effect>
-                                    <DropShadowEffect/>
-                                </Button.Effect>
-                                <Button.OpacityMask>
-                                    <ImageBrush ImageSource="/icons8-plus-48.png" Stretch="Uniform"/>
-                                </Button.OpacityMask>
-                                <Button.Foreground>
-                                    <ImageBrush/>
-                                </Button.Foreground>
-                            </Button>
-                            <Button Style="{DynamicResource ButtonStyle1}" x:Name="importSongsTextButton" Content="Import Songs" VerticalAlignment="Top" Grid.Column="1" Height="32" Grid.Row="1" Click="importButton_Click" Background="{x:Null}" FontFamily="Alef" FontSize="16"/>
-                        </StackPanel>
+
                     </Grid>
 
                 </Grid>
@@ -867,11 +909,9 @@
                     <DropShadowEffect/>
                 </Grid.Effect>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="486*"/>
-                    <ColumnDefinition Width="213*"/>
+                    <ColumnDefinition Width="465*"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="210*"/>
-                    <ColumnDefinition Width="484*"/>
+                    <ColumnDefinition Width="463*"/>
 
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -883,106 +923,8 @@
                     <ImageBrush ImageSource="/bluebackground.jpg" Stretch="UniformToFill"/>
                 </Grid.Background>
 
-
-                <!--Center Button Controls-->
-                <Grid Grid.Column="2">
-                    <StackPanel   VerticalAlignment="Center" HorizontalAlignment="Center" Height="AUto" Width="auto" Orientation="Horizontal" >
-                        <!--repeat button-->
-                        <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="repeatButton" Height="24" Width="24" BorderBrush="{x:Null}" Foreground="{x:Null}">
-                            <Button.Effect>
-                                <DropShadowEffect/>
-                            </Button.Effect>
-                            <Button.OpacityMask>
-                                <ImageBrush ImageSource="/icons8-restart-48.png" Stretch="Uniform"/>
-                            </Button.OpacityMask>
-                        </Button>
-
-
-                        <!--rewind button-->
-                        <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="rewindButton" Click="rewindButton_Click"  Width="32px" Foreground="{x:Null}" BorderBrush="{x:Null}" >
-                            <Button.Effect>
-                                <DropShadowEffect/>
-                            </Button.Effect>
-                            <Button.OpacityMask>
-                                <ImageBrush Stretch="Uniform" ImageSource="/left-chevron (1).png"/>
-                            </Button.OpacityMask>
-                            <Button.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </Button.RenderTransform>
-                        </Button>
-                        <!--play button button-->
-                        <Button   Style="{DynamicResource customPlayButtonStyle}" x:Name="playButton" BorderThickness="0" Width="56" BorderBrush="{x:Null}" Click="playButton_Click" Foreground="{x:Null}" VerticalAlignment="Stretch" >
-                            <Button.Effect>
-                                <DropShadowEffect/>
-                            </Button.Effect>
-                            <Button.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform/>
-                                    <TranslateTransform X="0"/>
-                                </TransformGroup>
-                            </Button.RenderTransform>
-                            <Button.OpacityMask>
-                                <ImageBrush ImageSource="/play-button.png" Stretch="Uniform"/>
-                            </Button.OpacityMask>
-                        </Button>
-                        <!--pause button-->
-
-                        <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="pauseButton"  Width="56"  Click="pauseButton_Click" Visibility="Collapsed" >
-                            <Button.OpacityMask>
-                                <ImageBrush ImageSource="/icons8-pause-64.png"/>
-                            </Button.OpacityMask>
-                        </Button>
-                        <!--forward button-->
-                        <Button  Style="{DynamicResource customPlayButtonStyle}"   x:Name="forwardButton" Width="32px" Click="forwardButton_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <Button.Effect>
-                                <DropShadowEffect/>
-                            </Button.Effect>
-                            <Button.OpacityMask>
-                                <ImageBrush ImageSource="/right-chevron (1).png" Stretch="Uniform"/>
-                            </Button.OpacityMask>
-                        </Button>
-                        <!--back button-->
-                        <Button  Style="{DynamicResource customPlayButtonStyle}" x:Name="shuffleButton" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" >
-                            <Button.Effect>
-                                <DropShadowEffect/>
-                            </Button.Effect>
-                            <Button.OpacityMask>
-                                <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
-                            </Button.OpacityMask>
-                        </Button>
-                        <!--shuffle button-->
-                        <Button Style="{DynamicResource shuffleToggleOnStyle}"  x:Name="shuffleButtonOn" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" Visibility="Collapsed" >
-                            <Button.Effect>
-                                <DropShadowEffect/>
-                            </Button.Effect>
-                            <Button.OpacityMask>
-                                <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
-                            </Button.OpacityMask>
-                        </Button>
-
-                    </StackPanel>
-
-                </Grid>
-
-
-                <!--END CENTER CONTROLS-->
-
-                <!-- Start Volume Controls-->
-                <Grid Grid.Row="0" Grid.Column="4">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <DockPanel Grid.Column="1"  >
-                        <Slider Style="{DynamicResource TrackSliderStyle}" MaxWidth="125px" VerticalAlignment="Center" x:Name="volumeSlider"
+                <DockPanel Grid.Column="2">
+                    <Slider Style="{DynamicResource TrackSliderStyle}" MaxWidth="125px" VerticalAlignment="Center" x:Name="volumeSlider"
                             Margin="0,0,0,0"
                             Background="{x:Null}"
                             DockPanel.Dock="Left"
@@ -994,26 +936,143 @@
                             SmallChange="1"
                             TickFrequency="1"
                             Value="100" BorderBrush="{x:Null}" Foreground="#FFFF0F0F" ValueChanged="volumeSlider_Change" AutoToolTipPlacement="TopLeft" Cursor="SizeWE" Opacity="0.8" >
-                            <Slider.Effect>
-                                <DropShadowEffect/>
-                            </Slider.Effect>
-                        </Slider>
-                    </DockPanel>
+                        <Slider.Effect>
+                            <DropShadowEffect/>
+                        </Slider.Effect>
+                    </Slider>
+                </DockPanel>
+
+
+
+                <Grid Grid.Row="0" Grid.Column="1">
+
+                    <!--control buttons-->
+                    <Grid Grid.Row="0" Grid.Column="0" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="Auto" MinWidth="322.58"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Margin="0,0,0,0" Grid.Column="1">
+                            <StackPanel   VerticalAlignment="Center" HorizontalAlignment="Center" Height="Auto" Width="auto" Orientation="Horizontal" >
+                                <!--repeat button-->
+                                <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="repeatButton" Height="24" Width="24" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                                    <Button.Effect>
+                                        <DropShadowEffect/>
+                                    </Button.Effect>
+                                    <Button.OpacityMask>
+                                        <ImageBrush ImageSource="/icons8-restart-48.png" Stretch="Uniform"/>
+                                    </Button.OpacityMask>
+                                </Button>
+
+
+                                <!--rewind button-->
+                                <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="rewindButton" Click="rewindButton_Click"  Width="32px" Foreground="{x:Null}" BorderBrush="{x:Null}" >
+                                    <Button.Effect>
+                                        <DropShadowEffect/>
+                                    </Button.Effect>
+                                    <Button.OpacityMask>
+                                        <ImageBrush Stretch="Uniform" ImageSource="/left-chevron (1).png"/>
+                                    </Button.OpacityMask>
+                                    <Button.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Button.RenderTransform>
+                                </Button>
+                                <!--play button button-->
+                                <Button   Style="{DynamicResource customPlayButtonStyle}" x:Name="playButton" BorderThickness="0" Width="56" BorderBrush="{x:Null}" Click="playButton_Click" Foreground="{x:Null}" VerticalAlignment="Stretch" >
+                                    <Button.Effect>
+                                        <DropShadowEffect/>
+                                    </Button.Effect>
+                                    <Button.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform X="0"/>
+                                        </TransformGroup>
+                                    </Button.RenderTransform>
+                                    <Button.OpacityMask>
+                                        <ImageBrush ImageSource="/play-button.png" Stretch="Uniform"/>
+                                    </Button.OpacityMask>
+                                </Button>
+                                <!--pause button-->
+
+                                <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="pauseButton"  Width="56"  Click="pauseButton_Click" Visibility="Collapsed" >
+                                    <Button.OpacityMask>
+                                        <ImageBrush ImageSource="/icons8-pause-64.png"/>
+                                    </Button.OpacityMask>
+                                </Button>
+                                <!--forward button-->
+                                <Button  Style="{DynamicResource customPlayButtonStyle}"   x:Name="forwardButton" Width="32px" Click="forwardButton_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Button.Effect>
+                                        <DropShadowEffect/>
+                                    </Button.Effect>
+                                    <Button.OpacityMask>
+                                        <ImageBrush ImageSource="/right-chevron (1).png" Stretch="Uniform"/>
+                                    </Button.OpacityMask>
+                                </Button>
+                                <!--back button-->
+                                <Button  Style="{DynamicResource customPlayButtonStyle}" x:Name="shuffleButton" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" >
+                                    <Button.Effect>
+                                        <DropShadowEffect/>
+                                    </Button.Effect>
+                                    <Button.OpacityMask>
+                                        <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
+                                    </Button.OpacityMask>
+                                </Button>
+                                <!--shuffle button-->
+                                <Button Style="{DynamicResource shuffleToggleOnStyle}"  x:Name="shuffleButtonOn" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" Visibility="Collapsed" >
+                                    <Button.Effect>
+                                        <DropShadowEffect/>
+                                    </Button.Effect>
+                                    <Button.OpacityMask>
+                                        <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
+                                    </Button.OpacityMask>
+                                </Button>
+
+                            </StackPanel>
+
+                        </Grid>
+
+
+                    </Grid>
+
+
                 </Grid>
-                <ProgressBar  x:Name="trackProgressBar" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" BorderBrush="{x:Null}" Margin="0,24,0,25" Opacity="0.35" Foreground="#FFF8971D" Background="{x:Null}">
-                    <ProgressBar.Effect>
-                        <BlurEffect/>
-                    </ProgressBar.Effect>
-                </ProgressBar>
-                <Slider Style="{DynamicResource TrackSliderStyle}" LargeChange="5" Height="22px" Maximum="100"  x:Name="trackProgressSlider" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" ValueChanged="trackProgressSlider_Change" Opacity="0.8" AutoToolTipPlacement="TopLeft" SmallChange="1" Cursor="ScrollWE" />
-                <TextBlock x:Name="trackTimeElapsedTextBox" Grid.Row="1" Grid.Column="1" HorizontalAlignment="left" Margin="0,29,10,0" Text="0:00" VerticalAlignment="Bottom"  Width="auto" FontSize="18" FontStretch="Condensed" TextWrapping="WrapWithOverflow" FontWeight="Normal" FontFamily="Segoe UI" >
-                    <TextBlock.Effect>
-                        <DropShadowEffect/>
-                    </TextBlock.Effect></TextBlock>
-                <TextBlock  x:Name="trackDurationTextBox" Grid.Row="1" Grid.Column="3" HorizontalAlignment="Right" Text="0:00" VerticalAlignment="Bottom" Margin="20,0,0,0"  Width="auto" FontSize="18" TextWrapping="WrapWithOverflow" FontStretch="UltraExpanded" FontWeight="Light" FontFamily="Segoe UI" >
-                    <TextBlock.Effect>
-                        <DropShadowEffect/>
-                    </TextBlock.Effect></TextBlock>
+
+
+                <!--Center Button Controls-->
+
+
+
+                <!--END CENTER CONTROLS-->
+
+                <!-- Start Volume Controls-->
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="81*"/>
+                        <ColumnDefinition Width="639*"/>
+                        <ColumnDefinition Width="80*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="1" x:Name="progressSliderGroup">                     
+
+                        <ProgressBar Grid.Column="1" x:Name="trackProgressBar" BorderBrush="{x:Null}" Margin="0,24,0,25" Opacity="0.35" Foreground="#FFF8971D" Background="{x:Null}" Grid.ColumnSpan="3">
+                            <ProgressBar.Effect>
+                                <BlurEffect/>
+                            </ProgressBar.Effect>
+                        </ProgressBar>
+                        <Slider Style="{DynamicResource TrackSliderStyle}" LargeChange="5" Height="22px" Maximum="100"  x:Name="trackProgressSlider" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" ValueChanged="trackProgressSlider_Change" Opacity="0.8" AutoToolTipPlacement="TopLeft" SmallChange="1" Cursor="ScrollWE" Grid.ColumnSpan="3" />
+                        <Label x:Name="timeElapsedLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="2" Height="26" Width="32">0:00</Label>
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="trackDurationLabel" Height="26" Width="32">0:00</Label>
+                    </Grid>
+                </Grid>
+                   
+
 
 
 
