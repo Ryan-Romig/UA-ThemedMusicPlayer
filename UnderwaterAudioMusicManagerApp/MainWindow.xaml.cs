@@ -174,14 +174,23 @@ namespace UnderwaterAudioMusicManagerApp
             //borderless window stuff. dont touch
         }
 
+
+
+
+
+        //--------------------------------------------------------
+
+
         public static WindowsMediaPlayer player = new WindowsMediaPlayer();
         String[] songFileName, songFilePath;
         bool isPlayingSong = false;
         Dictionary<string, Track> songList = new Dictionary<string, Track>();
         string selectedFile;
-
-
-
+        
+        private double getWindowSize()
+        {
+            return mainWindow.Width;
+        }
         private void swapPlayToPauseButton()
         {
             playButton.Visibility = Visibility.Collapsed;
@@ -374,7 +383,7 @@ namespace UnderwaterAudioMusicManagerApp
         private void shuffleButton_Click(object sender, RoutedEventArgs e)
         {
             toggleShuffle();
-            playStateTextBox.Content = player.playState;
+            
            
         }
 
@@ -428,6 +437,36 @@ namespace UnderwaterAudioMusicManagerApp
         private void favoritesList_Clicked(object sender, RoutedEventArgs e)
         {
             selectedFile = favoritesList.SelectedItem.ToString();
+        }
+
+        private void window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if(mainWindow.Width <= 480)
+            {             
+
+                    volumeSlider.Visibility = Visibility.Collapsed;
+                    volumeButton.Visibility = Visibility.Visible;              
+             
+            }
+            if (mainWindow.Width > 480)
+            {
+
+                volumeSlider.Visibility = Visibility.Visible;
+                volumeButton.Visibility = Visibility.Collapsed;
+
+            }
+
+
+        }
+
+        private void trackProgressSlider_MouseEnter(object sender, MouseEventArgs e)
+        {
+            trackProgressSlider.Opacity = 80;
+        }
+
+        private void trackProgressSlider_MouseLeave(object sender, MouseEventArgs e)
+        {
+            trackProgressSlider.Opacity = 0;
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
