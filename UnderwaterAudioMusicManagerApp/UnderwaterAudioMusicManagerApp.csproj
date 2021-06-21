@@ -27,6 +27,7 @@
     <None Remove="logo.png" />
     <None Remove="pause.png" />
     <None Remove="play-button.png" />
+    <None Remove="play.ico" />
     <None Remove="play.png" />
     <None Remove="playButton.png" />
     <None Remove="rewind.png" />
@@ -83,6 +84,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
+    <PackageReference Include="MaterialDesignThemes.MahApps.163" Version="0.0.111" />
+    <PackageReference Include="TagLibSharp" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="background.jpeg" />
     <Resource Include="blue.jpeg" />
     <Resource Include="bluebackground.jpg" />
@@ -103,6 +111,7 @@
     <Resource Include="logo.png" />
     <Resource Include="pause.png" />
     <Resource Include="play-button.png" />
+    <Resource Include="play.ico" />
     <Resource Include="play.png" />
     <Resource Include="playButton.png" />
     <Resource Include="rewind.png" />

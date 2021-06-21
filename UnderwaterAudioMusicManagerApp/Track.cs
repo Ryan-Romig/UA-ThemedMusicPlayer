@@ -11,7 +11,11 @@ namespace UnderwaterAudioMusicManagerApp
     {
         public string fileName;
         public string filePath;
-        //public string artist;
-        //public string genre;
+        public string songName;
+        public string artist;
+        public string genre;
+        public string album;
+        public TimeSpan duration;
+
     }
 }
