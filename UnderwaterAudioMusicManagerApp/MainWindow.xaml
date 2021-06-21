@@ -1,12 +1,13 @@
-﻿<Window x:Name="mainWindow" x:Class="UnderwaterAudioMusicManagerApp.MainWindow"
+﻿<Window
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        WindowStartupLocation="CenterScreen" 
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UnderwaterAudioMusicManagerApp"
+        xmlns:Custom="http://metro.mahapps.com/winfx/xaml/controls" x:Name="mainWindow" x:Class="UnderwaterAudioMusicManagerApp.MainWindow"
+        WindowStartupLocation="CenterScreen"
+         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         mc:Ignorable="d"
         Title="Music Manager" Height="959" Width="1600" ResizeMode="CanResize" Icon="/logo.png" AllowsTransparency="True" WindowStyle="None" SizeChanged="window_SizeChanged">
     <Window.Resources>
@@ -389,14 +390,6 @@
         <SolidColorBrush x:Key="Button.Disabled.Border5" Color="#FFADB2B5"/>
         <SolidColorBrush x:Key="Button.Disabled.Foreground5" Color="#FF838383"/>
         <Style x:Key="ToggleButtonStyle1" TargetType="{x:Type ToggleButton}">
-            <Style.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="Green"></Setter>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Background" Value="Green"/>
-                </Trigger>
-            </Style.Triggers>
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual6}"/>
             <Setter Property="Background" Value="{StaticResource Button.Static.Background5}"/>
             <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border5}"/>
@@ -414,7 +407,7 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="true">
-                                <Setter Property="Background" Value="Green"></Setter>
+                                <Setter Property="Background" Value="Green"/>
                                 <Setter Property="Margin" Value="10,0,10,0"/>
                             </Trigger>
                             <Trigger Property="Button.IsDefaulted" Value="true">
@@ -437,6 +430,14 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Green"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Background" Value="Green"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
         <Style x:Key="FocusVisual7">
             <Setter Property="Control.Template">
@@ -754,7 +755,7 @@
 
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="40"></WindowChrome>
+        <WindowChrome CaptionHeight="40"/>
     </WindowChrome.WindowChrome>
 
     <Grid x:Name="mainWindowGrid">
@@ -805,6 +806,8 @@
                 <ColumnDefinition Width="154"/>
             </Grid.ColumnDefinitions>
 
+            <!-- BOTTOM CONTROLS SECTION-->
+
             <!--Main Content-->
 
             <Grid x:Name="bodyGrid" Grid.Row="0" Grid.ColumnSpan="3">
@@ -819,19 +822,19 @@
                         <RowDefinition Height="15*"/>
                         <RowDefinition Height="181*"/>
                     </Grid.RowDefinitions>
-                    
-                    
+
+
                     <Grid x:Name="nagivationBarGridContainer" Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                       
-                            <StackPanel HorizontalAlignment="Center" x:Name="navigationBarStackPanel" Orientation="Horizontal">
+
+                        <StackPanel HorizontalAlignment="Center" x:Name="navigationBarStackPanel" Orientation="Horizontal">
                             <Grid Margin="0,0,10,0">
                                 <Button    Style="{StaticResource MaterialDesignRaisedAccentButton}"    
                                             
                                            materialDesign:ButtonAssist.CornerRadius="25 25 0 0"    
-                                           ToolTip="MaterialDesignRaisedAccentButton with Round Top Corners">                                    
+                                           ToolTip="MaterialDesignRaisedAccentButton with Round Top Corners">
                                     <TextBlock Text="Delphin" />
                                 </Button>
                             </Grid>
@@ -845,7 +848,7 @@
                             </Grid>
                         </StackPanel>
 
-                       
+
                     </Grid>
 
 
@@ -856,17 +859,20 @@
                                 <ColumnDefinition/>
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <Grid Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1">
+                            <Grid  x:Name="splitContentGrid" Grid.Column="0" Grid.ColumnSpan="1" Grid.Row="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="673*"/>
+                                    <RowDefinition Height="41*"/>
                                 </Grid.RowDefinitions>
-                                <ListBox Grid.Row="0" BorderThickness="4" x:Name="playlistBox" HorizontalContentAlignment="Center" FontSize="24"  SelectedIndex="0" Foreground="#FF00D1FF" BorderBrush="#FF1C8893" FontFamily="Corbel"  Background="{x:Null}"  GotFocus="playlistBox_Clicked" Margin="20,0,20,54"  >
+
+                                <ListBox Grid.Row="0" BorderThickness="4" x:Name="playlistBox" HorizontalContentAlignment="Center" FontSize="24"  SelectedIndex="0" Foreground="#FF00D1FF" BorderBrush="#FF1C8893" FontFamily="Corbel"  Background="{x:Null}"  GotFocus="playlistBox_Clicked" Margin="20,0,20,0" SelectionChanged="playlistBox_SelectionChanged" MouseDoubleClick="playlistBox_MouseDoubleClick"  >
                                     <ListBox.Effect>
                                         <DropShadowEffect/>
                                     </ListBox.Effect>
                                 </ListBox>
 
-                                <StackPanel VerticalAlignment="Bottom" Orientation="Horizontal" >
+
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" Height="36" Grid.Row="1" >
                                     <Button Style="{DynamicResource iconButtonStyle}" Height="36px"  HorizontalAlignment="Left" VerticalAlignment="Top" x:Name="importButton" Content="Import" Click="importButton_Click" Background="#FF3FA7D2" BorderBrush="{x:Null}" Width="36"  Grid.Column="1" Grid.Row="1"  >
                                         <Button.Effect>
                                             <DropShadowEffect/>
@@ -884,37 +890,6 @@
 
                             </Grid>
 
-                            <Grid Grid.Column="1">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <ListBox x:Name="favoritesList" BorderThickness="4" HorizontalContentAlignment="Center" FontSize="24"  SelectedIndex="0" Foreground="#FF00D1FF" BorderBrush="#FF1C8893" FontFamily="Corbel"  Background="{x:Null}" GotFocus="favoritesList_Clicked" Margin="20,0,20,54"  >
-                                    <ListBox.Effect>
-                                        <DropShadowEffect/>
-                                    </ListBox.Effect>
-                                </ListBox>
-
-                                <StackPanel Orientation="Horizontal" VerticalAlignment="Bottom" >
-                                    <Button x:Name="addFavoritesButton" Style="{DynamicResource iconButtonStyle}" Height="36px"  HorizontalAlignment="Left" VerticalAlignment="Top" Content="Import" Click="addFavoritesButton_Click" Background="#FF3FA7D2" BorderBrush="{x:Null}" Width="36"  Grid.Column="1" Grid.Row="1"  >
-                                        <Button.Effect>
-                                            <DropShadowEffect/>
-                                        </Button.Effect>
-                                        <Button.OpacityMask>
-                                            <ImageBrush ImageSource="/icons8-plus-48.png" Stretch="Uniform"/>
-                                        </Button.OpacityMask>
-                                        <Button.Foreground>
-                                            <ImageBrush/>
-                                        </Button.Foreground>
-                                    </Button>
-                                    <Button Style="{DynamicResource ButtonStyle1}" x:Name="addFavoritesTextButton" Content="Add Favorite" VerticalAlignment="Top" Grid.Column="1" Height="32" Grid.Row="1" Click="addFavoritesButton_Click" Background="{x:Null}" FontFamily="Alef" FontSize="16"/>
-                                </StackPanel>
-
-
-                            </Grid>
-
-
-
-
 
 
                         </Grid>
@@ -927,8 +902,6 @@
 
 
             </Grid>
-
-            <!-- BOTTOM CONTROLS SECTION-->
 
             <!--Controls-->
             <Grid x:Name="bottomControlBar" Grid.ColumnSpan="3" Margin="0,1,0,0" Grid.Row="1">
@@ -948,18 +921,30 @@
                 </Grid.Background>
 
                 <DockPanel x:Name="volumeControlPanel" Grid.Column="2">
-
-                    <Button x:Name="volumeButton" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Visible" Style="{StaticResource MaterialDesignRaisedAccentButton}" Width="100">
+                    <Button HorizontalAlignment="Right"  x:Name="volumeButton" RenderTransformOrigin="0.5,0.5">
                         <Button.RenderTransform>
                             <TransformGroup>
                                 <ScaleTransform/>
                                 <SkewTransform/>
                                 <RotateTransform/>
-                                <TranslateTransform X="-21"/>
+                                <TranslateTransform X="0"/>
                             </TransformGroup>
                         </Button.RenderTransform>
+                        <materialDesign:PackIcon Kind="VolumeHigh" RenderTransformOrigin="0.5,0.5" >
+                            <materialDesign:PackIcon.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform X="-3"/>
+                                </TransformGroup>
+                            </materialDesign:PackIcon.RenderTransform>
+                        </materialDesign:PackIcon>
                     </Button>
-                    <Slider Style="{DynamicResource TrackSliderStyle}" MaxWidth="125px" VerticalAlignment="Center" x:Name="volumeSlider"
+
+
+
+                    <Slider  MaxWidth="125px" VerticalAlignment="Center" x:Name="volumeSlider"
                             Margin="0,0,0,0"
                             Background="{x:Null}"
                             DockPanel.Dock="Left"
@@ -970,7 +955,7 @@
                             Orientation="Horizontal"
                             SmallChange="1"
                             TickFrequency="1"
-                            Value="100" BorderBrush="{x:Null}" Foreground="#FFFF0F0F" ValueChanged="volumeSlider_Change" AutoToolTipPlacement="TopLeft" Cursor="SizeWE" Opacity="0.8" >
+                            Value="100" BorderBrush="{x:Null}" Foreground="#FF00B7FF" ValueChanged="volumeSlider_Change" AutoToolTipPlacement="TopLeft" Cursor="SizeWE" Opacity="0.8" >
                         <Slider.Effect>
                             <DropShadowEffect/>
                         </Slider.Effect>
@@ -981,98 +966,99 @@
 
                 <Grid x:Name="playerControlPanel" Grid.Row="0" Grid.Column="1">
                     <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="Auto" MinWidth="322.58"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Margin="0,0,0,0" Grid.Column="1">
-                            <StackPanel x:Name="playerControlButtonStackPanel"   VerticalAlignment="Center" HorizontalAlignment="Center" Height="Auto" Width="auto" Orientation="Horizontal" >
-                                <!--repeat button-->
-                                <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="repeatButton" Height="24" Width="24" BorderBrush="{x:Null}" Foreground="{x:Null}">
-                                    <Button.Effect>
-                                        <DropShadowEffect/>
-                                    </Button.Effect>
-                                    <Button.OpacityMask>
-                                        <ImageBrush ImageSource="/icons8-restart-48.png" Stretch="Uniform"/>
-                                    </Button.OpacityMask>
-                                </Button>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto" MinWidth="322.58"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Margin="0,0,0,0" Grid.Column="1">
+                        <StackPanel x:Name="playerControlButtonStackPanel"   VerticalAlignment="Center" HorizontalAlignment="Center" Height="Auto" Width="auto" Orientation="Horizontal" >
+                            <!--repeat button-->
+                            <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="repeatButton" Height="24" Width="24" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                                <Button.Effect>
+                                    <DropShadowEffect/>
+                                </Button.Effect>
+                                <Button.OpacityMask>
+                                    <ImageBrush ImageSource="/icons8-restart-48.png" Stretch="Uniform"/>
+                                </Button.OpacityMask>
+                            </Button>
 
 
-                                <!--rewind button-->
-                                <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="rewindButton" Click="rewindButton_Click"  Width="32px" Foreground="{x:Null}" BorderBrush="{x:Null}" >
-                                    <Button.Effect>
-                                        <DropShadowEffect/>
-                                    </Button.Effect>
-                                    <Button.OpacityMask>
-                                        <ImageBrush Stretch="Uniform" ImageSource="/left-chevron (1).png"/>
-                                    </Button.OpacityMask>
-                                    <Button.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform/>
-                                            <TranslateTransform/>
-                                        </TransformGroup>
-                                    </Button.RenderTransform>
-                                </Button>
-                                <!--play button button-->
+                            <!--rewind button-->
+                            <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="rewindButton" Click="rewindButton_Click"  Width="32px" Foreground="{x:Null}" BorderBrush="{x:Null}" >
+                                <Button.Effect>
+                                    <DropShadowEffect/>
+                                </Button.Effect>
+                                <Button.OpacityMask>
+                                    <ImageBrush Stretch="Uniform" ImageSource="/left-chevron (1).png"/>
+                                </Button.OpacityMask>
+                                <Button.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Button.RenderTransform>
+                            </Button>
+                            <!--play button button-->
 
 
-                                <Button   Style="{DynamicResource customPlayButtonStyle}" x:Name="playButton" BorderThickness="0" Width="56" BorderBrush="{x:Null}" Click="playButton_Click" Foreground="{x:Null}" VerticalAlignment="Stretch" Visibility="Visible" Background="#FFDDDDDD" >
-                                    <Button.Effect>
-                                        <DropShadowEffect/>
-                                    </Button.Effect>
-                                    <Button.RenderTransform>
-                                        <TransformGroup>
-                                            <ScaleTransform/>
-                                            <SkewTransform/>
-                                            <RotateTransform/>
-                                            <TranslateTransform X="0"/>
-                                        </TransformGroup>
-                                    </Button.RenderTransform>
-                                    <Button.OpacityMask>
-                                        <ImageBrush ImageSource="/play-button.png" Stretch="Uniform"/>
-                                    </Button.OpacityMask>
-                                    <materialDesign:PackIcon Kind="PlayCircleOutline" />
-                                </Button>
-                                <!--pause button-->
+                            <Button   Style="{DynamicResource customPlayButtonStyle}" x:Name="playButton" BorderThickness="0" Width="56" BorderBrush="{x:Null}" Click="playButton_Click" Foreground="{x:Null}" VerticalAlignment="Stretch" Visibility="Visible" Background="#FFDDDDDD" >
+                                <Button.Effect>
+                                    <DropShadowEffect/>
+                                </Button.Effect>
+                                <Button.RenderTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform X="0"/>
+                                    </TransformGroup>
+                                </Button.RenderTransform>
+                                <Button.OpacityMask>
+                                    <ImageBrush ImageSource="/play-button.png" Stretch="Uniform"/>
+                                </Button.OpacityMask>
+                                <materialDesign:PackIcon Kind="PlayCircleOutline" />
+                            </Button>
+                            <!--pause button-->
 
-                                <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="pauseButton"  Width="56"  Click="pauseButton_Click" Visibility="Collapsed" >
-                                    <Button.OpacityMask>
-                                        <ImageBrush ImageSource="/icons8-pause-64.png"/>
-                                    </Button.OpacityMask>
-                                </Button>
-                                <!--forward button-->
-                                <Button  Style="{DynamicResource customPlayButtonStyle}"   x:Name="forwardButton" Width="32px" Click="forwardButton_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <Button.Effect>
-                                        <DropShadowEffect/>
-                                    </Button.Effect>
-                                    <Button.OpacityMask>
-                                        <ImageBrush ImageSource="/right-chevron (1).png" Stretch="Uniform"/>
-                                    </Button.OpacityMask>
-                                </Button>
-                                <!--back button-->
-                                <Button  Style="{DynamicResource customPlayButtonStyle}" x:Name="shuffleButton" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" >
-                                    <Button.Effect>
-                                        <DropShadowEffect/>
-                                    </Button.Effect>
-                                    <Button.OpacityMask>
-                                        <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
-                                    </Button.OpacityMask>
-                                </Button>
-                                <!--shuffle button-->
-                                <Button Style="{DynamicResource shuffleToggleOnStyle}"  x:Name="shuffleButtonOn" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" Visibility="Collapsed" >
-                                    <Button.Effect>
-                                        <DropShadowEffect/>
-                                    </Button.Effect>
-                                    <Button.OpacityMask>
-                                        <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
-                                    </Button.OpacityMask>
-                                </Button>
+                            <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="pauseButton"  Width="56"  Click="pauseButton_Click" Visibility="Collapsed" >
+                                <Button.OpacityMask>
+                                    <ImageBrush ImageSource="/icons8-pause-64.png"/>
+                                </Button.OpacityMask>
+                            </Button>
+                            <!--forward button-->
+                            <Button  Style="{DynamicResource customPlayButtonStyle}"   x:Name="forwardButton" Width="32px" Click="forwardButton_Click" BorderBrush="{x:Null}" Foreground="{x:Null}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <Button.Effect>
+                                    <DropShadowEffect/>
+                                </Button.Effect>
+                                <Button.OpacityMask>
+                                    <ImageBrush ImageSource="/right-chevron (1).png" Stretch="Uniform"/>
+                                </Button.OpacityMask>
+                            </Button>
+                            <!--back button-->
+                            <Button  Style="{DynamicResource customPlayButtonStyle}" x:Name="shuffleButton" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" >
+                                <Button.Effect>
+                                    <DropShadowEffect/>
+                                </Button.Effect>
+                                <Button.OpacityMask>
+                                    <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
+                                </Button.OpacityMask>
+                            </Button>
+                            <!--shuffle button-->
+                            <Button Style="{DynamicResource shuffleToggleOnStyle}"  x:Name="shuffleButtonOn" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" Visibility="Collapsed" >
+                                <Button.Effect>
+                                    <DropShadowEffect/>
+                                </Button.Effect>
+                                <Button.OpacityMask>
+                                    <ImageBrush ImageSource="/icons8-shuffle-64.png" Stretch="Uniform"/>
+                                </Button.OpacityMask>
+                            </Button>
 
-                            </StackPanel>
+                        </StackPanel>
 
-                        
+
+
 
 
                     </Grid>
@@ -1096,14 +1082,21 @@
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="1" x:Name="progressSliderGroup">
 
-                        <ProgressBar Grid.Column="1" x:Name="trackProgressBar" BorderBrush="{x:Null}" Margin="0,24,0,25" Opacity="0.35" Foreground="#FF1DBCF8" Background="{x:Null}" Grid.ColumnSpan="3">
+                        <!--<ProgressBar Grid.Column="1" x:Name="trackProgressBar" BorderBrush="{x:Null}" Margin="0,24,0,25" Opacity="0.5" Foreground="#FF1DBCF8" Background="{x:Null}" Grid.ColumnSpan="3">
+                            <ProgressBar.Effect>
+                                <BlurEffect/>
+                            </ProgressBar.Effect>
+                        </ProgressBar>-->
+                        <!--<Custom:MetroProgressBar Grid.Column="1" x:Name="trackProgressBar"></Custom:MetroProgressBar>-->
+
+                        <ProgressBar materialDesign:TransitionAssist.DisableTransitions="True" x:Name="trackProgressBar" >
                             <ProgressBar.Effect>
                                 <BlurEffect/>
                             </ProgressBar.Effect>
                         </ProgressBar>
-                        <Slider Style="{DynamicResource TrackSliderStyle}" LargeChange="5" Height="22px" Maximum="100"  x:Name="trackProgressSlider" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="Black" Foreground="Black" ValueChanged="trackProgressSlider_Change" Opacity="0.8" AutoToolTipPlacement="TopLeft" SmallChange="1" Cursor="ScrollWE" Grid.ColumnSpan="3" MouseEnter="trackProgressSlider_MouseEnter" MouseLeave="trackProgressSlider_MouseLeave" />
-                        <Label x:Name="timeElapsedLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="2" Height="26" Width="32">0:00</Label>
-                        <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="trackDurationLabel" Height="26" Width="32">0:00</Label>
+                        <Slider IsMoveToPointEnabled="True"  Height="22px" Maximum="100"  x:Name="trackProgressSlider" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="Black" Foreground="Black" ValueChanged="trackProgressSlider_Change" Opacity="0" AutoToolTipPlacement="None" SmallChange="0.2" Cursor="ScrollWE" Grid.ColumnSpan="3" MouseEnter="trackProgressSlider_MouseEnter" MouseLeave="trackProgressSlider_MouseLeave" TickFrequency="0.1" Custom:SliderHelper.EnableMouseWheel="MouseHover" LargeChange="5" />
+                        <Label x:Name="trackDurationLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="2" Height="26" Width="32" Content="0:00"/>
+                        <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="timeElapsedLabel" Height="26" Width="32" Content="0:00"/>
                     </Grid>
                 </Grid>
 
