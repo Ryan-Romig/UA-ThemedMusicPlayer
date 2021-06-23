@@ -11,6 +11,7 @@
     <None Remove="blue.jpeg" />
     <None Remove="bluebackground.jpg" />
     <None Remove="close.jpeg" />
+    <None Remove="DelphinFrame.png" />
     <None Remove="forward.png" />
     <None Remove="headerLogo.png" />
     <None Remove="icons8-circled-play-64.png" />
@@ -23,6 +24,9 @@
     <None Remove="icons8-reverse-64.png" />
     <None Remove="icons8-reverse64.png" />
     <None Remove="icons8-shuffle-64.png" />
+    <None Remove="icons8-skip-to-end-64.png" />
+    <None Remove="icons8-skip-to-start-64 - Copy.png" />
+    <None Remove="icons8-skip-to-start-64.png" />
     <None Remove="left-chevron %281%29.png" />
     <None Remove="logo.png" />
     <None Remove="pause.png" />
@@ -32,61 +36,11 @@
     <None Remove="playButton.png" />
     <None Remove="rewind.png" />
     <None Remove="right-chevron %281%29.png" />
+    <None Remove="skip-end.png" />
     <None Remove="whiteLogo.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <COMReference Include="WMPLib">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>6bf52a50-394a-11d3-b153-00c04f79faa6</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="MediaPlayer">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>22d6f304-b0f6-11d0-94ab-0080c74c7e95</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="WMPDXMLib">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>73f0dd5c-d071-46b6-a8bf-897c84eaac49</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="WMPLauncher">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>5cb42160-cd7c-4806-9367-1c4a65153f4a</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="WMLSS">
-      <WrapperTool>tlbimp</WrapperTool>
-      <VersionMinor>0</VersionMinor>
-      <VersionMajor>1</VersionMajor>
-      <Guid>c21e9ce5-b317-463b-a1b1-b5e36eed59d0</Guid>
-      <Lcid>0</Lcid>
-      <Isolated>false</Isolated>
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="MaterialDesignColors" Version="2.0.1" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.1.0" />
-    <PackageReference Include="MaterialDesignThemes.MahApps.163" Version="0.0.111" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>
 
@@ -95,6 +49,7 @@
     <Resource Include="blue.jpeg" />
     <Resource Include="bluebackground.jpg" />
     <Resource Include="close.jpeg" />
+    <Resource Include="DelphinFrame.png" />
     <Resource Include="forward.png" />
     <Resource Include="headerLogo.png" />
     <Resource Include="icons8-circled-play-64.png" />
@@ -107,6 +62,9 @@
     <Resource Include="icons8-reverse-64.png" />
     <Resource Include="icons8-reverse64.png" />
     <Resource Include="icons8-shuffle-64.png" />
+    <Resource Include="icons8-skip-to-end-64.png" />
+    <Resource Include="icons8-skip-to-start-64 - Copy.png" />
+    <Resource Include="icons8-skip-to-start-64.png" />
     <Resource Include="left-chevron (1).png" />
     <Resource Include="logo.png" />
     <Resource Include="pause.png" />
@@ -116,6 +74,7 @@
     <Resource Include="playButton.png" />
     <Resource Include="rewind.png" />
     <Resource Include="right-chevron (1).png" />
+    <Resource Include="skip-end.png" />
     <Resource Include="whiteLogo.png" />
   </ItemGroup>
 
