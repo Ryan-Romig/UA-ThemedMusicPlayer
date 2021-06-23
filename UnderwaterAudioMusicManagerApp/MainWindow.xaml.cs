@@ -26,6 +26,8 @@ namespace UnderwaterAudioMusicManagerApp
     Yello --- #F9F871
     */
 
+
+
     public partial class MainWindow : Window
     {
 
@@ -143,7 +145,29 @@ namespace UnderwaterAudioMusicManagerApp
         //above is for proper borderless window
 
 
-
+        public class SliderTools : DependencyObject
+        {
+            public static bool GetMoveToPointOnDrag(DependencyObject obj) { return (bool)obj.GetValue(MoveToPointOnDragProperty); }
+            public static void SetMoveToPointOnDrag(DependencyObject obj, bool value) { obj.SetValue(MoveToPointOnDragProperty, value); }
+            public static readonly DependencyProperty MoveToPointOnDragProperty = DependencyProperty.RegisterAttached("MoveToPointOnDrag", typeof(bool), typeof(SliderTools), new PropertyMetadata
+            {
+                PropertyChangedCallback = (obj, changeEvent) =>
+                {
+                    var slider = (Slider)obj;
+                    if ((bool)changeEvent.NewValue)
+                        slider.MouseMove += (obj2, mouseEvent) =>
+                        {
+                            if (mouseEvent.LeftButton == MouseButtonState.Pressed)
+                                slider.RaiseEvent(new MouseButtonEventArgs(mouseEvent.MouseDevice, mouseEvent.Timestamp, MouseButton.Left)
+                                {
+                                    RoutedEvent = UIElement.PreviewMouseLeftButtonDownEvent,
+                                    Source = mouseEvent.Source,
+                                });
+                        };
+                }
+            });
+        }
+        public DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
 
         public MainWindow()
         {
@@ -159,17 +183,34 @@ namespace UnderwaterAudioMusicManagerApp
             //borderless window stuff. dont touch above
 
             player.MediaOpened += new EventHandler(player_MediaOpened);
-            
+            player.MediaEnded += new EventHandler(player_MediaEnded);
+            timer.Tick += new EventHandler(timer_Tick);
+            timer.Interval = TimeSpan.FromMilliseconds(200);
+
+
         }
 
+        private void player_MediaEnded(object sender, EventArgs e)
+        {
+            timer.Stop();
+            swapPauseToPlayButton();
+            if(playlistBox.SelectedIndex + 1 <= playlistBox.Items.Count)
+            {
+                player.Stop();
+
+            }
+            else
+            {
+                playlistBox.SelectedIndex += 1;
+                startPlaying();
+            }
+        }
 
         private void player_MediaOpened(object sender, EventArgs e)
         {
-            trackProgressSlider.Maximum = player.NaturalDuration.TimeSpan.TotalMilliseconds;
-            DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = TimeSpan.FromMilliseconds(200);
-            timer.Start();
+            
+            trackProgressSlider.Maximum = player.NaturalDuration.TimeSpan.TotalSeconds;            
+            trackDurationLabel.Content = player.NaturalDuration.TimeSpan.ToString(@"m\:ss");
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -233,6 +274,7 @@ namespace UnderwaterAudioMusicManagerApp
             isPaused = false;
             isPlaying = true;
             swapPlayToPauseButton();
+            timer.Start();
 
         }
 
@@ -243,6 +285,7 @@ namespace UnderwaterAudioMusicManagerApp
             isPaused = true;
             isPlaying = false;
             swapPauseToPlayButton();
+            timer.Stop();
         }
 
 
@@ -327,6 +370,7 @@ namespace UnderwaterAudioMusicManagerApp
         private void importButton_Click(object sender, RoutedEventArgs e)
         {
             openImportDialog();
+            
 
         }
 
@@ -435,19 +479,19 @@ namespace UnderwaterAudioMusicManagerApp
            
         }
 
-
-
+       
         private void trackProgressSlider_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            player.Position = TimeSpan.FromSeconds(trackProgressSlider.Value);
 
         }
+
 
         private void volumeSlider_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
            
                 double playerVolume = volumeSlider.Value / 100;
-                player.Volume = playerVolume;           
-                
+                player.Volume = playerVolume;                       
 
           
         }
@@ -485,10 +529,16 @@ namespace UnderwaterAudioMusicManagerApp
         {
             if (isPaused)
             {
-                player.Play();
-                isPaused = false;
-                isPlaying = true;
-                swapPlayToPauseButton();
+                if(player.Source == new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)))
+                {
+                    startPlaying();
+                }
+                else
+                {
+                    loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
+                    startPlaying();
+                }
+                
             }
 
             else
@@ -502,14 +552,55 @@ namespace UnderwaterAudioMusicManagerApp
                 {
 
                     loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-                    player.Play();
                     startPlaying();
-                    isPlaying = true;
-                    isPaused = false;
-                    swapPlayToPauseButton();
 
                 }
             }
+        }
+
+        private void Slider_OnMouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var slider = (Slider)sender;
+                Point position = e.GetPosition(slider);
+                double d = 1.0d / slider.ActualWidth * position.X;
+                var p = slider.Maximum * d;
+                slider.Value = p;
+            }
+        }
+
+        private void playlistBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            //loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
+        }
+
+        private void playlistBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            timer.Stop();
+            if(playlistBox.SelectedItem != null)
+            {
+                loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
+                startPlaying();
+
+            }
+            
+        }
+
+        private void delphinNavTab_Click(object sender, RoutedEventArgs e)
+        {
+            libraryPage.Visibility = Visibility.Collapsed;
+            delphinPage.Visibility = Visibility.Visible;
+            tabTitleLabel.Content = "Delphin";
+            titleLabelBar.Background = new SolidColorBrush(Color.FromArgb(99, 0, 0, 88));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            libraryPage.Visibility = Visibility.Visible;
+            delphinPage.Visibility = Visibility.Collapsed;
+            tabTitleLabel.Content = "Library";
+            titleLabelBar.Background = new SolidColorBrush(Color.FromArgb(99,0,0,55));
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
