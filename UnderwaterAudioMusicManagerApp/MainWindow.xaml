@@ -384,13 +384,16 @@
                             </ListBox.Effect>
                         </ListBox>
                     </Grid>
+                    <Grid x:Name="playlistPage">                        
+                       
+                    </Grid>
 
 
                 </Grid>
                
                 <StackPanel Grid.Column="0"  VerticalAlignment="Top" Orientation="Vertical" Height="240"  >
                     <Button Height="60px" x:Name="importButton" Click="importButton_Click">Add Media</Button>
-                    <Button Height="60px"  >Playlist</Button>
+                    <Button Height="60px" Click="Button_Click_1"  >Playlist</Button>
                     <Button x:Name="delphinNavTab" Height="60px" Click="delphinNavTab_Click">Delphin</Button>
                     <Button Height="60px" Click="Button_Click"  >Library</Button>
 
@@ -449,7 +452,15 @@
 
                         <StackPanel  Grid.Column="1" x:Name="playerControlButtonStackPanel"   VerticalAlignment="Center" HorizontalAlignment="Center" Height="Auto" Width="auto" Orientation="Horizontal" >
                             <!--repeat button-->
-                            <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="repeatButton" Height="24" Width="24" BorderBrush="{x:Null}" Foreground="{x:Null}">
+                            <Button Style="{DynamicResource customPlayButtonStyle}" x:Name="repeatButton" Height="24" Width="24" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="repeatButton_Click">
+                                <Button.Effect>
+                                    <DropShadowEffect/>
+                                </Button.Effect>
+                                <Button.OpacityMask>
+                                    <ImageBrush ImageSource="/icons8-restart-48.png" Stretch="Uniform"/>
+                                </Button.OpacityMask>
+                            </Button>
+                            <Button Visibility="Collapsed" Style="{DynamicResource shuffleToggleOnStyle}" x:Name="repeatButtonOn" Height="24" Width="24" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="repeatButton_Click" Background="#FF0CFF00">
                                 <Button.Effect>
                                     <DropShadowEffect/>
                                 </Button.Effect>
@@ -534,7 +545,7 @@
                                 </Button.OpacityMask>
                             </Button>
                             <!--shuffle button-->
-                            <Button Style="{DynamicResource shuffleToggleOnStyle}"  x:Name="shuffleButtonOn" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" Visibility="Collapsed" >
+                            <Button Style="{DynamicResource shuffleToggleOnStyle}"  x:Name="shuffleButtonOn" Width="24px" BorderBrush="{x:Null}" Foreground="{x:Null}" Click="shuffleButton_Click" Visibility="Collapsed" Background="#FF0CFF00" >
                                 <Button.Effect>
                                     <DropShadowEffect/>
                                 </Button.Effect>
