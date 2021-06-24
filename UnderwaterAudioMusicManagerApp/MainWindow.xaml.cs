@@ -8,6 +8,9 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.IO;
+using System.Text;
+using System.Windows.Media.Animation;
 //using WMPLib; for old windows media player way
 
 
@@ -195,6 +198,7 @@ namespace UnderwaterAudioMusicManagerApp
         bool isShuffle;
         bool isRepeat;
         Dictionary<string, Track> musicLibrary = new Dictionary<string, Track>();
+        List<Dictionary<int, string>> playlistList = new List<Dictionary<int, string>>();
         int mediumResponsiveWindowSize = 570;
 
        
@@ -209,35 +213,42 @@ namespace UnderwaterAudioMusicManagerApp
             timer.Tick += new EventHandler(timer_Tick);
             timer.Interval = TimeSpan.FromMilliseconds(200);
         }
-
+        public int timer1TickCount;
+        
 
 
         public MainWindow()
         {
             InitializeComponent();
             createMediaEventHandlers();
-            createTimerEventTickAndSetInterval();  
+            createTimerEventTickAndSetInterval();
+            //timer1.Tick += timer1_Tick;
+            //timer1.Interval = TimeSpan.FromMilliseconds(1);
         }
 
         //Event Handlers//
         private void player_MediaEnded(object sender, EventArgs e)
-        {
+        {            
             timer.Stop();
             if (isRepeat)
             {
+                player.Position = TimeSpan.FromSeconds(0);
                 startPlaying();
             }
             else
-            {
-                swapPauseToPlayButton();
-                if (playlistBox.SelectedIndex + 1 <= playlistBox.Items.Count)
+            {                
+                if (playlistBox.SelectedIndex + 1 == playlistBox.Items.Count)
                 {
+                    swapPauseToPlayButton();
                     player.Stop();
+                    player.Position = TimeSpan.FromSeconds(0);
 
                 }
                 else
                 {
+                    player.Position = TimeSpan.FromSeconds(0);
                     playlistBox.SelectedIndex += 1;
+                    loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
                     startPlaying();
                 }
             }
@@ -255,7 +266,12 @@ namespace UnderwaterAudioMusicManagerApp
         {
             
             timeElapsedLabel.Content = player.Position.ToString(@"m\:ss");
-            trackProgressBar.Value = (player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds) * 100;
+            if (player.NaturalDuration.HasTimeSpan)
+            {
+                trackProgressBar.Value = (player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds) * 100;
+
+            }
+
         }
         private string getFilePathFromSelectedFile(string itemName, Dictionary<string, Track> list)
         {
@@ -266,9 +282,21 @@ namespace UnderwaterAudioMusicManagerApp
             }
             return null;
         }
-        private void shuffleButton_Click(object sender, RoutedEventArgs e)
+
+        private void handleShuffleClick()
         {
             toggleShuffle();
+            if (isRepeat)
+            {
+                toggleRepeat();
+            }   
+
+        }
+
+
+        private void shuffleButton_Click(object sender, RoutedEventArgs e)
+        {
+         
 
 
         }
@@ -364,16 +392,37 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void selectPreviousSong()
         {
-            if (playlistBox.SelectedIndex <= 0)
+            if (playlistBox.Items.Count <= 0)
             {
                 return;
             }
-            playlistBox.SelectedIndex--;
+
             if (isPlaying == true)
             {
-                timer.Stop();
-                loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-                startPlaying();
+                if(player.Position >= TimeSpan.FromSeconds(0.3))
+                {
+                    timer.Stop();
+                    player.Position = TimeSpan.FromSeconds(0);
+                    startPlaying();
+                }
+                else if(player.Position <= TimeSpan.FromSeconds(10))
+                {
+                    timer.Stop();
+                    player.Position = TimeSpan.FromSeconds(0);
+                    if(playlistBox.SelectedIndex <= 0)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        playlistBox.SelectedIndex--;
+                        loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
+                        startPlaying();
+                    }
+                   
+                }
+              
+
             }
         }
 
@@ -621,27 +670,74 @@ namespace UnderwaterAudioMusicManagerApp
             }
             
         }
+       public DispatcherTimer timer1 = new DispatcherTimer(DispatcherPriority.Render);
 
         private void delphinNavTab_Click(object sender, RoutedEventArgs e)
         {
             libraryPage.Visibility = Visibility.Collapsed;
             delphinPage.Visibility = Visibility.Visible;
             tabTitleLabel.Content = "Delphin";
-            titleLabelBar.Background = new SolidColorBrush(Color.FromArgb(99, 0, 0, 88));
+            //timer1TickCount = 0;
+            
+            slideRightToLeftAnimation(titleLabelBar);
+
+
+            //timer1.Start();
+
+
+
+
+               
+           
+
+
+
         }
+        private void slideRightToLeftAnimation(UIElement element)
+        {
+            titleLabelBar.Visibility = Visibility.Visible;
+            titleLabelBar.Background = new SolidColorBrush(Color.FromArgb(100, 0, 155, 216));
+            TranslateTransform trans = new TranslateTransform();
+            element.RenderTransform = trans;
+            DoubleAnimation anim1 = new DoubleAnimation(mainWindow.ActualWidth, 0, TimeSpan.FromMilliseconds(450));
+            trans.BeginAnimation(TranslateTransform.XProperty, anim1);
+            
+        }
+        
+        //private void timer1_Tick(object sender, EventArgs e)
+        //{
+        //    if(timer1TickCount < 500)
+        //    {
+        //        var element = titleLabelBar as UIElement;
+
+        //        element.RenderTransform = new TranslateTransform(-timer1TickCount, 0);
+        //        timer1TickCount = timer1TickCount + 40;
+        //    }
+        //    else
+        //    {
+        //        timer1.Stop();
+                
+        //    }
+        
+        //}
+    
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             libraryPage.Visibility = Visibility.Visible;
             delphinPage.Visibility = Visibility.Collapsed;
             tabTitleLabel.Content = "Library";
-            titleLabelBar.Background = new SolidColorBrush(Color.FromArgb(99,0,0,55));
+            slideRightToLeftAnimation(titleLabelBar);
         }
 
        
         private void repeatButton_Click(object sender, RoutedEventArgs e)
         {
             toggleRepeat();
+            if (isShuffle)
+            {
+                toggleShuffle();
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -650,7 +746,22 @@ namespace UnderwaterAudioMusicManagerApp
             delphinPage.Visibility = Visibility.Collapsed;
             playlistPage.Visibility = Visibility.Visible;
             tabTitleLabel.Content = "Playlists";
-            titleLabelBar.Background = new SolidColorBrush(Color.FromArgb(99, 0, 0, 55));
+            slideRightToLeftAnimation(titleLabelBar);
+        }
+
+        private void addToPlaylistButton_Click(object sender, RoutedEventArgs e)
+        {                 
+            playlistListBox.Items.Add(playlistBox.SelectedItem.ToString());
+        }
+
+        private void playlistListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            timer.Stop();
+            if (playlistListBox.SelectedItem != null)
+            {
+                loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistListBox.SelectedItem.ToString(), musicLibrary)));
+                startPlaying();
+            }
         }
 
         private void playButton_Click(object sender, RoutedEventArgs e)
