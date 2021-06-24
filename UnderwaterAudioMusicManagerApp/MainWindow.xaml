@@ -327,22 +327,32 @@
 
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="32"/>
-                    <ColumnDefinition Width="338*"/>
-                    <ColumnDefinition Width="421*"/>
-                    <ColumnDefinition Width="338*"/>
-                    <ColumnDefinition Width="32px"/>
+                    <ColumnDefinition Width="36*"/>
+                    <ColumnDefinition Width="181*"/>
+                    <ColumnDefinition Width="26"/>
+                    <ColumnDefinition Width="9"/>
                 </Grid.ColumnDefinitions>
 
                 <!--TitleBar Content-->
-                <Border Grid.Column="2" x:Name="titleLabelBar" Background="#009BD8" CornerRadius="0,0,20,20"   >
-                    <Label HorizontalAlignment="Center" FontSize="24px" FontWeight="Light" FontStretch="Expanded" x:Name="tabTitleLabel" Background="{x:Null}"></Label>
+
+
+                <Border Grid.Column="1" x:Name="titleLabelBar" Background="#009BD8" CornerRadius="0,0,20,20" Visibility="Collapsed" Margin="0,0,1,0"   >
+                    <Label HorizontalAlignment="Center" FontSize="24px" FontWeight="Light" FontStretch="Expanded" x:Name="tabTitleLabel" Background="{x:Null}" Content="Library"/>
                 </Border>
-                <Button  WindowChrome.IsHitTestVisibleInChrome="True" x:Name="closeButton"  Grid.Column="4"  BorderBrush="{x:Null}" Content="{x:Null}" Click="closeButton_Click" Margin="2,6,2,6" Background="#FF00141F" Foreground="{x:Null}">
+
+
+
+
+
+
+                <Button Grid.Column="3" WindowChrome.IsHitTestVisibleInChrome="True" x:Name="closeButton"   BorderBrush="{x:Null}" Content="{x:Null}" Click="closeButton_Click" Margin="6,10,2,10" Foreground="Black" Background="#FF00141F">
                     <Button.OpacityMask>
                         <ImageBrush ImageSource="/icons8-delete-24.png"/>
                     </Button.OpacityMask>
 
                 </Button>
+
+
 
 
             </Grid>
@@ -356,23 +366,23 @@
                     <!--bottom control bar height-->
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="17*" />
-                    <ColumnDefinition Width="111*" />
+                    <ColumnDefinition Width="40" />
+                    <ColumnDefinition Width="33*"/>
+                    <ColumnDefinition Width="235*" />
+                    <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel x:Name="navigationPanel"/>
 
 
 
 
                 <!-- BOTTOM CONTROLS SECTION-->
-                <!--Main Content-->
-                <Grid Grid.Column="1" x:Name="mainContentGrid">
+                <Grid Grid.Column="2" x:Name="mainContentGrid" Grid.ColumnSpan="2">
 
                     <Grid Visibility="Collapsed" Grid.Column="1" x:Name="delphinPage">
                         <Image x:Name="delphinFrameImage" Grid.Column="0" Source="/DelphinFrame.png" StretchDirection="Both" Stretch="Uniform" Visibility="Visible"/>
                     </Grid>
-                    
+
                     <Grid x:Name="libraryPage">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="229*"/>
@@ -383,19 +393,21 @@
                                 <DropShadowEffect/>
                             </ListBox.Effect>
                         </ListBox>
+                        <ListBox Grid.Column="1" x:Name="playlistListBox" MouseDoubleClick="playlistListBox_MouseDoubleClick" Background="#FF009BD8" />
                     </Grid>
-                    <Grid x:Name="playlistPage">                        
-                       
-                    </Grid>
+                    <Grid x:Name="playlistPage"/>
 
 
                 </Grid>
-               
-                <StackPanel Grid.Column="0"  VerticalAlignment="Top" Orientation="Vertical" Height="240"  >
-                    <Button Height="60px" x:Name="importButton" Click="importButton_Click">Add Media</Button>
-                    <Button Height="60px" Click="Button_Click_1"  >Playlist</Button>
-                    <Button x:Name="delphinNavTab" Height="60px" Click="delphinNavTab_Click">Delphin</Button>
-                    <Button Height="60px" Click="Button_Click"  >Library</Button>
+
+                <StackPanel Grid.Column="1" x:Name="navigationPanel" VerticalAlignment="Top" Orientation="Vertical"  Grid.ColumnSpan="1"  >
+                    <Button Height="60px" Click="Button_Click"  Content="Library"  />
+                    <Button Height="60px" Click="Button_Click_1"  Content="Playlist"  />
+                    <Button x:Name="delphinNavTab" Height="60px" Click="delphinNavTab_Click" Content="Delphin"/>
+                    
+                    <Button Height="60px" Click="addToPlaylistButton_Click" Content="Add to Playlist" />
+                    <Button Height="60px" x:Name="importButton" Click="importButton_Click" Content="Add Media"/>
+
 
                 </StackPanel>
 
@@ -404,7 +416,7 @@
 
 
                 <!--Controls-->
-                <Grid x:Name="bottomControlBar" Margin="0,1,0,0" Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid x:Name="bottomControlBar" Margin="0,1,0,0" Grid.Row="1" Grid.ColumnSpan="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="465*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -422,10 +434,9 @@
 
 
                     <DockPanel x:Name="volumeControlPanel" Grid.Column="2">
-                        <Button HorizontalAlignment="Right"  x:Name="volumeButton" RenderTransformOrigin="0.5,0.5">
-                        </Button>
+                        <Button HorizontalAlignment="Right"  x:Name="volumeButton" RenderTransformOrigin="0.5,0.5"/>
 
-                        <Slider  MaxWidth="125px" VerticalAlignment="Center" x:Name="volumeSlider"
+                        <Slider  MouseMove="Slider_OnMouseMove" IsMoveToPointEnabled="True" MaxWidth="125px" VerticalAlignment="Center" x:Name="volumeSlider"
                             Margin="0,0,0,0"
                             Background="{x:Null}"
                             DockPanel.Dock="Left"
@@ -434,7 +445,7 @@
                             Maximum="100"
                             Orientation="Horizontal"
                             SmallChange="1"
-                            Value="100" BorderBrush="{x:Null}" Foreground="#FF00B7FF" ValueChanged="volumeSlider_Change" AutoToolTipPlacement="TopLeft" Cursor="SizeWE" Opacity="0.8" MouseMove="Slider_OnMouseMove" >
+                            Value="100" BorderBrush="{x:Null}" Foreground="#FF00B7FF" ValueChanged="volumeSlider_Change" AutoToolTipPlacement="TopLeft" Cursor="SizeWE" Opacity="0.8" >
                             <Slider.Effect>
                                 <DropShadowEffect/>
                             </Slider.Effect>
@@ -587,7 +598,7 @@
                                     <BlurEffect/>
                                 </ProgressBar.Effect>
                             </ProgressBar>
-                            <Slider Value="{Binding timeElapsed}" MouseMove="Slider_OnMouseMove" IsMoveToPointEnabled="True"  Height="22px" Maximum="100"  x:Name="trackProgressSlider" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" ValueChanged="trackProgressSlider_Change" Opacity="0" AutoToolTipPlacement="None" SmallChange="0.2" Cursor="ScrollWE" Grid.ColumnSpan="3" TickFrequency="0.1" LargeChange="5" />
+                            <Slider  MouseMove="Slider_OnMouseMove" IsMoveToPointEnabled="True"  Height="22px" Maximum="100"  x:Name="trackProgressSlider" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" ValueChanged="trackProgressSlider_Change" Opacity="0" AutoToolTipPlacement="None" SmallChange="0.2" Cursor="ScrollWE" Grid.ColumnSpan="3" TickFrequency="0.1" LargeChange="5" />
                             <Label x:Name="trackDurationLabel" HorizontalAlignment="Right" VerticalAlignment="Bottom" Grid.Column="2" Height="26" Width="32" Content="0:00"/>
                             <Label HorizontalAlignment="Left" VerticalAlignment="Bottom" x:Name="timeElapsedLabel" Height="26" Width="32" Content="0:00"/>
                         </Grid>
