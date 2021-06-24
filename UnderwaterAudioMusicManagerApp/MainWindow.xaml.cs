@@ -221,23 +221,27 @@ namespace UnderwaterAudioMusicManagerApp
 
         //Event Handlers//
         private void player_MediaEnded(object sender, EventArgs e)
-        {
+        {            
             timer.Stop();
             if (isRepeat)
             {
+                player.Position = TimeSpan.FromSeconds(0);
                 startPlaying();
             }
             else
-            {
-                swapPauseToPlayButton();
-                if (playlistBox.SelectedIndex + 1 <= playlistBox.Items.Count)
+            {                
+                if (playlistBox.SelectedIndex + 1 == playlistBox.Items.Count)
                 {
+                    swapPauseToPlayButton();
                     player.Stop();
+                    player.Position = TimeSpan.FromSeconds(0);
 
                 }
                 else
                 {
+                    player.Position = TimeSpan.FromSeconds(0);
                     playlistBox.SelectedIndex += 1;
+                    loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
                     startPlaying();
                 }
             }
@@ -256,6 +260,7 @@ namespace UnderwaterAudioMusicManagerApp
             
             timeElapsedLabel.Content = player.Position.ToString(@"m\:ss");
             trackProgressBar.Value = (player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds) * 100;
+          
         }
         private string getFilePathFromSelectedFile(string itemName, Dictionary<string, Track> list)
         {
@@ -364,16 +369,37 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void selectPreviousSong()
         {
-            if (playlistBox.SelectedIndex <= 0)
+            if (playlistBox.Items.Count <= 0)
             {
                 return;
             }
-            playlistBox.SelectedIndex--;
+
             if (isPlaying == true)
             {
-                timer.Stop();
-                loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-                startPlaying();
+                if(player.Position >= TimeSpan.FromSeconds(0.3))
+                {
+                    timer.Stop();
+                    player.Position = TimeSpan.FromSeconds(0);
+                    startPlaying();
+                }
+                else if(player.Position <= TimeSpan.FromSeconds(10))
+                {
+                    timer.Stop();
+                    player.Position = TimeSpan.FromSeconds(0);
+                    if(playlistBox.SelectedIndex <= 0)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        playlistBox.SelectedIndex--;
+                        loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
+                        startPlaying();
+                    }
+                   
+                }
+              
+
             }
         }
 
