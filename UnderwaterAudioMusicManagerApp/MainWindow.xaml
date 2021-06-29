@@ -292,6 +292,67 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="FocusVisual">
+            <Setter Property="Control.Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Rectangle Margin="2" StrokeDashArray="1 2" SnapsToDevicePixels="true" StrokeThickness="1" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+
+        <!--Navigation Button Stying-->
+        <SolidColorBrush x:Key="Button.Static.Background1" Color="#FFDDDDDD"/>
+        <SolidColorBrush x:Key="Button.Static.Border1" Color="#FF707070"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Background1" Color="#FFBEE6FD"/>
+        <SolidColorBrush x:Key="Button.MouseOver.Border" Color="#FF3C7FB1"/>
+        <SolidColorBrush x:Key="Button.Pressed.Background1" Color="#FFC4E5F6"/>
+        <SolidColorBrush x:Key="Button.Pressed.Border1" Color="#FF2C628B"/>
+        <SolidColorBrush x:Key="Button.Disabled.Background1" Color="#FFF4F4F4"/>
+        <SolidColorBrush x:Key="Button.Disabled.Border1" Color="#FFADB2B5"/>
+        <SolidColorBrush x:Key="Button.Disabled.Foreground1" Color="#FF838383"/>
+        <Style x:Key="navButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
+            <Setter Property="Background" Value="{StaticResource Button.Static.Background1}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border1}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Height" Value="30px"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}" SnapsToDevicePixels="true">
+                            <ContentPresenter x:Name="contentPresenter" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDefaulted" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.MouseOver.Background1}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Pressed.Background1}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Pressed.Border1}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Background" TargetName="border" Value="{StaticResource Button.Disabled.Background1}"/>
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource Button.Disabled.Border1}"/>
+                                <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="{StaticResource Button.Disabled.Foreground1}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
 
@@ -329,14 +390,13 @@
                     <ColumnDefinition Width="32"/>
                     <ColumnDefinition Width="36*"/>
                     <ColumnDefinition Width="181*"/>
-                    <ColumnDefinition Width="26"/>
-                    <ColumnDefinition Width="9"/>
+                    <ColumnDefinition Width="35"/>
                 </Grid.ColumnDefinitions>
 
                 <!--TitleBar Content-->
 
 
-                <Border Grid.Column="1" x:Name="titleLabelBar" Background="#009BD8" CornerRadius="0,0,20,20" Visibility="Collapsed" Margin="0,0,1,0"   >
+                <Border Grid.Column="1" x:Name="titleLabelBar" Background="#009BD8" CornerRadius="0,0,20,20" Margin="0,0,1,0" MouseLeftButtonDown="titleLabelBar_MouseLeftButtonDown"   >
                     <Label HorizontalAlignment="Center" FontSize="24px" FontWeight="Light" FontStretch="Expanded" x:Name="tabTitleLabel" Background="{x:Null}" Content="Library"/>
                 </Border>
 
@@ -345,13 +405,19 @@
 
 
 
-                <Button Grid.Column="3" WindowChrome.IsHitTestVisibleInChrome="True" x:Name="closeButton"   BorderBrush="{x:Null}" Content="{x:Null}" Click="closeButton_Click" Margin="6,10,2,10" Foreground="Black" Background="#FF00141F">
-                    <Button.OpacityMask>
-                        <ImageBrush ImageSource="/icons8-delete-24.png"/>
-                    </Button.OpacityMask>
+                <Border WindowChrome.IsHitTestVisibleInChrome="True"  x:Name="closeButtonBackground" Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="0,20,0,0"  BorderBrush="Transparent" MouseEnter="closeButtonBackground_MouseEnter" MouseLeave="closeButtonBackground_MouseLeave" MouseDown="closeButtonBackground_MouseDown_1" MouseLeftButtonUp="closeButtonBackground_MouseLeftButtonUp">
+                        <Button WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Center" VerticalAlignment="Center" Height="14px" Width="14px" x:Name="closeButton"  Click="closeButton_Click" Foreground="Black" Background="#FF00141F" Margin="0,3,0,3" MouseLeftButtonDown="closeButton_MouseLeftButtonDown">
+                            <Button.OpacityMask>
+                                <ImageBrush ImageSource="/icons8-delete-24.png"/>
+                            </Button.OpacityMask>
 
-                </Button>
+                        </Button>
+                    </Border>
 
+               
+
+
+               
 
 
 
@@ -393,20 +459,39 @@
                                 <DropShadowEffect/>
                             </ListBox.Effect>
                         </ListBox>
-                        <ListBox Grid.Column="1" x:Name="playlistListBox" MouseDoubleClick="playlistListBox_MouseDoubleClick" Background="#FF009BD8" />
+
+                        <ListView Grid.Column="1" x:Name="libraryListView" >
+
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true"  ColumnHeaderToolTip="Employee Information">
+                                    <GridViewColumn x:Name="col1" Header="Track" Width="100"/>
+                                    <GridViewColumn x:Name="col2" Header="Duration" Width="100"/>
+                                    <!--<GridViewColumn x:Name="col3" Width="100"/>-->
+                                </GridView>
+
+                            </ListView.View>
+                        </ListView>
+
+
+
                     </Grid>
-                    <Grid x:Name="playlistPage"/>
+                    
+                    
+                    <Grid Visibility="Collapsed" x:Name="playlistPage">
+                        <ListBox Grid.Column="1" x:Name="playlistListBox" MouseDoubleClick="playlistListBox_MouseDoubleClick" Background="#FF009BD8" />
+
+                    </Grid>
 
 
                 </Grid>
 
-                <StackPanel Grid.Column="1" x:Name="navigationPanel" VerticalAlignment="Top" Orientation="Vertical"  Grid.ColumnSpan="1"  >
-                    <Button Height="60px" Click="Button_Click"  Content="Library"  />
-                    <Button Height="60px" Click="Button_Click_1"  Content="Playlist"  />
-                    <Button x:Name="delphinNavTab" Height="60px" Click="delphinNavTab_Click" Content="Delphin"/>
-                    
-                    <Button Height="60px" Click="addToPlaylistButton_Click" Content="Add to Playlist" />
-                    <Button Height="60px" x:Name="importButton" Click="importButton_Click" Content="Add Media"/>
+                <StackPanel  Grid.Column="1" x:Name="navigationPanel" VerticalAlignment="Center" Orientation="Vertical"  Grid.ColumnSpan="1"  >
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click"  Content="Library"  />
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click_1"  Content="Playlist"  />
+                    <Button Style="{DynamicResource navButtonStyle}"  x:Name="delphinNavTab"  Click="delphinNavTab_Click" Content="Delphin"/>
+
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="addToPlaylistButton_Click" Content="Add to Playlist" />
+                    <Button Style="{DynamicResource navButtonStyle}"  x:Name="importButton" Click="importButton_Click" Content="Add Media"/>
 
 
                 </StackPanel>
@@ -584,15 +669,8 @@
                             <ColumnDefinition Width="639*"/>
                             <ColumnDefinition Width="80*"/>
                         </Grid.ColumnDefinitions>
+                        <Label x:Name="nowPlayingLabel" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Top"></Label>
                         <Grid Grid.Column="1" x:Name="progressSliderGroup">
-
-                            <!--<ProgressBar Grid.Column="1" x:Name="trackProgressBar" BorderBrush="{x:Null}" Margin="0,24,0,25" Opacity="0.5" Foreground="#FF1DBCF8" Background="{x:Null}" Grid.ColumnSpan="3">
-                            <ProgressBar.Effect>
-                                <BlurEffect/>
-                            </ProgressBar.Effect>
-                        </ProgressBar>-->
-                            <!--<Custom:MetroProgressBar Grid.Column="1" x:Name="trackProgressBar"></Custom:MetroProgressBar>-->
-
                             <ProgressBar Height="4px" x:Name="trackProgressBar" >
                                 <ProgressBar.Effect>
                                     <BlurEffect/>
