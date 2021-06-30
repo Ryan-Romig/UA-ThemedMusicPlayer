@@ -200,6 +200,7 @@ namespace UnderwaterAudioMusicManagerApp
         int mediumResponsiveWindowSize = 570;
         UnderwaterAudioMediaPlayer player = new UnderwaterAudioMediaPlayer();
         
+        
         string supportedMusicFileTypes = UnderwaterAudioMediaPlayer.supportedMusicFileTypes;        
 
 
@@ -223,10 +224,12 @@ namespace UnderwaterAudioMusicManagerApp
             InitializeComponent();
             createMediaEventHandlers();
             createTimerEventTickAndSetInterval();
-            this.libraryListView.ItemsSource = player.mediaLibrary;
+            libraryListView.ItemsSource = player.mediaLibrary;
 
-            col1.Header = "Track Name";
-            
+
+
+
+
         }
 
         //Event Handlers//
@@ -440,11 +443,26 @@ namespace UnderwaterAudioMusicManagerApp
                 {
                     Track track = new Track();
                     getTrackTags(track, i,songFileName,songFilePath);
-                    player.mediaLibrary.Add(track);
-                    
+                    Dictionary<string, Track> dic = new Dictionary<string, Track>();
+                    foreach(Track song in player.mediaLibrary)
+                    {
+                        if(dic.ContainsKey(song.filePath) != true)
+                        {
+                            dic.Add(song.filePath, song);
+
+                        }
+                    }
+
+                    if(dic.ContainsKey(track.filePath) != true)
+                    {
+                        player.mediaLibrary.Add(track);
+
+                    }
+
                 }
 
             }
+            
         }
 
 
@@ -570,47 +588,25 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void playlistBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //timer.Stop();
-            //if(playlistBox.SelectedItem != null)
-            //{
-            //    loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-            //    startPlaying();
-            //}
-            
-        }
-        //private void savePlaylist(string playlistName)
-        //{      
 
-        //    System.IO.StreamWriter playlist = new System.IO.StreamWriter(playlistName+".plst");
-        //  foreach(var song in currentPlaylistBox.Items)
-        //    {
-        //        Track track = searchForSelectedFile(song.ToString(), musicLibrary);
-        //        playlist.WriteLine(track.filePath);
-        //    }
-        //    playlist.Close();
-            
-        //}
-        //private void loadPreviousLibrary()
-        //{
-        //    if (File.Exists("libraryPage.plst"))
-        //    {
-        //        string[] savedPlaylist = File.ReadAllLines("library.plst");
-        //        for (int i = 0; i < savedPlaylist.Length; i++)
-        //        {
-        //            if (playlistBox.Items.Contains(savedPlaylist[i]) != true)
-        //            {
-                    
-        //                playlistBox.Items.Add(savedPlaylist[i]);
-                        
-        //            }
-        //        }
-        //    }
            
-            
-        //}
+        }
+        private void savePlaylist(string playlistName)
+        {
+
+            System.IO.StreamWriter playlist = new System.IO.StreamWriter(playlistName + ".plst");
+           
+            foreach (var track in player.mediaLibrary)
+            {                 
+                playlist.WriteLine(track.filePath);
+            }
+            playlist.Close();
+
+        }
+
         private void closeApp()
         {
-            //savePlaylist("library");
+            savePlaylist("library");
             Close();
 
         }
@@ -642,7 +638,7 @@ namespace UnderwaterAudioMusicManagerApp
 
         //}
 
-        public DispatcherTimer timer1 = new DispatcherTimer(DispatcherPriority.Render);
+        //public DispatcherTimer timer1 = new DispatcherTimer(DispatcherPriority.Render);
         private void showDelphinPage()
         {
             libraryPage.Visibility = Visibility.Collapsed;
@@ -674,7 +670,8 @@ namespace UnderwaterAudioMusicManagerApp
             tabTitleLabel.Content = "Library";
             slideRightToLeftAnimation(titleLabelBar);
             
-            
+
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)

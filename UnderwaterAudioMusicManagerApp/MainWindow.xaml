@@ -461,14 +461,8 @@
                         </ListBox>
 
                         
-                        <DataGrid AutoGenerateColumns="False"   IsReadOnly="True" Grid.Column="1"  x:Name="libraryListView"  >
-                            <DataGrid.Columns>
-                                <DataGridTextColumn x:Name="col1"/>
-
-
-                            </DataGrid.Columns>
-
-                        
+                        <DataGrid AutoGenerateColumns="True"   IsReadOnly="True" Grid.Column="1"  x:Name="libraryListView"  >
+                                           
                         </DataGrid>
 
 
