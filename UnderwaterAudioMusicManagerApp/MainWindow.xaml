@@ -460,17 +460,16 @@
                             </ListBox.Effect>
                         </ListBox>
 
-                        <ListView Grid.Column="1" x:Name="libraryListView" >
+                        
+                        <DataGrid AutoGenerateColumns="False"   IsReadOnly="True" Grid.Column="1"  x:Name="libraryListView"  >
+                            <DataGrid.Columns>
+                                <DataGridTextColumn x:Name="col1"/>
 
-                            <ListView.View>
-                                <GridView AllowsColumnReorder="true"  ColumnHeaderToolTip="Employee Information">
-                                    <GridViewColumn x:Name="col1" Header="Track" Width="100"/>
-                                    <GridViewColumn x:Name="col2" Header="Duration" Width="100"/>
-                                    <!--<GridViewColumn x:Name="col3" Width="100"/>-->
-                                </GridView>
 
-                            </ListView.View>
-                        </ListView>
+                            </DataGrid.Columns>
+
+                        
+                        </DataGrid>
 
 
 

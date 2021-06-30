@@ -7,7 +7,7 @@ using System.Windows.Threading;
 
 namespace UnderwaterAudioMusicManagerApp
 {
-    class Track    {
+   public class Track    {
         public string fileName { get; set; }
         public string filePath;
         public string songName;

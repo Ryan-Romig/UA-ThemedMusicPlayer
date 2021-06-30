@@ -191,37 +191,28 @@ namespace UnderwaterAudioMusicManagerApp
         //----------------------------------------------------------------------------------//
         //----------------------------------------------------------------------------------//
 
-        //Start Logic//
-        public DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
-        private static MediaPlayer player = new MediaPlayer();
-        String[] songFileName, songFilePath;
-        bool isPlaying;
-        bool isPaused;
-        bool isShuffle;
-        bool isRepeat;
-        Dictionary<string, Track> musicLibrary = new Dictionary<string, Track>();
-        List<Dictionary<int, string>> playlistList = new List<Dictionary<int, string>>();
+
+
+
+        //-------------------------------Start Logic-------------------------------------------//
+
+        //---------------------Declare Constants----------------------//
         int mediumResponsiveWindowSize = 570;
-        public ListBox currentPlaylistBox = new ListBox();
-        string supportedMusicFileTypes = "Music(.mp3) (.wav) (.aac) (.mp4) (.flac) (.wma) |*.mp3;*.wav;*.aac;*.mp4;*.m4a;*.flac;*.wma";
-        List<Track> trackList;
-
-
-
+        UnderwaterAudioMediaPlayer player = new UnderwaterAudioMediaPlayer();
         
+        string supportedMusicFileTypes = UnderwaterAudioMediaPlayer.supportedMusicFileTypes;        
 
 
         private void createMediaEventHandlers()
-        {
-            
+        {            
             player.MediaOpened += new EventHandler(player_MediaOpened);
             player.MediaEnded += new EventHandler(player_MediaEnded);
         }
 
         private void createTimerEventTickAndSetInterval()
         {
-            timer.Tick += new EventHandler(timer_Tick);
-            timer.Interval = TimeSpan.FromMilliseconds(200);
+            player.timer.Tick += new EventHandler(timer_Tick);
+            player.timer.Interval = TimeSpan.FromMilliseconds(200);
         }
         public int timer1TickCount;
         
@@ -232,50 +223,17 @@ namespace UnderwaterAudioMusicManagerApp
             InitializeComponent();
             createMediaEventHandlers();
             createTimerEventTickAndSetInterval();
-            loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
-            currentPlaylistBox = playlistBox;  
-         
+            this.libraryListView.ItemsSource = player.mediaLibrary;
 
-            //timer1.Tick += timer1_Tick;
-            //timer1.Interval = TimeSpan.FromMilliseconds(1);
+            col1.Header = "Track Name";
+            
         }
 
         //Event Handlers//
         private void player_MediaEnded(object sender, EventArgs e)
-        {            
-            timer.Stop();
-            if (isRepeat)
-            {
-                player.Position = TimeSpan.FromSeconds(0);
-                startPlaying();
-            }
-
-            else if (isShuffle)
-            {
-               var fileNameArray =  convertDictionaryKeysToArray(musicLibrary);
-                playNextShuffledSong();
-                startPlaying();
-            }
-
-            else
-            {                
-                if (playlistBox.SelectedIndex + 1 == playlistBox.Items.Count)
-                {
-                    swapPauseToPlayButton();
-                    player.Stop();
-                    swapPauseToPlayButton();
-                    trackProgressBar.Value = 0;
-                    player.Position = TimeSpan.FromSeconds(0);
-
-                }
-                else
-                {
-                    player.Position = TimeSpan.FromSeconds(0);
-                    playlistBox.SelectedIndex += 1;
-                    loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-                    startPlaying();
-                }
-            }
+        {
+            player.loadSongIntoPlayer(player.mediaLibrary[0]);
+            player.play();
             
         }
 
@@ -286,7 +244,7 @@ namespace UnderwaterAudioMusicManagerApp
             
             trackProgressSlider.Maximum = player.NaturalDuration.TimeSpan.TotalSeconds;            
             trackDurationLabel.Content = player.NaturalDuration.TimeSpan.ToString(@"m\:ss");
-            nowPlayingLabel.Content = System.IO.Path.GetFileNameWithoutExtension(player.Source.AbsoluteUri);
+            nowPlayingLabel.Content = player.currentMedia.fileName;
         }
 
         private void timer_Tick(object sender, EventArgs e)
@@ -314,7 +272,7 @@ namespace UnderwaterAudioMusicManagerApp
         private void handleShuffleClick()
         {
             toggleShuffle();
-            if (isRepeat)
+            if (player.isRepeat)
             {
                 toggleRepeat();
             }   
@@ -402,71 +360,21 @@ namespace UnderwaterAudioMusicManagerApp
         
         private void startPlaying()
         {
-            player.Play();
-            isPaused = false;
-            isPlaying = true;
+            player.play();
             swapPlayToPauseButton();
-            timer.Start();
+            player.timer.Start();
         
         }
 
         private void pausePlaying()
         {
-            player.Pause();
-            isPaused = true;
-            isPlaying = false;
+            player.pause();
+
             swapPauseToPlayButton();
-            timer.Stop();
+            player.timer.Stop();
         }
 
-        private void selectPreviousSong()
-        {
-            if (playlistBox.Items.Count <= 0)
-            {
-                return;
-            }
-
-            if (isPlaying == true)
-            {
-                if(player.Position >= TimeSpan.FromSeconds(1))
-                {
-                    timer.Stop();
-                    player.Position = TimeSpan.FromSeconds(0);
-                    startPlaying();
-                }
-                else if(player.Position < TimeSpan.FromSeconds(1))
-                {
-                    timer.Stop();
-                    player.Position = TimeSpan.FromSeconds(0);
-                    if(playlistBox.SelectedIndex <= 0)
-                    {
-                        return;
-                    }
-                    else
-                    {
-                        playlistBox.SelectedIndex--;
-                        loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-                        startPlaying();
-                    }
-                   
-                }
-              
-
-            }
-            else if (!isPlaying && currentPlaylistBox.SelectedIndex !< 0 && currentPlaylistBox.SelectedItem != null)
-            {
-                player.Position = TimeSpan.FromSeconds(0);
-                currentPlaylistBox.SelectedIndex--;
-            }
-            else
-            {
-                player.Position = TimeSpan.FromSeconds(0);
-                if (isShuffle)
-                {
-                    playNextShuffledSong();
-                }
-            }
-        }
+       
 
         private Track searchForSelectedFile(string itemName, Dictionary<string, Track> list)
         {
@@ -479,8 +387,7 @@ namespace UnderwaterAudioMusicManagerApp
         }
 
         private void rewindButton_Click(object sender, RoutedEventArgs e)
-        {
-            selectPreviousSong();
+        {   
           
 
 
@@ -495,58 +402,11 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void selectNextSong()
         {
-            //does nothing if there is no item in the playlist or nothing selected
-            if (playlistBox.SelectedIndex >= playlistBox.Items.Count && playlistBox.SelectedIndex !< 0 && !isShuffle)
-            {
-                return;
-            }
-            //checks if its playing and if the shuffle button is OFF
-            else if (isPlaying == true && isShuffle == false && currentPlaylistBox.SelectedItem != null) 
-            {
-                timer.Stop();
-                player.Stop();
-                swapPauseToPlayButton();
-                currentPlaylistBox.SelectedIndex++;
-                loadSongIntoPlayer(new Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
 
-                startPlaying();
-            }
-            else if(!isPlaying && !isShuffle && currentPlaylistBox.SelectedItem == null)
-            {
-                currentPlaylistBox.SelectedIndex++;
-                startPlaying();
-            }
-
-
-            else if (isShuffle && isPlaying)
-            {
-                player.Stop();
-                playNextShuffledSong();
-                startPlaying();
-            }
-            else if(isShuffle && isPlaying == false)
-            {
-                player.Stop();
-                playNextShuffledSong();
-                
-                
-            }
-            else
-            {
-                return;
-            }
 
         }
 
-        private void playNextShuffledSong()
-        {
-            loadSongIntoPlayer(new System.Uri(searchForSelectedFile(pickRandomSong(convertDictionaryKeysToArray(musicLibrary)), musicLibrary).filePath));
-            currentPlaylistBox.SelectedItem = null;
-            startPlaying();
-            player.Stop();
-            swapPauseToPlayButton();
 
-        }
 
         private void forwardButton_Click(object sender, RoutedEventArgs e)
         {
@@ -573,32 +433,22 @@ namespace UnderwaterAudioMusicManagerApp
             if (openFilePopup.ShowDialog() == true)
             {
 
-                songFileName = openFilePopup.SafeFileNames;
-                songFilePath = openFilePopup.FileNames;
+                string[] songFileName = openFilePopup.SafeFileNames;
+               string[] songFilePath = openFilePopup.FileNames;
 
                 for(int i= 0; i < songFilePath.Length; i++)
                 {
                     Track track = new Track();
-                    getTrackTags(track, i);
-
-
-                    if (musicLibrary.ContainsKey(track.fileName) != true)
-                    {
-
-                        addTrackToLibrary(track, i);
-                    }
+                    getTrackTags(track, i,songFileName,songFilePath);
+                    player.mediaLibrary.Add(track);
                     
                 }
 
             }
         }
-        private void addTrackToLibrary(Track track, int i)
-        {
-            musicLibrary.Add(track.fileName.ToString(), track);
-            playlistBox.Items.Add(track.fileName.ToString());
-        }
 
-        private void getTrackTags(Track track, int i)
+
+        private void getTrackTags(Track track, int i,string[] songFileName, string[] songFilePath)
         {
             track.fileName = System.IO.Path.GetFileNameWithoutExtension(songFileName[i]);
             track.filePath = songFilePath[i];
@@ -615,7 +465,7 @@ namespace UnderwaterAudioMusicManagerApp
         private void pauseButton_Click(object sender, RoutedEventArgs e)
         {
             if
-                (isPlaying)
+                (player.playState == UnderwaterAudioMediaPlayer.playerPlaying)
             {
                 pausePlaying();
 
@@ -624,12 +474,12 @@ namespace UnderwaterAudioMusicManagerApp
       
         private void swapShuffleIcons()
         {
-            if (isShuffle)
+            if (player.isShuffle)
             {
                 shuffleButton.Visibility = Visibility.Visible;
                 shuffleButtonOn.Visibility = Visibility.Collapsed;
             }
-            else if(isShuffle == false)
+            else if(player.isShuffle == false)
             {
                 shuffleButton.Visibility = Visibility.Collapsed;
                 shuffleButtonOn.Visibility = Visibility.Visible;
@@ -638,20 +488,20 @@ namespace UnderwaterAudioMusicManagerApp
         }
         private void toggleShuffle()
         {
-            if(isShuffle)
+            if(player.isShuffle)
             {
                 swapShuffleIcons();
-                isShuffle = false;
+                player.isShuffle = false;
                 
                 
 
             }
-            else if(isShuffle == false)
+            else if(player.isShuffle == false)
             {
 
                 swapShuffleIcons();
          
-                isShuffle = true;
+                player.isShuffle = true;
                 
 
 
@@ -662,18 +512,18 @@ namespace UnderwaterAudioMusicManagerApp
         }
         private void toggleRepeat()
         {
-            if (isRepeat)
+            if (player.isRepeat)
             {
                 
-                isRepeat = false;
+                player.isRepeat = false;
                 repeatButton.Visibility = Visibility.Visible;
                 repeatButtonOn.Visibility = Visibility.Collapsed;
 
             }
-            else if (isRepeat != true)
+            else if (player.isRepeat != true)
             {
                 
-                isRepeat = true;
+                player.isRepeat = true;
                 repeatButton.Visibility = Visibility.Collapsed;
                 repeatButtonOn.Visibility = Visibility.Visible;
 
@@ -685,57 +535,10 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void handlePlayButtonClick()
         {
-            
 
-
-            if (playlistPage.Visibility == Visibility.Visible)
-            {
-              currentPlaylistBox = playlistListBox;
-               
-            }
-            if(libraryPage.Visibility == Visibility.Visible)
-            {
-                currentPlaylistBox = playlistBox;
-            }
-            if(delphinPage.Visibility == Visibility.Visible)
-            {
-                currentPlaylistBox = playlistBox;
-            }
-
-            if (isPaused && currentPlaylistBox.SelectedItem != null)
-            {
-                if(player.Source == new Uri(getFilePathFromSelectedFile(currentPlaylistBox.SelectedItem.ToString(), musicLibrary)))
-                {
-                    startPlaying();
-                }
-                else
-                {
-                    loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-                    startPlaying();
-                }
-                
-            }
-
-            else if(isPaused)
-            {
-                startPlaying();
-            }
-            
-            else 
-            {
-                if (currentPlaylistBox.SelectedItem == null)
-                {
-                    return;
-                }
-
-                else
-                {
-
-                    loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(currentPlaylistBox.SelectedItem.ToString(), musicLibrary)));
-                    startPlaying();
-
-                }
-            }
+            player.play();
+            swapPlayToPauseButton();
+           
             
         }
 
@@ -767,79 +570,78 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void playlistBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            timer.Stop();
-            if(playlistBox.SelectedItem != null)
-            {
-                loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
-                startPlaying();
-            }
+            //timer.Stop();
+            //if(playlistBox.SelectedItem != null)
+            //{
+            //    loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistBox.SelectedItem.ToString(), musicLibrary)));
+            //    startPlaying();
+            //}
             
         }
-        private void savePlaylist(string playlistName)
-        {      
+        //private void savePlaylist(string playlistName)
+        //{      
 
-            System.IO.StreamWriter playlist = new System.IO.StreamWriter(playlistName+".plst");
-          foreach(var song in currentPlaylistBox.Items)
-            {
-                Track track = searchForSelectedFile(song.ToString(), musicLibrary);
-                playlist.WriteLine(track.filePath);
-            }
-            playlist.Close();
+        //    System.IO.StreamWriter playlist = new System.IO.StreamWriter(playlistName+".plst");
+        //  foreach(var song in currentPlaylistBox.Items)
+        //    {
+        //        Track track = searchForSelectedFile(song.ToString(), musicLibrary);
+        //        playlist.WriteLine(track.filePath);
+        //    }
+        //    playlist.Close();
             
-        }
-        private void loadPreviousLibrary()
-        {
-            if (File.Exists("libraryPage.plst"))
-            {
-                string[] savedPlaylist = File.ReadAllLines("library.plst");
-                for (int i = 0; i < savedPlaylist.Length; i++)
-                {
-                    if (playlistBox.Items.Contains(savedPlaylist[i]) != true)
-                    {
+        //}
+        //private void loadPreviousLibrary()
+        //{
+        //    if (File.Exists("libraryPage.plst"))
+        //    {
+        //        string[] savedPlaylist = File.ReadAllLines("library.plst");
+        //        for (int i = 0; i < savedPlaylist.Length; i++)
+        //        {
+        //            if (playlistBox.Items.Contains(savedPlaylist[i]) != true)
+        //            {
                     
-                        playlistBox.Items.Add(savedPlaylist[i]);
+        //                playlistBox.Items.Add(savedPlaylist[i]);
                         
-                    }
-                }
-            }
+        //            }
+        //        }
+        //    }
            
             
-        }
+        //}
         private void closeApp()
         {
-            savePlaylist("library");
+            //savePlaylist("library");
             Close();
 
         }
-         private void loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart()
-        {
-            string defaultMusicFolderPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)).FullName;
-            string[] filesInDefaultDirectory = Directory.GetFiles(defaultMusicFolderPath, "*.*").Where(file => file.ToLower().EndsWith(".mp3") || file.ToLower().EndsWith(".wav") || file.ToLower().EndsWith(".flac") || file.ToLower().EndsWith(".m4a") || file.ToLower().EndsWith(".mp4") || file.ToLower().EndsWith(".wma") || file.ToLower().EndsWith(".aac")).ToArray(); //|| file.ToLower().EndsWith(".EXT")
-            trackList = new List<Track>();
+        // private void loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart()
+        //{
+        //    string defaultMusicFolderPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)).FullName;
+        //    string[] filesInDefaultDirectory = Directory.GetFiles(defaultMusicFolderPath, "*.*").Where(file => file.ToLower().EndsWith(".mp3") || file.ToLower().EndsWith(".wav") || file.ToLower().EndsWith(".flac") || file.ToLower().EndsWith(".m4a") || file.ToLower().EndsWith(".mp4") || file.ToLower().EndsWith(".wma") || file.ToLower().EndsWith(".aac")).ToArray(); //|| file.ToLower().EndsWith(".EXT")
 
-            for (int i=0;i < filesInDefaultDirectory.Length; i++)
-            {
-                Track track = new Track();
-                track.fileName = System.IO.Path.GetFileNameWithoutExtension(filesInDefaultDirectory[i]);
-                track.filePath = filesInDefaultDirectory[i];
-                var tag = TagLib.File.Create(track.filePath);
-                track.artist = tag.Tag.FirstPerformer;
-                track.duration = tag.Properties.Duration;
-                track.genre = tag.Tag.FirstGenre;
-                track.album = tag.Tag.Album;
-                track.songName = tag.Tag.Title;
-                musicLibrary.Add(track.fileName.ToString(), track); // sets up library database
-                playlistBox.Items.Add(track.fileName); // this is just a representation of whats in the library database. 
+        //    for (int i=0;i < filesInDefaultDirectory.Length; i++)
+        //    {
+        //        Track track = new Track();
+        //        track.fileName = System.IO.Path.GetFileNameWithoutExtension(filesInDefaultDirectory[i]);
+        //        track.filePath = filesInDefaultDirectory[i];
+        //        var tag = TagLib.File.Create(track.filePath);
+        //        track.artist = tag.Tag.FirstPerformer;
+        //        track.duration = tag.Properties.Duration;
+        //        track.genre = tag.Tag.FirstGenre;
+        //        track.album = tag.Tag.Album;
+        //        track.songName = tag.Tag.Title;
+        //        musicLibrary.Add(track.fileName.ToString(), track); // sets up library database
+        //        playlistBox.Items.Add(track.fileName); // this is just a representation of whats in the library database. 
 
                
 
 
-            }
-            loadPreviousLibrary();
-            libraryListView.ItemsSource = musicLibrary;
+        //    }
+        //    //libraryListView.ItemsSource = musicLibrary;
 
 
-        }
+        //}
+
         public DispatcherTimer timer1 = new DispatcherTimer(DispatcherPriority.Render);
         private void showDelphinPage()
         {
@@ -884,7 +686,7 @@ namespace UnderwaterAudioMusicManagerApp
         private void repeatButton_Click(object sender, RoutedEventArgs e)
         {
             toggleRepeat();
-            if (isShuffle)
+            if (player.isShuffle)
             {
                 toggleShuffle();
             }
@@ -909,17 +711,17 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void addToPlaylistButton_Click(object sender, RoutedEventArgs e)
         {                 
-            playlistListBox.Items.Add(playlistBox.SelectedItem.ToString());
+
         }
 
         private void playlistListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            timer.Stop();
-            if (playlistListBox.SelectedItem != null)
-            {
-                loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistListBox.SelectedItem.ToString(), musicLibrary)));
-                startPlaying();
-            }
+            //timer.Stop();
+            //if (playlistListBox.SelectedItem != null)
+            //{
+            //    loadSongIntoPlayer(new System.Uri(getFilePathFromSelectedFile(playlistListBox.SelectedItem.ToString(), musicLibrary)));
+            //    startPlaying();
+            //}
         }
 
         private Track[] convertDictionaryValuesToArray(Dictionary<String, Track> dictionary)
@@ -934,11 +736,11 @@ namespace UnderwaterAudioMusicManagerApp
 
         }
 
-        private string pickRandomSong(String[] playlist)
+        private string pickRandomSong(List<Track> playlist)
         {
             Random random = new Random();
 
-            return playlist[random.Next(playlist.Length)].ToString();
+            return playlist[random.Next(playlist.Count)].ToString();
 
         }
 
@@ -995,6 +797,7 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
+            player.loadSongIntoPlayer(player.currentMedia);
             handlePlayButtonClick();          
 
         }
