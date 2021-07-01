@@ -323,8 +323,9 @@
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Padding" Value="1"/>
-            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Margin" Value="5,0,5,0"/>
             <Setter Property="Height" Value="30px"/>
+            <Setter Property="Width" Value="100px"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -406,18 +407,18 @@
 
 
                 <Border WindowChrome.IsHitTestVisibleInChrome="True"  x:Name="closeButtonBackground" Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="0,20,0,0"  BorderBrush="Transparent" MouseEnter="closeButtonBackground_MouseEnter" MouseLeave="closeButtonBackground_MouseLeave" MouseDown="closeButtonBackground_MouseDown_1" MouseLeftButtonUp="closeButtonBackground_MouseLeftButtonUp">
-                        <Button WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Center" VerticalAlignment="Center" Height="14px" Width="14px" x:Name="closeButton"  Click="closeButton_Click" Foreground="Black" Background="#FF00141F" Margin="0,3,0,3" MouseLeftButtonDown="closeButton_MouseLeftButtonDown">
-                            <Button.OpacityMask>
-                                <ImageBrush ImageSource="/icons8-delete-24.png"/>
-                            </Button.OpacityMask>
+                    <Button WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Center" VerticalAlignment="Center" Height="14px" Width="14px" x:Name="closeButton"  Click="closeButton_Click" Foreground="Black" Background="#FF00141F" Margin="0,3,0,3" MouseLeftButtonDown="closeButton_MouseLeftButtonDown">
+                        <Button.OpacityMask>
+                            <ImageBrush ImageSource="/icons8-delete-24.png"/>
+                        </Button.OpacityMask>
 
-                        </Button>
-                    </Border>
-
-               
+                    </Button>
+                </Border>
 
 
-               
+
+
+
 
 
 
@@ -427,49 +428,53 @@
             <!--Body  this is all the content below the title bar-->
             <Grid x:Name="appContentGrid" Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition/>
+                    <RowDefinition Height="41*"/>
+                    <RowDefinition Height="553*"/>
                     <RowDefinition Height="135"/>
                     <!--bottom control bar height-->
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="40" />
-                    <ColumnDefinition Width="33*"/>
-                    <ColumnDefinition Width="235*" />
+                    <ColumnDefinition/>
                     <ColumnDefinition Width="40"/>
                 </Grid.ColumnDefinitions>
 
 
 
 
+                <!--<StackPanel  Grid.Column="1" x:Name="navigationPanel" Orientation="Horizontal" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.Row="0"  >
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click"  Content="Library"  />
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click_1"  Content="Playlist"  />
+                    <Button Style="{DynamicResource navButtonStyle}"  x:Name="delphinNavTab"  Click="delphinNavTab_Click" Content="Delphin"/>
 
-                <!-- BOTTOM CONTROLS SECTION-->
-                <Grid Grid.Column="2" x:Name="mainContentGrid" Grid.ColumnSpan="2">
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="addToPlaylistButton_Click" Content="Add to Playlist" />
+                    <Button Style="{DynamicResource navButtonStyle}"  x:Name="importButton" Click="importButton_Click" Content="Add Media"/>
+                    <Button Style="{DynamicResource navButtonStyle}"  x:Name="deleteButton" Content="Delete" Click="deleteButton_Click"/>
+
+
+                </StackPanel>-->
+
+
+                <Grid Grid.Column="1" Grid.Row="1" x:Name="mainContentGrid"  >
 
                     <Grid Visibility="Collapsed" Grid.Column="1" x:Name="delphinPage">
                         <Image x:Name="delphinFrameImage" Grid.Column="0" Source="/DelphinFrame.png" StretchDirection="Both" Stretch="Uniform" Visibility="Visible"/>
                     </Grid>
 
+
                     <Grid x:Name="libraryPage">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="229*"/>
-                            <ColumnDefinition Width="770*"/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <ListBox Grid.Column="0" BorderThickness="4" x:Name="playlistBox" HorizontalContentAlignment="Center" FontSize="18"  SelectedIndex="0" Foreground="#FF00D1FF" BorderBrush="{x:Null}" FontFamily="Corbel"  Background="{x:Null}" Margin="20,0,20,10" SelectionChanged="playlistBox_SelectionChanged" MouseDoubleClick="playlistBox_MouseDoubleClick"  >
-                            <ListBox.Effect>
-                                <DropShadowEffect/>
-                            </ListBox.Effect>
-                        </ListBox>
+                        <DataGrid  AutoGenerateColumns="True" CanUserSortColumns="True"  IsReadOnly="True"  x:Name="libraryListView" MouseDoubleClick="libraryListView_MouseDoubleClick" Loaded="libraryListView_Loaded" Background="{x:Null}" BorderBrush="{x:Null}"  >
+                            <DataGrid.Columns>
 
-                        
-                        <DataGrid AutoGenerateColumns="True"   IsReadOnly="True" Grid.Column="1"  x:Name="libraryListView"  >
-                                           
+                            </DataGrid.Columns>
                         </DataGrid>
 
-
-
                     </Grid>
-                    
-                    
+
+
                     <Grid Visibility="Collapsed" x:Name="playlistPage">
                         <ListBox Grid.Column="1" x:Name="playlistListBox" MouseDoubleClick="playlistListBox_MouseDoubleClick" Background="#FF009BD8" />
 
@@ -478,23 +483,14 @@
 
                 </Grid>
 
-                <StackPanel  Grid.Column="1" x:Name="navigationPanel" VerticalAlignment="Center" Orientation="Vertical"  Grid.ColumnSpan="1"  >
-                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click"  Content="Library"  />
-                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click_1"  Content="Playlist"  />
-                    <Button Style="{DynamicResource navButtonStyle}"  x:Name="delphinNavTab"  Click="delphinNavTab_Click" Content="Delphin"/>
 
-                    <Button Style="{DynamicResource navButtonStyle}"   Click="addToPlaylistButton_Click" Content="Add to Playlist" />
-                    <Button Style="{DynamicResource navButtonStyle}"  x:Name="importButton" Click="importButton_Click" Content="Add Media"/>
-
-
-                </StackPanel>
 
 
 
 
 
                 <!--Controls-->
-                <Grid x:Name="bottomControlBar" Margin="0,1,0,0" Grid.Row="1" Grid.ColumnSpan="4">
+                <Grid x:Name="bottomControlBar" Margin="0,1,0,0" Grid.Row="2" Grid.ColumnSpan="3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="465*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -684,6 +680,20 @@
 
 
                 </Grid>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TabControl Margin="10,10,10,10" HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center">
+                        <TabItem  Width="100" Padding="10,0,10,0" HorizontalContentAlignment="Center"  Header="Library" PreviewMouseLeftButtonDown="TabItem_PreviewMouseLeftButtonDown">
+                            <Grid Background="Transparent"/>
+                        </TabItem>
+
+                    </TabControl>
+                    <TabControl Margin="10,10,10,10" HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center">
+                        <TabItem  Width="100" Header="Delphin" PreviewMouseLeftButtonDown="TabItem_PreviewMouseLeftButtonDown_1">
+                            <Grid Background="Transparent"/>
+                        </TabItem>
+                    </TabControl>
+                </StackPanel>
+                
             </Grid>
 
 

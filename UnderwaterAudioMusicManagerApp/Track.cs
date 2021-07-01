@@ -7,15 +7,27 @@ using System.Windows.Threading;
 
 namespace UnderwaterAudioMusicManagerApp
 {
-   public class Track    {
+    public class Track
+    {
         public string fileName { get; set; }
         public string filePath;
-        public string songName;
+        public string songName { get; set; }
         public string artist { get; set; }
-        public string genre;
+        public string genre { get; set; }
         public string album { get; set; }
-        public TimeSpan duration;      
+        public TimeSpan duration;
+
+
+        public Track()
+        {
+            
+        }
     }
+            
+            
+}
+        
+    
 
     
-}
+
