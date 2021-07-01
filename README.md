@@ -11,22 +11,14 @@ resume playing
 close button
 import songs into list
 shuffle toggle on/off
+repeat
+select song
+add song to library
+volume slider (needs adjusted)
+track scrubbing
+
+responsive up to mobile size
 
 
-
-things to add:
-volume slider
-track position scrubber
-mute button
-funtionality for repeat button
-functionality for shuffle button
-save playlist capability
-many much more to come
-
-With music added
-![Capture2](https://user-images.githubusercontent.com/46287392/122614768-20182300-d03c-11eb-84d2-44fa5661084c.PNG)
-without music added
-![Capture](https://user-images.githubusercontent.com/46287392/122614644-e7784980-d03b-11eb-88fd-76aa231c1bd8.PNG)
-shuffle on, resized to mobile size
-![moble](https://user-images.githubusercontent.com/46287392/122623913-d1c24e80-d052-11eb-8f2b-c279bd37ba4c.PNG)
-
+![Capture](https://user-images.githubusercontent.com/46287392/124175555-99633d00-da62-11eb-9309-ee2ac91341a5.PNG)
+![Capture2](https://user-images.githubusercontent.com/46287392/124175556-99fbd380-da62-11eb-887c-20d2af36fcd0.PNG)
