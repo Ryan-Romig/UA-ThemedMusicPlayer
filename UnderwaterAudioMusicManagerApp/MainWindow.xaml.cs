@@ -189,9 +189,7 @@ namespace UnderwaterAudioMusicManagerApp
 
 
 
-        //----------------------------------------------------------------------------------//
-        //----------------------------------------------------------------------------------//
-        //----------------------------------------------------------------------------------//
+        //----------------------------------------------------------------------------------//     //----------------------------------------------------------------------------------//        //----------------------------------------------------------------------------------//
 
 
 
@@ -210,6 +208,7 @@ namespace UnderwaterAudioMusicManagerApp
         {            
             player.MediaOpened += new EventHandler(player_MediaOpened);
             player.MediaEnded += new EventHandler(player_MediaEnded);
+            
         }
 
         private void createTimerEventTickAndSetInterval()
@@ -231,11 +230,6 @@ namespace UnderwaterAudioMusicManagerApp
         }
 
 
-        //public List<Track> setLibraryBinding()
-        //{
-        //    libraryListView.ItemsSource = player.mediaLibrary;
-        //    return player.mediaLibrary;
-        //}
 
         public void setColumnNames()
         {
@@ -245,6 +239,7 @@ namespace UnderwaterAudioMusicManagerApp
             libraryListView.Columns[2].Header = "Album";
             
         }
+ 
 
         //Event Handlers//
         private void player_MediaEnded(object sender, EventArgs e)
@@ -254,26 +249,31 @@ namespace UnderwaterAudioMusicManagerApp
                 player.loadSongIntoPlayer(player.currentMedia);
                 startPlaying();
             }
-            else { 
-            if(player.currentPlaylistIndex < player.mediaLibrary.Count -1)
+            else if (player.isShuffle)
             {
-                player.currentPlaylistIndex++;
-                player.Position = new System.TimeSpan(0);
-                player.pausedPosition = new System.TimeSpan(0);
-                player.loadSongIntoPlayer(player.mediaLibrary[player.currentPlaylistIndex]);               
+                selectShuffleSong();
                 startPlaying();
-                libraryListView.SelectedIndex = player.currentPlaylistIndex;
             }
-            else if (player.currentPlaylistIndex == player.mediaLibrary.Count)
-            {
-                player.stop();
-            }
+            else { 
+                    if(player.currentPlaylistIndex < player.mediaLibrary.Count -1)
+                    {
+                        player.currentPlaylistIndex++;
+                        player.Position = new System.TimeSpan(0);
+                        player.pausedPosition = new System.TimeSpan(0);
+                        player.loadSongIntoPlayer(player.mediaLibrary[player.currentPlaylistIndex]);               
+                        startPlaying();
+                        libraryListView.SelectedIndex = player.currentPlaylistIndex;
+                    }
+                    else if (player.currentPlaylistIndex == player.mediaLibrary.Count-1)
+                    {
+                    stopPlaying();
+                    
+                    }
 
-            libraryListView.SelectedItem = player.currentMedia;
-            }
+                    libraryListView.SelectedItem = player.currentMedia;
+                }
 
         }
-
 
 
         private void player_MediaOpened(object sender, EventArgs e)
@@ -328,12 +328,19 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void trackProgressSlider_Change(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (player.Source != null)
+    
+            if (player.Source!= null)
             {
-                player.Position = TimeSpan.FromSeconds(trackProgressSlider.Value);
-                trackProgressBar.Value = player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds;
-                player.pausedPosition = TimeSpan.FromSeconds(trackProgressSlider.Value);
+                if(player.NaturalDuration != Duration.Automatic)
+                {
+                    
+                    player.Position = TimeSpan.FromSeconds(trackProgressSlider.Value);
+                    trackProgressBar.Value = player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds;
+                    player.pausedPosition = TimeSpan.FromSeconds(trackProgressSlider.Value);
+                    
 
+                }
+                
             }
 
         }
@@ -407,30 +414,52 @@ namespace UnderwaterAudioMusicManagerApp
             {
                 if (player.Source != new Uri(player.currentMedia.filePath))
                 {
+                    if (player.isShuffle)
+                    {
+                        selectShuffleSong();
+                        player.Position = new TimeSpan(0);
+                        player.pausedPosition = new TimeSpan(0);
+                    }
+                    else
+                    {
+                        player.loadSongIntoPlayer(player.mediaLibrary[player.currentPlaylistIndex]);
+                        player.Position = new TimeSpan(0);
+                        player.pausedPosition = new TimeSpan(0);
+                    }
 
-
-                    player.loadSongIntoPlayer(player.mediaLibrary[player.currentPlaylistIndex]);
-                    player.Position = new TimeSpan(0);
-                    player.pausedPosition = new TimeSpan(0);
+                    
 
 
 
                 }
-                else
+                else 
                 {
                     player.Position = player.pausedPosition;
                     player.play();
                     swapPlayToPauseButton();
                     player.timer.Start();
                 }
+                
 
             }
             else
             {
-                player.loadSongIntoPlayer(player.mediaLibrary[libraryListView.SelectedIndex]);
-                player.stop();
-                player.play();
-                swapPlayToPauseButton();
+                if (player.isShuffle)
+                {
+                    selectShuffleSong();
+                    player.stop();
+                    player.play();
+                    swapPlayToPauseButton();
+                }
+                else
+                {
+                    player.loadSongIntoPlayer(player.mediaLibrary[libraryListView.SelectedIndex]);
+                    player.stop();
+                    player.play();
+                    swapPlayToPauseButton();
+                }
+
+               
             }
               
                 
@@ -724,19 +753,29 @@ namespace UnderwaterAudioMusicManagerApp
             }
 
         }
+        private void setTrackPositionFromSlider()
+        {
+            player.Position = TimeSpan.FromSeconds(trackProgressSlider.Value);
+            trackProgressBar.Value = player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds;
+            player.pausedPosition = TimeSpan.FromSeconds(trackProgressSlider.Value);
+        }
 
 
         private void handlePlayButtonClick()
         {
-
-
-            startPlaying();
-           
+            
+            startPlaying();          
             
         }
 
+
         private void Slider_OnMouseMove(object sender, MouseEventArgs e)
         {
+            if(e.LeftButton == MouseButtonState.Pressed)
+            {
+                player.isScrubbing = true;
+            }
+
             if (e.LeftButton == MouseButtonState.Pressed)
             {
                 var slider = (Slider)sender;
@@ -744,7 +783,7 @@ namespace UnderwaterAudioMusicManagerApp
                 double d = 1.0d / slider.ActualWidth * position.X;
                 var p = slider.Maximum * d;
                 slider.Value = p;
-                if(player.Source != null)
+                if(player.Source != null && player.NaturalDuration != Duration.Automatic)
                 {
                     trackProgressBar.Value = trackProgressBar.Value = (player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds) * 100;
                 }
@@ -756,16 +795,7 @@ namespace UnderwaterAudioMusicManagerApp
             }
         }
 
-        private void playlistBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-          
-        }
-
-        private void playlistBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-
-           
-        }
+     
         private void savePlaylist(string playlistName)
         {
 
@@ -816,9 +846,6 @@ namespace UnderwaterAudioMusicManagerApp
             tabTitleLabel.Content = "Library";
             slideRightToLeftAnimation(titleLabelBar);
           
-
-
-
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -835,10 +862,7 @@ namespace UnderwaterAudioMusicManagerApp
                 toggleShuffle();
             }
         }
-        private void hideDelphinPage()
-        {
-
-        }
+ 
         private void showPlaylistPage()
         {
             libraryPage.Visibility = Visibility.Collapsed;
@@ -855,7 +879,7 @@ namespace UnderwaterAudioMusicManagerApp
         public void removeSongFromLibrary()
         {
 
-            if(player.mediaLibrary.Count > 0)
+            if(player.mediaLibrary.Count > 0 && libraryListView.SelectedIndex >= 0)
             {
                 int previousIndex = libraryListView.SelectedIndex;
                 player.mediaLibrary.Remove(player.mediaLibrary[previousIndex]);
@@ -885,14 +909,14 @@ namespace UnderwaterAudioMusicManagerApp
         }
         private void addToPlaylistButton_Click(object sender, RoutedEventArgs e)
         {
-            playlistListBox.Items.Add(libraryListView.SelectedItem);
+           
+            var selectedItem = player.mediaLibrary.Where(track => track == libraryListView.SelectedItem).ToList();
+
+            MessageBox.Show(selectedItem[0].duration.ToString()) ;
+            
 
         }
 
-        private void playlistListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-     
-        }
 
         private Track[] convertDictionaryValuesToArray(Dictionary<String, Track> dictionary)
         {
@@ -967,6 +991,7 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void playButton_Click(object sender, RoutedEventArgs e)
         {
+            
             handlePlayButtonClick();          
 
         }
@@ -1012,5 +1037,7 @@ namespace UnderwaterAudioMusicManagerApp
         {
             showDelphinPage();
         }
+
+       
     }
 }

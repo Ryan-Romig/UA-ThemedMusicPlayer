@@ -442,7 +442,7 @@
 
 
 
-                <!--<StackPanel  Grid.Column="1" x:Name="navigationPanel" Orientation="Horizontal" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.Row="0"  >
+                <StackPanel  Grid.Column="1" x:Name="navigationPanel" Orientation="Horizontal" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.Row="0"  >
                     <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click"  Content="Library"  />
                     <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click_1"  Content="Playlist"  />
                     <Button Style="{DynamicResource navButtonStyle}"  x:Name="delphinNavTab"  Click="delphinNavTab_Click" Content="Delphin"/>
@@ -452,7 +452,7 @@
                     <Button Style="{DynamicResource navButtonStyle}"  x:Name="deleteButton" Content="Delete" Click="deleteButton_Click"/>
 
 
-                </StackPanel>-->
+                </StackPanel>
 
 
                 <Grid Grid.Column="1" Grid.Row="1" x:Name="mainContentGrid"  >
@@ -476,7 +476,7 @@
 
 
                     <Grid Visibility="Collapsed" x:Name="playlistPage">
-                        <ListBox Grid.Column="1" x:Name="playlistListBox" MouseDoubleClick="playlistListBox_MouseDoubleClick" Background="#FF009BD8" />
+                        
 
                     </Grid>
 
@@ -516,10 +516,10 @@
                             DockPanel.Dock="Left"
                             IsSnapToTickEnabled="False"
                             LargeChange="5"
-                            Maximum="100"
+                            Maximum="65"
                             Orientation="Horizontal"
                             SmallChange="1"
-                            Value="100" BorderBrush="{x:Null}" Foreground="#FF00B7FF" ValueChanged="volumeSlider_Change" AutoToolTipPlacement="TopLeft" Cursor="SizeWE" Opacity="0.8" >
+                            Value="100" BorderBrush="{x:Null}" Foreground="#FF00B7FF" ValueChanged="volumeSlider_Change" AutoToolTipPlacement="None" Cursor="SizeWE" Opacity="0.8" >
                             <Slider.Effect>
                                 <DropShadowEffect/>
                             </Slider.Effect>
@@ -680,7 +680,7 @@
 
 
                 </Grid>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <!--<StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Center">
                     <TabControl Margin="10,10,10,10" HorizontalAlignment="Center" Grid.Column="1" VerticalAlignment="Center">
                         <TabItem  Width="100" Padding="10,0,10,0" HorizontalContentAlignment="Center"  Header="Library" PreviewMouseLeftButtonDown="TabItem_PreviewMouseLeftButtonDown">
                             <Grid Background="Transparent"/>
@@ -692,7 +692,7 @@
                             <Grid Background="Transparent"/>
                         </TabItem>
                     </TabControl>
-                </StackPanel>
+                </StackPanel>-->
                 
             </Grid>
 

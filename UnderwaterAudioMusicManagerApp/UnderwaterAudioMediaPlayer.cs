@@ -15,7 +15,6 @@ namespace UnderwaterAudioMusicManagerApp
     {
 
         public List<Track> mediaLibrary = new List<Track>();
-        public List<List<Track>> playlistList = new List<List<Track>>(); 
         //public BindingList<Track> mediaLibrary = new BindingList<Track>();
         public static string playerStopped = "stopped";
         public static string playerPaused = "paused";
@@ -25,15 +24,21 @@ namespace UnderwaterAudioMusicManagerApp
         public static string previousMedia;
         public bool isShuffle;
         public bool isRepeat;
-
+        public bool isScrubbing;
         public Track currentMedia = new Track();
         public DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         public static string supportedMusicFileTypes = "Music(.mp3) (.wav) (.aac) (.mp4) (.flac) (.wma) |*.mp3;*.wav;*.aac;*.mp4;*.m4a;*.flac;*.wma";
         public  System.TimeSpan pausedPosition;
-        public int currentPlaylistIndex = 0;
+        public int currentPlaylistIndex;   
 
 
-       
+        public UnderwaterAudioMediaPlayer()
+        {
+            loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
+            loadPreviousLibrary();
+        }
+
+
 
         //used for getting tags when adding media using the add to library button
         private void getTrackTags(Track track, int i, string[] songFileName, string[] songFilePath)
@@ -62,6 +67,7 @@ namespace UnderwaterAudioMusicManagerApp
 
         }
 
+
         //takes a text file with extention .plst and reads each lines to an array
         private void loadPreviousLibrary()
         {
@@ -71,7 +77,7 @@ namespace UnderwaterAudioMusicManagerApp
                 string[] savedPlaylist = File.ReadAllLines("library.plst");
 
                 Dictionary<string, Track> dic = new Dictionary<string, Track>();
-                foreach(Track song in mediaLibrary)
+                foreach (Track song in mediaLibrary)
                 {
                     dic.Add(song.filePath, song);
                 }
@@ -95,7 +101,7 @@ namespace UnderwaterAudioMusicManagerApp
 
                     }
                 }
-                
+
             }
 
 
@@ -106,10 +112,10 @@ namespace UnderwaterAudioMusicManagerApp
         void loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart()
         {
             //dumps all music files into an array 
-            string defaultMusicFolderPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)).FullName; 
+            string defaultMusicFolderPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)).FullName;
             string[] filesInDefaultDirectory = Directory.GetFiles(defaultMusicFolderPath, "*.*").Where(file => file.ToLower().EndsWith(".mp3") || file.ToLower().EndsWith(".wav") || file.ToLower().EndsWith(".flac") || file.ToLower().EndsWith(".m4a") || file.ToLower().EndsWith(".mp4") || file.ToLower().EndsWith(".wma") || file.ToLower().EndsWith(".aac")).ToArray(); //|| file.ToLower().EndsWith(".EXT")
 
-           //importing each music file into a Track object and saving to the main library
+            //importing each music file into a Track object and saving to the main library
             for (int i = 0; i < filesInDefaultDirectory.Length; i++)
             {
                 Track track = new Track();
@@ -121,17 +127,9 @@ namespace UnderwaterAudioMusicManagerApp
                 track.genre = tag.Tag.FirstGenre;
                 track.album = tag.Tag.Album;
                 track.songName = tag.Tag.Title;
-                mediaLibrary.Add(track); 
+                mediaLibrary.Add(track);
             }
-        }      
-
-
-        public UnderwaterAudioMediaPlayer()
-        {
-            loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
-            loadPreviousLibrary();
         }
-
 
         //custom  functions that sets playstate
         public void pause()
@@ -164,9 +162,9 @@ namespace UnderwaterAudioMusicManagerApp
         public void stop()
         {
             this.Stop();
-            this.playState = playerStopped;
-            this.timer.Stop();
+            this.playState = playerStopped;            
             this.Position = new System.TimeSpan(0);
+            this.timer.Stop();
         }
         
         public void loadSongIntoPlayer(Track track)
