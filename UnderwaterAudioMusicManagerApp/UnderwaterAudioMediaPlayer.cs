@@ -8,12 +8,15 @@ using System.IO;
 using System.Windows.Threading;
 using System.Windows;
 using System.ComponentModel;
+using System.Windows.Media.Imaging;
+using System.Windows.Controls;
 
 namespace UnderwaterAudioMusicManagerApp
 {
     public class UnderwaterAudioMediaPlayer : System.Windows.Media.MediaPlayer
     {
-
+        //public  List<List<Track>> playlist = new List<List<Track>>();
+        public List<Playlist> playlistCollection = new List<Playlist>();
         public List<Track> mediaLibrary = new List<Track>();
         //public BindingList<Track> mediaLibrary = new BindingList<Track>();
         public static string playerStopped = "stopped";
@@ -29,7 +32,10 @@ namespace UnderwaterAudioMusicManagerApp
         public DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         public static string supportedMusicFileTypes = "Music(.mp3) (.wav) (.aac) (.mp4) (.flac) (.wma) |*.mp3;*.wav;*.aac;*.mp4;*.m4a;*.flac;*.wma";
         public  System.TimeSpan pausedPosition;
-        public int currentPlaylistIndex;   
+        public int currentPlaylistIndex;
+        public Track selectedTrack;
+        public List<Track> currentPlaylist;
+        public Playlist selectedPlaylist;
 
 
         public UnderwaterAudioMediaPlayer()
@@ -69,7 +75,7 @@ namespace UnderwaterAudioMusicManagerApp
 
 
         //takes a text file with extention .plst and reads each lines to an array
-        private void loadPreviousLibrary()
+        public void loadPreviousLibrary()
         {
 
             if (File.Exists("library.plst"))
@@ -92,6 +98,24 @@ namespace UnderwaterAudioMusicManagerApp
                     track.genre = tag.Tag.FirstGenre;
                     track.album = tag.Tag.Album;
                     track.songName = tag.Tag.Title;
+                    if(tag.Tag.Pictures.FirstOrDefault() != null )
+                    {
+                        var pic = tag.Tag.Pictures[0];
+                        MemoryStream ms = new MemoryStream(pic.Data.Data);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        BitmapImage bitmap = new BitmapImage();
+                        bitmap.BeginInit();
+                        bitmap.StreamSource = ms;
+                        bitmap.EndInit();
+                        track.albumArt = new Image();
+                        track.albumArt.Source = bitmap;
+                    }
+                    else
+                    {
+                        track.albumArt = null;
+                    }
+                   
+                   
                     if (dic.ContainsKey(track.filePath) != true)
                     {
                         mediaLibrary.Add(track); // sets up library database
@@ -128,8 +152,25 @@ namespace UnderwaterAudioMusicManagerApp
                 track.album = tag.Tag.Album;
                 track.songName = tag.Tag.Title;
                 mediaLibrary.Add(track);
+                if (tag.Tag.Pictures.FirstOrDefault() != null)
+                {
+                    var pic = tag.Tag.Pictures[0];
+                    MemoryStream ms = new MemoryStream(pic.Data.Data);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.StreamSource = ms;
+                    bitmap.EndInit();
+
+                    track.albumArt.Source = bitmap;
+                }
+                else
+                {
+                    track.albumArt = null;
+                }
             }
         }
+       
 
         //custom  functions that sets playstate
         public void pause()

@@ -464,19 +464,41 @@
 
                     <Grid x:Name="libraryPage">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
+                            <ColumnDefinition Width="881*"/>
+                            <ColumnDefinition Width="191*"/>
                         </Grid.ColumnDefinitions>
-                        <DataGrid  AutoGenerateColumns="True" CanUserSortColumns="True"  IsReadOnly="True"  x:Name="libraryListView" MouseDoubleClick="libraryListView_MouseDoubleClick" Loaded="libraryListView_Loaded" Background="{x:Null}" BorderBrush="{x:Null}"  >
-                            <DataGrid.Columns>
+                        <DataGrid AutoGenerateColumns="True" CanUserSortColumns="True"  IsReadOnly="True"  x:Name="libraryListView" MouseDoubleClick="libraryListView_MouseDoubleClick" Loaded="libraryListView_Loaded" Background="{x:Null}" BorderBrush="{x:Null}" Visibility="Collapsed" Margin="0,0,690,0"  >
 
-                            </DataGrid.Columns>
                         </DataGrid>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                            <ScrollViewer.Effect>
+                                <DropShadowEffect/>
+                            </ScrollViewer.Effect>
+                            <WrapPanel x:Name="playlistView" Loaded="playlistView_Loaded"/>
+                        </ScrollViewer>
+
+                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                            <StackPanel  Grid.Column="1" x:Name="playlistPanel">
+
+                            </StackPanel>
+                        </ScrollViewer>
+                       
+                         
+
+                      
+
 
                     </Grid>
 
 
                     <Grid Visibility="Collapsed" x:Name="playlistPage">
-                        
+                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                            <ScrollViewer.Effect>
+                                <DropShadowEffect/>
+                            </ScrollViewer.Effect>
+                            <WrapPanel x:Name="playlistListView" Loaded="playlistListView_Loaded" />
+                        </ScrollViewer>
+
 
                     </Grid>
 
@@ -693,7 +715,7 @@
                         </TabItem>
                     </TabControl>
                 </StackPanel>-->
-                
+
             </Grid>
 
 
