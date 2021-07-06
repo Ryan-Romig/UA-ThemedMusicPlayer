@@ -1022,8 +1022,7 @@ namespace UnderwaterAudioMusicManagerApp
             bitmapImage.EndInit();
             image.Source = bitmapImage;
             image.Width = 60;
-            image.Height = 60;
-            image.SetValue(Grid.RowProperty, 0);
+            image.Height = 60;            
             image.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
             image.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
             image.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
@@ -1037,7 +1036,7 @@ namespace UnderwaterAudioMusicManagerApp
             
             image.Width = 60;
             image.Height = 60;
-            image.SetValue(Grid.RowProperty, 0);
+            image.SetValue(Grid.RowProperty, 1);
             image.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
             image.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
             image.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
@@ -1047,16 +1046,19 @@ namespace UnderwaterAudioMusicManagerApp
         private Grid createAlbumIcon()
         {
             Grid albumStack = new Grid();
+            albumStack.RowDefinitions.Add(new RowDefinition());
+            albumStack.RowDefinitions.Add(new RowDefinition());
             albumStack.Width = 120;
             albumStack.VerticalAlignment = VerticalAlignment.Center;
             albumStack.HorizontalAlignment = HorizontalAlignment.Center;
             albumStack.MinHeight = 120;
             albumStack.Margin = new Thickness(10, 10, 10, 10);
             Border border = new Border();
+            border.SetValue(Grid.RowProperty, 1);
             border.CornerRadius = new CornerRadius(14);
             border.Background = new SolidColorBrush(Color.FromArgb(100, 0, 100, 200));
-            border.Width = 120;
-            border.Height = 120;
+            border.Width = 100;
+            border.Height = 100;
             albumStack.Children.Add(border);
 
             return albumStack;
@@ -1067,15 +1069,9 @@ namespace UnderwaterAudioMusicManagerApp
             albumStack.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
             albumStack.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
             albumStack.Margin = new Thickness(10, 10, 10, 10);
-            albumStack.Children.Add(new TextBlock() { Text = playlist.Name, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Center, FontSize = 16, TextTrimming = TextTrimming.CharacterEllipsis }); ;
-            
-            
-            //image.Width = 60;
-            //image.Height = 60;
-            //image.SetValue(Grid.RowProperty, 0);
-            //image.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-            //image.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
-            //image.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
+            TextBlock textblock = new TextBlock() { Text = playlist.Name, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Center, FontSize = 12, TextTrimming = TextTrimming.CharacterEllipsis };
+            textblock.SetValue(Grid.RowProperty, 0);
+            albumStack.Children.Add(textblock);       
 
             Playlist selectedItem = playlist;
             var firstTrack = selectedItem.playlist.FirstOrDefault();
@@ -1085,10 +1081,10 @@ namespace UnderwaterAudioMusicManagerApp
             {
                 
                 Image albumImage = new Image();
-                albumImage.Source = firstTrack.albumArt;
+                albumImage.Source = image;
                 albumImage.Width = 60;
                 albumImage.Height = 60;
-                albumImage.SetValue(Grid.RowProperty, 0);
+                albumImage.SetValue(Grid.RowProperty, 1);
                 albumImage.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
                 albumImage.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
                 albumImage.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
@@ -1096,7 +1092,10 @@ namespace UnderwaterAudioMusicManagerApp
             }
             else
             {
-                albumStack.Children.Add(getRandomImageFromWeb());
+                Image albumImage = getRandomImageFromWeb();
+            albumImage.SetValue(Grid.RowProperty, 1);
+
+                albumStack.Children.Add(albumImage);
 
             }
               
@@ -1156,7 +1155,7 @@ namespace UnderwaterAudioMusicManagerApp
                 {
                     
                     addTrackThumbnail(track, playlistListView);
-                    //addTrackThumbnail();
+            
 
                 }
                 showPlaylistPage();
@@ -1206,10 +1205,7 @@ namespace UnderwaterAudioMusicManagerApp
             var nameText = panel.Children[1];
             var border = panel.Children[0];
 
-            albumArtImage.RenderTransform = new ScaleTransform(scaleX: 1, scaleY: 1);
-            nameText.SetValue(Grid.RowSpanProperty, 1);
-
-            
+            albumArtImage.RenderTransform = new ScaleTransform(scaleX: 1, scaleY: 1);     
 
         }
 
@@ -1228,17 +1224,20 @@ namespace UnderwaterAudioMusicManagerApp
 
 
             var selectedItem = track;
-            albumStack.Children.Add(new TextBlock() { Text = selectedItem.fileName, VerticalAlignment = VerticalAlignment.Top, FontSize = 16 });
+            var textBlock = new TextBlock() { Text = selectedItem.fileName, VerticalAlignment = VerticalAlignment.Top, FontSize = 12 };
+            textBlock.SetValue(Grid.RowProperty, 0);
+            albumStack.Children.Add(new TextBlock() { Text = selectedItem.fileName, VerticalAlignment = VerticalAlignment.Top, FontSize = 12 });
 
 
             if (selectedItem.albumArt != null)
             {
 
                 Image albumImage = new Image();
+                albumImage.SetValue(Grid.RowProperty, 1);
                   albumImage.Source =  selectedItem.albumArt;
                 albumImage.Width = 60;
                 albumImage.Height = 60;
-                albumImage.SetValue(Grid.RowProperty, 0);
+                albumImage.SetValue(Grid.RowProperty, 1);
                 albumImage.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
                 albumImage.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
                 albumImage.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
@@ -1246,7 +1245,9 @@ namespace UnderwaterAudioMusicManagerApp
             }
             else
             {
-                albumStack.Children.Add(getRandomImageFromWeb());
+                Image albumImage = getRandomImageFromWeb();
+                albumImage.SetValue(Grid.RowProperty, 1);
+                albumStack.Children.Add(albumImage);
 
             }
 
@@ -1276,17 +1277,11 @@ namespace UnderwaterAudioMusicManagerApp
                 albumStack.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
                 albumStack.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
                 albumStack.Margin = new Thickness(10, 10, 10, 10);
-                albumStack.Children.Add(new TextBlock() { Text = track.fileName, VerticalAlignment = VerticalAlignment.Top,HorizontalAlignment = HorizontalAlignment.Center, FontSize = 16, TextTrimming = TextTrimming.CharacterEllipsis }); ;
+                albumStack.Children.Add(new TextBlock() { Text = track.fileName, VerticalAlignment = VerticalAlignment.Top,HorizontalAlignment = HorizontalAlignment.Center, FontSize = 12, TextTrimming = TextTrimming.CharacterEllipsis }); ;
 
                 Image image = getRandomImageFromWeb();
-                //image.Width = 60;
-                //image.Height = 60;
-                //image.SetValue(Grid.RowProperty, 0);
-                //image.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-                //image.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
-                //image.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
-
-                
+                image.SetValue(Grid.RowProperty, 1);
+               
 
                 var selectedItem = track;          
 
@@ -1297,10 +1292,12 @@ namespace UnderwaterAudioMusicManagerApp
                         albumImage.Source  = track.albumArt;
                     albumImage.Width = 60;
                     albumImage.Height = 60;
-                    albumImage.SetValue(Grid.RowProperty, 0);
+                    albumImage.SetValue(Grid.RowProperty, 1);
                     albumImage.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
                     albumImage.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
                     albumImage.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
+                  
+
                     albumStack.Children.Add(albumImage);
                 }
                 else
@@ -1318,14 +1315,6 @@ namespace UnderwaterAudioMusicManagerApp
                albumStack.MouseEnter += Element_MouseEnter;
                albumStack.MouseLeave += Element_MouseLeave;
                albumStack.MouseDown += Element_MouseDown;
-
-                //foreach (StackPanel element in playlistView.Children)
-                //{
-                //    element.MouseEnter += Element_MouseEnter;
-                //    element.MouseLeave += Element_MouseLeave;
-                //    element.MouseDown += Element_MouseDown;
-
-                //}
             }          
 
 
@@ -1386,42 +1375,43 @@ namespace UnderwaterAudioMusicManagerApp
             }
         }
 
-       private void highlightFunction(Grid icon, WrapPanel panel)
+        private void highlightFunction(Grid icon, WrapPanel panel)
         {
 
 
-              var albumArtImage = icon.Children[2];
-                TextBlock nameText = (TextBlock)icon.Children[1];
-                var border = icon.Children[0];
+            var albumArtImage = icon.Children[2];
+            TextBlock nameText = (TextBlock)icon.Children[1];
+            var border = icon.Children[0];
 
 
-                if (nameText.Text == player.currentMedia.fileName)
-                {
-                    icon.Background = new SolidColorBrush(Color.FromArgb(100, 0, 200, 200));
-
-                }
-                else
-                {
-                    icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
-                }
-
-
-        }
-        private void highlightFunction(string name, WrapPanel panel)
-        {
-
-            Grid icon = (Grid)playlistListView.Children[player.currentPlaylistIndex];
-            icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
-
-            if (name == player.currentMedia.fileName)
+            if (player.currentPlaylistIndex == playlistListView.Children.IndexOf(icon))
             {
                 icon.Background = new SolidColorBrush(Color.FromArgb(100, 0, 200, 200));
-
             }
-           
+            else
+            {
+                icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
+            }
 
 
         }
+
+
+        //private void highlightFunction(string name, int index, WrapPanel panel)
+        //{
+
+        //    Grid icon = (Grid)playlistListView.Children[player.currentPlaylistIndex];
+        //    icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
+
+        //    if (name == player.currentMedia.fileName && player.currentPlaylistIndex == playlistListView.Children.IndexOf(icon))
+        //    {
+        //        icon.Background = new SolidColorBrush(Color.FromArgb(100, 0, 200, 200));
+
+        //    }
+
+
+
+        //}
 
         private void Element_MouseDown(object sender, MouseButtonEventArgs e)
         {
@@ -1439,7 +1429,7 @@ namespace UnderwaterAudioMusicManagerApp
             
             var selectedTrack = player.currentPlaylist.Where(track => track.fileName == nameText.Text).ToList().FirstOrDefault();
             player.selectedTrack = selectedTrack;
-            player.currentPlaylistIndex = player.currentPlaylist.IndexOf(selectedTrack);
+            player.currentPlaylistIndex = playlistListView.Children.IndexOf(panel);
 
            
 
