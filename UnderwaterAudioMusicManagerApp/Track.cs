@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
 
 namespace UnderwaterAudioMusicManagerApp
 {
@@ -17,7 +18,8 @@ namespace UnderwaterAudioMusicManagerApp
         public string genre { get; set; }
         public string album { get; set; }
         public TimeSpan duration;
-        public Image albumArt;
+        public BitmapImage albumArt {get;set;}
+        
 
 
       

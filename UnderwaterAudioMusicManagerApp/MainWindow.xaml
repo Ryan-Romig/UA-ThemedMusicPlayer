@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UnderwaterAudioMusicManagerApp"
         mc:Ignorable="d"
-        Title="Music Manager" Height="769" Width="1152" ResizeMode="CanResize" Icon="/logo.png" AllowsTransparency="True" WindowStyle="None" SizeChanged="mainWindow_SizeChanged" Background="{x:Null}">
+        Title="Music Manager"  Height="769" Width="1152" ResizeMode="CanResize" Icon="/logo.png" SizeChanged="mainWindow_SizeChanged" Background="{x:Null}" SizeToContent="Manual" WindowStyle="SingleBorderWindow">
     <Window.Resources>
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
@@ -358,14 +358,14 @@
 
 
     <!-- setting the top clickaple part of the window to move the window around -->
-    <WindowChrome.WindowChrome>
+    <!--<WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="40"/>
-    </WindowChrome.WindowChrome>
+    </WindowChrome.WindowChrome>-->
 
 
     <!-- main container  -->
     <!--Main Window Grid this holds 2 rows the title bar and everything below it-->
-    <Border CornerRadius="20,20,20,20" >
+    <Border CornerRadius="0,0,0,0" >
         <Border.Background>
             <ImageBrush ImageSource="/background.jpeg"/>
         </Border.Background>
@@ -376,7 +376,7 @@
             <ImageBrush ImageSource="/background.jpeg" Stretch="UniformToFill"/>
         </Grid.Background>-->
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -397,7 +397,7 @@
                 <!--TitleBar Content-->
 
 
-                <Border Grid.Column="1" x:Name="titleLabelBar" Background="#009BD8" CornerRadius="0,0,20,20" Margin="0,0,1,0" MouseLeftButtonDown="titleLabelBar_MouseLeftButtonDown"   >
+                <Border Grid.Column="1" x:Name="titleLabelBar" Background="#009BD8" CornerRadius="0,0,0,0" Margin="0,0,1,0" MouseLeftButtonDown="titleLabelBar_MouseLeftButtonDown"   >
                     <Label HorizontalAlignment="Center" FontSize="24px" FontWeight="Light" FontStretch="Expanded" x:Name="tabTitleLabel" Background="{x:Null}" Content="Library"/>
                 </Border>
 
@@ -406,7 +406,7 @@
 
 
 
-                <Border WindowChrome.IsHitTestVisibleInChrome="True"  x:Name="closeButtonBackground" Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="0,20,0,0"  BorderBrush="Transparent" MouseEnter="closeButtonBackground_MouseEnter" MouseLeave="closeButtonBackground_MouseLeave" MouseDown="closeButtonBackground_MouseDown_1" MouseLeftButtonUp="closeButtonBackground_MouseLeftButtonUp">
+                <Border Visibility="Collapsed" WindowChrome.IsHitTestVisibleInChrome="True"  x:Name="closeButtonBackground" Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" CornerRadius="0,0,0,0"  BorderBrush="Transparent" MouseEnter="closeButtonBackground_MouseEnter" MouseLeave="closeButtonBackground_MouseLeave" MouseDown="closeButtonBackground_MouseDown_1" MouseLeftButtonUp="closeButtonBackground_MouseLeftButtonUp">
                     <Button WindowChrome.IsHitTestVisibleInChrome="True" HorizontalAlignment="Center" VerticalAlignment="Center" Height="14px" Width="14px" x:Name="closeButton"  Click="closeButton_Click" Foreground="Black" Background="#FF00141F" Margin="0,3,0,3" MouseLeftButtonDown="closeButton_MouseLeftButtonDown">
                         <Button.OpacityMask>
                             <ImageBrush ImageSource="/icons8-delete-24.png"/>
@@ -442,9 +442,10 @@
 
 
 
+                <Button Style="{DynamicResource navButtonStyle}" Grid.Column="1" HorizontalAlignment="Left"  Click="Button_Click"  Content="Back"  />
+
                 <StackPanel  Grid.Column="1" x:Name="navigationPanel" Orientation="Horizontal" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.Row="0"  >
-                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click"  Content="Library"  />
-                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click_1"  Content="Playlist"  />
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click_1"  Content="Playlist" Visibility="Collapsed" />
                     <Button Style="{DynamicResource navButtonStyle}"  x:Name="delphinNavTab"  Click="delphinNavTab_Click" Content="Delphin"/>
 
                     <Button Style="{DynamicResource navButtonStyle}"   Click="addToPlaylistButton_Click" Content="Add to Playlist" />
@@ -482,10 +483,10 @@
 
                             </StackPanel>
                         </ScrollViewer>
-                       
-                         
 
-                      
+
+
+
 
 
                     </Grid>

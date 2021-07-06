@@ -107,8 +107,7 @@ namespace UnderwaterAudioMusicManagerApp
                         bitmap.BeginInit();
                         bitmap.StreamSource = ms;
                         bitmap.EndInit();
-                        track.albumArt = new Image();
-                        track.albumArt.Source = bitmap;
+                        track.albumArt = bitmap;
                     }
                     else
                     {
@@ -133,7 +132,7 @@ namespace UnderwaterAudioMusicManagerApp
 
 
         //loads songs from default music folder. 
-        void loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart()
+        private void loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart()
         {
             //dumps all music files into an array 
             string defaultMusicFolderPath = new DirectoryInfo(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)).FullName;
@@ -162,7 +161,7 @@ namespace UnderwaterAudioMusicManagerApp
                     bitmap.StreamSource = ms;
                     bitmap.EndInit();
 
-                    track.albumArt.Source = bitmap;
+                    track.albumArt = bitmap;
                 }
                 else
                 {

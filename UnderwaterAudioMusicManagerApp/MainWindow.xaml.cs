@@ -16,7 +16,6 @@ using System.Windows.Data;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
-//using WMPLib; for old windows media player way
 
 
 
@@ -49,141 +48,141 @@ namespace UnderwaterAudioMusicManagerApp
         //}
 
 
-        private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            switch (msg)
-            {
-                case 0x0024:
-                    WmGetMinMaxInfo(hwnd, lParam);
-                    handled = true;
-                    break;
-            }
-            return (IntPtr)0;
-        }
-        private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
-        {
-            MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
-            int MONITOR_DEFAULTTONEAREST = 0x00000002;
-            IntPtr monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
-            if (monitor != IntPtr.Zero)
-            {
-                MONITORINFO monitorInfo = new MONITORINFO();
-                GetMonitorInfo(monitor, monitorInfo);
-                RECT rcWorkArea = monitorInfo.rcWork;
-                RECT rcMonitorArea = monitorInfo.rcMonitor;
-                mmi.ptMaxPosition.x = Math.Abs(rcWorkArea.left - rcMonitorArea.left);
-                mmi.ptMaxPosition.y = Math.Abs(rcWorkArea.top - rcMonitorArea.top);
-                mmi.ptMaxSize.x = Math.Abs(rcWorkArea.right - rcWorkArea.left);
-                mmi.ptMaxSize.y = Math.Abs(rcWorkArea.bottom - rcWorkArea.top);
-            }
-            Marshal.StructureToPtr(mmi, lParam, true);
-        }
+        //private static IntPtr WindowProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        //{
+        //    switch (msg)
+        //    {
+        //        case 0x0024:
+        //            WmGetMinMaxInfo(hwnd, lParam);
+        //            handled = true;
+        //            break;
+        //    }
+        //    return (IntPtr)0;
+        //}
+        //private static void WmGetMinMaxInfo(IntPtr hwnd, IntPtr lParam)
+        //{
+        //    MINMAXINFO mmi = (MINMAXINFO)Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
+        //    int MONITOR_DEFAULTTONEAREST = 0x00000002;
+        //    IntPtr monitor = MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST);
+        //    if (monitor != IntPtr.Zero)
+        //    {
+        //        MONITORINFO monitorInfo = new MONITORINFO();
+        //        GetMonitorInfo(monitor, monitorInfo);
+        //        RECT rcWorkArea = monitorInfo.rcWork;
+        //        RECT rcMonitorArea = monitorInfo.rcMonitor;
+        //        mmi.ptMaxPosition.x = Math.Abs(rcWorkArea.left - rcMonitorArea.left);
+        //        mmi.ptMaxPosition.y = Math.Abs(rcWorkArea.top - rcMonitorArea.top);
+        //        mmi.ptMaxSize.x = Math.Abs(rcWorkArea.right - rcWorkArea.left);
+        //        mmi.ptMaxSize.y = Math.Abs(rcWorkArea.bottom - rcWorkArea.top);
+        //    }
+        //    Marshal.StructureToPtr(mmi, lParam, true);
+        //}
 
-        [StructLayout(LayoutKind.Sequential)]
-        public struct POINT
-        {
-            /// <summary>x coordinate of point.</summary>
-            public int x;
-            /// <summary>y coordinate of point.</summary>
-            public int y;
-            /// <summary>Construct a point of coordinates (x,y).</summary>
-            public POINT(int x, int y)
-            {
-                this.x = x;
-                this.y = y;
-            }
-        }
-        [StructLayout(LayoutKind.Sequential)]
-        public struct MINMAXINFO
-        {
-            public POINT ptReserved;
-            public POINT ptMaxSize;
-            public POINT ptMaxPosition;
-            public POINT ptMinTrackSize;
-            public POINT ptMaxTrackSize;
-        };
+        //[StructLayout(LayoutKind.Sequential)]
+        //public struct POINT
+        //{
+        //    /// <summary>x coordinate of point.</summary>
+        //    public int x;
+        //    /// <summary>y coordinate of point.</summary>
+        //    public int y;
+        //    /// <summary>Construct a point of coordinates (x,y).</summary>
+        //    public POINT(int x, int y)
+        //    {
+        //        this.x = x;
+        //        this.y = y;
+        //    }
+        //}
+        //[StructLayout(LayoutKind.Sequential)]
+        //public struct MINMAXINFO
+        //{
+        //    public POINT ptReserved;
+        //    public POINT ptMaxSize;
+        //    public POINT ptMaxPosition;
+        //    public POINT ptMinTrackSize;
+        //    public POINT ptMaxTrackSize;
+        //};
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public class MONITORINFO
-        {
-            public int cbSize = Marshal.SizeOf(typeof(MONITORINFO));
-            public RECT rcMonitor = new RECT();
-            public RECT rcWork = new RECT();
-            public int dwFlags = 0;
-        }
+        //[StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        //public class MONITORINFO
+        //{
+        //    public int cbSize = Marshal.SizeOf(typeof(MONITORINFO));
+        //    public RECT rcMonitor = new RECT();
+        //    public RECT rcWork = new RECT();
+        //    public int dwFlags = 0;
+        //}
 
-        [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        public struct RECT
-        {
-            public int left;
-            public int top;
-            public int right;
-            public int bottom;
-            public static readonly RECT Empty = new RECT();
-            public int Width { get { return Math.Abs(right - left); } }
-            public int Height { get { return bottom - top; } }
-            public RECT(int left, int top, int right, int bottom)
-            {
-                this.left = left;
-                this.top = top;
-                this.right = right;
-                this.bottom = bottom;
-            }
-            public RECT(RECT rcSrc)
-            {
-                left = rcSrc.left;
-                top = rcSrc.top;
-                right = rcSrc.right;
-                bottom = rcSrc.bottom;
-            }
-            public bool IsEmpty { get { return left >= right || top >= bottom; } }
-            public override string ToString()
-            {
-                if (this == Empty) { return "RECT {Empty}"; }
-                return "RECT { left : " + left + " / top : " + top + " / right : " + right + " / bottom : " + bottom + " }";
-            }
-            public override bool Equals(object obj)
-            {
-                if (!(obj is Rect)) { return false; }
-                return (this == (RECT)obj);
-            }
-            /// <summary>Return the HashCode for this struct (not garanteed to be unique)</summary>
-            public override int GetHashCode() => left.GetHashCode() + top.GetHashCode() + right.GetHashCode() + bottom.GetHashCode();
-            /// <summary> Determine if 2 RECT are equal (deep compare)</summary>
-            public static bool operator ==(RECT rect1, RECT rect2) { return (rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom); }
-            /// <summary> Determine if 2 RECT are different(deep compare)</summary>
-            public static bool operator !=(RECT rect1, RECT rect2) { return !(rect1 == rect2); }
-        }
+        //[StructLayout(LayoutKind.Sequential, Pack = 0)]
+        //public struct RECT
+        //{
+        //    public int left;
+        //    public int top;
+        //    public int right;
+        //    public int bottom;
+        //    public static readonly RECT Empty = new RECT();
+        //    public int Width { get { return Math.Abs(right - left); } }
+        //    public int Height { get { return bottom - top; } }
+        //    public RECT(int left, int top, int right, int bottom)
+        //    {
+        //        this.left = left;
+        //        this.top = top;
+        //        this.right = right;
+        //        this.bottom = bottom;
+        //    }
+        //    public RECT(RECT rcSrc)
+        //    {
+        //        left = rcSrc.left;
+        //        top = rcSrc.top;
+        //        right = rcSrc.right;
+        //        bottom = rcSrc.bottom;
+        //    }
+        //    public bool IsEmpty { get { return left >= right || top >= bottom; } }
+        //    public override string ToString()
+        //    {
+        //        if (this == Empty) { return "RECT {Empty}"; }
+        //        return "RECT { left : " + left + " / top : " + top + " / right : " + right + " / bottom : " + bottom + " }";
+        //    }
+        //    public override bool Equals(object obj)
+        //    {
+        //        if (!(obj is Rect)) { return false; }
+        //        return (this == (RECT)obj);
+        //    }
+        //    /// <summary>Return the HashCode for this struct (not garanteed to be unique)</summary>
+        //    public override int GetHashCode() => left.GetHashCode() + top.GetHashCode() + right.GetHashCode() + bottom.GetHashCode();
+        //    /// <summary> Determine if 2 RECT are equal (deep compare)</summary>
+        //    public static bool operator ==(RECT rect1, RECT rect2) { return (rect1.left == rect2.left && rect1.top == rect2.top && rect1.right == rect2.right && rect1.bottom == rect2.bottom); }
+        //    /// <summary> Determine if 2 RECT are different(deep compare)</summary>
+        //    public static bool operator !=(RECT rect1, RECT rect2) { return !(rect1 == rect2); }
+        //}
 
-        [DllImport("user32")]
-        internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
+        //[DllImport("user32")]
+        //internal static extern bool GetMonitorInfo(IntPtr hMonitor, MONITORINFO lpmi);
 
-        [DllImport("User32")]
-        internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
-        //above is for proper borderless window    
+        //[DllImport("User32")]
+        //internal static extern IntPtr MonitorFromWindow(IntPtr handle, int flags);
+        ////above is for proper borderless window    
 
-        public class SliderTools : DependencyObject
-        {
-            public static bool GetMoveToPointOnDrag(DependencyObject obj) { return (bool)obj.GetValue(MoveToPointOnDragProperty); }
-            public static void SetMoveToPointOnDrag(DependencyObject obj, bool value) { obj.SetValue(MoveToPointOnDragProperty, value); }
-            public static readonly DependencyProperty MoveToPointOnDragProperty = DependencyProperty.RegisterAttached("MoveToPointOnDrag", typeof(bool), typeof(SliderTools), new PropertyMetadata
-            {
-                PropertyChangedCallback = (obj, changeEvent) =>
-                {
-                    var slider = (Slider)obj;
-                    if ((bool)changeEvent.NewValue)
-                        slider.MouseMove += (obj2, mouseEvent) =>
-                        {
-                            if (mouseEvent.LeftButton == MouseButtonState.Pressed)
-                                slider.RaiseEvent(new MouseButtonEventArgs(mouseEvent.MouseDevice, mouseEvent.Timestamp, MouseButton.Left)
-                                {
-                                    RoutedEvent = UIElement.PreviewMouseLeftButtonDownEvent,
-                                    Source = mouseEvent.Source,
-                                });
-                        };
-                }
-            });
-        }
+        //public class SliderTools : DependencyObject
+        //{
+        //    public static bool GetMoveToPointOnDrag(DependencyObject obj) { return (bool)obj.GetValue(MoveToPointOnDragProperty); }
+        //    public static void SetMoveToPointOnDrag(DependencyObject obj, bool value) { obj.SetValue(MoveToPointOnDragProperty, value); }
+        //    public static readonly DependencyProperty MoveToPointOnDragProperty = DependencyProperty.RegisterAttached("MoveToPointOnDrag", typeof(bool), typeof(SliderTools), new PropertyMetadata
+        //    {
+        //        PropertyChangedCallback = (obj, changeEvent) =>
+        //        {
+        //            var slider = (Slider)obj;
+        //            if ((bool)changeEvent.NewValue)
+        //                slider.MouseMove += (obj2, mouseEvent) =>
+        //                {
+        //                    if (mouseEvent.LeftButton == MouseButtonState.Pressed)
+        //                        slider.RaiseEvent(new MouseButtonEventArgs(mouseEvent.MouseDevice, mouseEvent.Timestamp, MouseButton.Left)
+        //                        {
+        //                            RoutedEvent = UIElement.PreviewMouseLeftButtonDownEvent,
+        //                            Source = mouseEvent.Source,
+        //                        });
+        //                };
+        //        }
+        //    });
+        //}
 
 
 
@@ -195,16 +194,37 @@ namespace UnderwaterAudioMusicManagerApp
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
         //-------------------------------Start Logic-------------------------------------------//
 
-        //---------------------Declare Constants----------------------//
+
+
+
+
+
+
+
+
         int mediumResponsiveWindowSize = 570;
-        UnderwaterAudioMediaPlayer player = new UnderwaterAudioMediaPlayer();
-        
+
+        UnderwaterAudioMediaPlayer player = new UnderwaterAudioMediaPlayer();     
         
         string supportedMusicFileTypes = UnderwaterAudioMediaPlayer.supportedMusicFileTypes;
+
         ListBox playlistBox = new ListBox();
-       
+        Random random = new Random();
 
 
         private void createMediaEventHandlers()
@@ -228,7 +248,10 @@ namespace UnderwaterAudioMusicManagerApp
             InitializeComponent();
             createMediaEventHandlers();
             createTimerEventTickAndSetInterval();
- 
+           
+
+
+
 
         }
 
@@ -283,21 +306,16 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void player_MediaOpened(object sender, EventArgs e)
         {
-
-            Track senderTrack = sender as Track;
-            
-
-                foreach(Grid iconGrid in playlistView.Children)
-            {
-                highlightFunction(iconGrid, playlistListView);
-            }
-           
-
-            //highlightFunction(senderTrack, playlistListView);
-            trackProgressSlider.Maximum = player.NaturalDuration.TimeSpan.TotalSeconds;            
+            String trackName = player.currentMedia.fileName;
+            trackProgressSlider.Maximum = player.NaturalDuration.TimeSpan.TotalSeconds;
             trackDurationLabel.Content = player.NaturalDuration.TimeSpan.ToString(@"m\:ss");
             nowPlayingLabel.Content = player.currentMedia.fileName;
             player.Position = new TimeSpan(0);
+            foreach(Grid icon in playlistListView.Children)
+            {
+                highlightFunction(icon, playlistListView);
+
+            }
 
 
         }
@@ -355,7 +373,6 @@ namespace UnderwaterAudioMusicManagerApp
                     trackProgressBar.Value = player.Position.TotalSeconds / player.NaturalDuration.TimeSpan.TotalSeconds;
                     player.pausedPosition = TimeSpan.FromSeconds(trackProgressSlider.Value);
                     
-
                 }
                 
             }
@@ -399,14 +416,6 @@ namespace UnderwaterAudioMusicManagerApp
        //--------------------Functions--------------------------------------------------//
 
 
-
-        //private void loadSongIntoPlayer(System.Uri filePath)
-        //{            
-        //    player.Open(filePath);
-        //    player.Stop();      
-            
-        //}
-
         private double getWindowSize()
         {
             return mainWindow.Width;
@@ -423,7 +432,6 @@ namespace UnderwaterAudioMusicManagerApp
             playButton.Visibility = Visibility.Visible;
             pauseButton.Visibility = Visibility.Collapsed;
         }
-
         
         private void startPlaying()
         {         
@@ -497,15 +505,15 @@ namespace UnderwaterAudioMusicManagerApp
 
        
 
-        private Track searchForSelectedFile(string itemName, Dictionary<string, Track> list)
-        {
-            if (itemName != null && list.ContainsKey(itemName.ToString()))
-            {
-                return list[itemName];
+        //private Track searchForSelectedFile(string itemName, Dictionary<string, Track> list)
+        //{
+        //    if (itemName != null && list.ContainsKey(itemName.ToString()))
+        //    {
+        //        return list[itemName];
 
-            }
-            return null;
-        }
+        //    }
+        //    return null;
+        //}
 
         private void rewindButton_Click(object sender, RoutedEventArgs e)
         {
@@ -539,20 +547,17 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void selectShuffleSong()
         {
-            Random random = new Random();
-            player.currentPlaylistIndex = random.Next(player.currentPlaylist.Count - 1);
-            
+            int nextSongindex = random.Next(player.currentPlaylist.Count - 1);
+            player.loadSongIntoPlayer(player.currentPlaylist[nextSongindex]);
+            player.currentPlaylistIndex = nextSongindex;
+            startPlaying();
            
-            if (player.playState == UnderwaterAudioMediaPlayer.playerPlaying)
+            if (player.playState != UnderwaterAudioMediaPlayer.playerPlaying)
             {
-                player.loadSongIntoPlayer(player.currentPlaylist[player.currentPlaylistIndex]);
-                startPlaying();
-            }
-            else if (player.playState == UnderwaterAudioMediaPlayer.playerStopped || player.playState == UnderwaterAudioMediaPlayer.playerPaused)
-            {
-                player.loadSongIntoPlayer(player.currentPlaylist[player.currentPlaylistIndex]);
                 stopPlaying();
             }
+ 
+           
         }
 
 
@@ -999,7 +1004,7 @@ namespace UnderwaterAudioMusicManagerApp
                 bitmap.StreamSource = ms;
                 bitmap.EndInit();
 
-                track.albumArt.Source = bitmap;
+                track.albumArt = bitmap;
             }
             else
             {
@@ -1027,7 +1032,8 @@ namespace UnderwaterAudioMusicManagerApp
 
         private Image getAlbumImageFromTag(Track track)
         {
-            Image image = track.albumArt;
+            Image image = new Image();
+            image.Source = track.albumArt;
             
             image.Width = 60;
             image.Height = 60;
@@ -1062,8 +1068,8 @@ namespace UnderwaterAudioMusicManagerApp
             albumStack.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
             albumStack.Margin = new Thickness(10, 10, 10, 10);
             albumStack.Children.Add(new TextBlock() { Text = playlist.Name, VerticalAlignment = VerticalAlignment.Top, HorizontalAlignment = HorizontalAlignment.Center, FontSize = 16, TextTrimming = TextTrimming.CharacterEllipsis }); ;
-
-            Image image = getRandomImageFromWeb();
+            
+            
             //image.Width = 60;
             //image.Height = 60;
             //image.SetValue(Grid.RowProperty, 0);
@@ -1073,10 +1079,13 @@ namespace UnderwaterAudioMusicManagerApp
 
             Playlist selectedItem = playlist;
             var firstTrack = selectedItem.playlist.FirstOrDefault();
+            BitmapImage image = firstTrack.albumArt;
 
             if (firstTrack.albumArt != null)
             {
-                Image albumImage = firstTrack.albumArt;
+                
+                Image albumImage = new Image();
+                albumImage.Source = firstTrack.albumArt;
                 albumImage.Width = 60;
                 albumImage.Height = 60;
                 albumImage.SetValue(Grid.RowProperty, 0);
@@ -1087,7 +1096,7 @@ namespace UnderwaterAudioMusicManagerApp
             }
             else
             {
-                albumStack.Children.Add(image);
+                albumStack.Children.Add(getRandomImageFromWeb());
 
             }
               
@@ -1106,24 +1115,31 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void PlaylistIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            
+
+
+
+
+
+
+
             Grid panel = (Grid)sender;
             var albumArtImage = panel.Children[2];
             TextBlock nameText = (TextBlock)panel.Children[1];
             var border = panel.Children[0];
-            panel.Background = new SolidColorBrush(Color.FromArgb(100, 0, 100, 200));
+            foreach (Grid icon in playlistView.Children)
+            {
+                highlightFunction(icon, playlistView);
 
+            }
+            panel.Background = new SolidColorBrush(Color.FromArgb(200, 100, 100, 200));
             Playlist playlist = player.playlistCollection.Where(playlists => playlists.Name == nameText.Text).ToList().FirstOrDefault();
             if (playlist == null)
             {
                 playlist = new Playlist();
                 playlist.playlist = player.mediaLibrary;
             }
-            
-            highlightFunction(panel, playlistView);     
-               
-
             player.selectedPlaylist = playlist;
+       
 
 
 
@@ -1144,7 +1160,11 @@ namespace UnderwaterAudioMusicManagerApp
 
                 }
                 showPlaylistPage();
-                //player.currentPlaylist = player.playlistCollection.Where(playlist => playlist.Name == nameText.Text).ToList().FirstOrDefault().playlist;
+                foreach (Grid icon in playlistListView.Children)
+                {
+                    highlightFunction(icon, playlistListView);
+
+                }
 
 
 
@@ -1204,33 +1224,37 @@ namespace UnderwaterAudioMusicManagerApp
             Grid albumStack = createAlbumIcon();
             albumStack.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
             albumStack.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
-            albumStack.Margin = new Thickness(10, 10, 10, 10);
-
-            Image image = getRandomImageFromWeb();
-       
+            albumStack.Margin = new Thickness(10, 10, 10, 10);       
 
 
-            var selectedItem = track;  
-            
+            var selectedItem = track;
+            albumStack.Children.Add(new TextBlock() { Text = selectedItem.fileName, VerticalAlignment = VerticalAlignment.Top, FontSize = 16 });
 
 
-
-                albumStack.Children.Add(new TextBlock() { Text = selectedItem.fileName, VerticalAlignment = VerticalAlignment.Top, FontSize = 16 });
-          
-            if (track.albumArt != null)
+            if (selectedItem.albumArt != null)
             {
-                albumStack.Children.Add(getRandomImageFromWeb());
 
-                //albumStack.Children.Add(getAlbumImageFromTag(track));
-                //track.albumArt = getAlbumImageFromTag(track);
-                //albumStack.Children.Add(track.albumArt) ;
+                Image albumImage = new Image();
+                  albumImage.Source =  selectedItem.albumArt;
+                albumImage.Width = 60;
+                albumImage.Height = 60;
+                albumImage.SetValue(Grid.RowProperty, 0);
+                albumImage.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
+                albumImage.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
+                albumImage.SetValue(PaddingProperty, new Thickness(5, 5, 5, 5));
+                albumStack.Children.Add(albumImage);
             }
             else
             {
                 albumStack.Children.Add(getRandomImageFromWeb());
-                
+
             }
-           
+
+
+
+
+          
+            
 
                 
 
@@ -1269,7 +1293,8 @@ namespace UnderwaterAudioMusicManagerApp
 
                 if(track.albumArt != null)
                 {
-                    Image albumImage = track.albumArt;
+                    Image albumImage = new Image();
+                        albumImage.Source  = track.albumArt;
                     albumImage.Width = 60;
                     albumImage.Height = 60;
                     albumImage.SetValue(Grid.RowProperty, 0);
@@ -1363,43 +1388,39 @@ namespace UnderwaterAudioMusicManagerApp
 
        private void highlightFunction(Grid icon, WrapPanel panel)
         {
-            
 
 
-            foreach (Grid grid in panel.Children)
+              var albumArtImage = icon.Children[2];
+                TextBlock nameText = (TextBlock)icon.Children[1];
+                var border = icon.Children[0];
+
+
+                if (nameText.Text == player.currentMedia.fileName)
+                {
+                    icon.Background = new SolidColorBrush(Color.FromArgb(100, 0, 200, 200));
+
+                }
+                else
+                {
+                    icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
+                }
+
+
+        }
+        private void highlightFunction(string name, WrapPanel panel)
+        {
+
+            Grid icon = (Grid)playlistListView.Children[player.currentPlaylistIndex];
+            icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
+
+            if (name == player.currentMedia.fileName)
             {
-
-                TextBlock selectedItem = (TextBlock)grid.Children[1];
-
-
-                if (grid != icon)
-                {
-                    grid.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
-
-                }
-                else if(grid == icon)
-                {
-                    grid.Background = new SolidColorBrush(Color.FromArgb(100, 0, 200, 200));
-
-                }
-
-                //var _selectedTrack = player.mediaLibrary.Where(track => track.fileName == selectedItem.Text).ToList().FirstOrDefault();
-
-                //if (_selectedTrack == player.currentMedia)
-                //{
-                //    grid.Background = new SolidColorBrush(Color.FromArgb(100, 0, 200, 200));
-
-                //}
-                //var _selectedPlaylist = player.playlistCollection.Where(playlist => playlist.Name == selectedItem.Text).ToList().FirstOrDefault();
-
-
-                //if (_selectedPlaylist != null && _selectedPlaylist.playlist == player.currentPlaylist )
-                //{
-
-                //}
-
+                icon.Background = new SolidColorBrush(Color.FromArgb(100, 0, 200, 200));
 
             }
+           
+
+
         }
 
         private void Element_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1408,20 +1429,22 @@ namespace UnderwaterAudioMusicManagerApp
             var albumArtImage = panel.Children[2];
             TextBlock nameText = (TextBlock)panel.Children[1];
             var border = panel.Children[0];
+            foreach (Grid icon in playlistListView.Children)
+            {
+                highlightFunction(icon, playlistListView);
 
-                        
-            panel.Background = new SolidColorBrush(Color.FromArgb(100, 0, 100, 200));
+            }
+            panel.Background = new SolidColorBrush(Color.FromArgb(200, 100, 100, 200));
             
             
             var selectedTrack = player.currentPlaylist.Where(track => track.fileName == nameText.Text).ToList().FirstOrDefault();
             player.selectedTrack = selectedTrack;
             player.currentPlaylistIndex = player.currentPlaylist.IndexOf(selectedTrack);
 
+           
 
 
-            highlightFunction(panel, playlistListView);
 
-            
 
 
 
