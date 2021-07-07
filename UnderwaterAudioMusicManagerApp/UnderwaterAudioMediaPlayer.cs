@@ -32,7 +32,8 @@ namespace UnderwaterAudioMusicManagerApp
         public DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         public static string supportedMusicFileTypes = "Music(.mp3) (.wav) (.aac) (.mp4) (.flac) (.wma) |*.mp3;*.wav;*.aac;*.mp4;*.m4a;*.flac;*.wma";
         public  System.TimeSpan pausedPosition;
-        public int currentPlaylistIndex;
+        public int currentlySelectedSongIndexInCurrentPlaylist;
+        public int currentMediaIndex;
         public Track selectedTrack;
         public List<Track> currentPlaylist;
         public Playlist selectedPlaylist;
@@ -212,6 +213,7 @@ namespace UnderwaterAudioMusicManagerApp
             this.Open(new Uri(track.filePath));
             this.stop();//remember that position is set to 0 here
             this.currentMedia = track;
+           
            
 
         }
