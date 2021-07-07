@@ -10,5 +10,12 @@ namespace UnderwaterAudioMusicManagerApp
     {
         public List<Track> playlist { get; set; }
         public string Name { get; set; }
+
+       public Playlist()
+        {
+
+        }
     }
+
+    
 }

@@ -16,9 +16,7 @@ using System.Windows.Data;
 using System.Threading.Tasks;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
-
-
-
+using System.Xml.Serialization;
 
 namespace UnderwaterAudioMusicManagerApp
 {
@@ -112,13 +110,29 @@ namespace UnderwaterAudioMusicManagerApp
             InitializeComponent();
             createMediaEventHandlers();
             createTimerEventTickAndSetInterval();
-           
+            if(player.mediaLibrary.Count > 0)
+            {
+                Playlist playlist = new Playlist();
+                playlist.playlist = player.mediaLibrary;
+                playlist.Name = "Library";
+                player.playlistCollection.Add(playlist);
+                addAlbumThumbnail(playlist, playlistView);
+            }
+            File.Delete("library.plst");
+            importSavedPlaylistFiles();
+            if(playlistView.Children.Count == 0)
+            {
+                addNoPlaylistIcon(playlistView);
+            }
 
 
 
 
         }
-
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = false;
+        }
 
 
         public void setColumnNames()
@@ -131,9 +145,16 @@ namespace UnderwaterAudioMusicManagerApp
             
 
         }
- 
+
 
         //Event Handlers//
+
+
+
+  
+
+
+
         private void player_MediaEnded(object sender, EventArgs e)
         {
             if (player.isRepeat)
@@ -281,7 +302,7 @@ namespace UnderwaterAudioMusicManagerApp
         
         private void startPlaying()
         {         
-           if(player.currentMedia.filePath != null)
+           if(player.currentMedia != null && player.currentMedia.filePath != null)
             {
                 if (player.Source != new Uri(player.currentMedia.filePath))
                 {
@@ -488,7 +509,20 @@ namespace UnderwaterAudioMusicManagerApp
         private void importButton_Click(object sender, RoutedEventArgs e)
         {
             openImportDialog();
-            
+            if (player.mediaLibrary.Count > 0)
+            {
+                Playlist playlist = new Playlist();
+                playlist.playlist = player.mediaLibrary;
+                playlist.Name = "Library";
+                if(playlistView.Children.Count > 0)
+                {
+                    playlistView.Children.RemoveAt(0);
+
+                }
+                player.playlistCollection.Add(playlist);
+                addAlbumThumbnail(playlist, playlistView);
+            }
+
 
         }
 
@@ -521,7 +555,12 @@ namespace UnderwaterAudioMusicManagerApp
                     if(dic.ContainsKey(track.filePath) != true)
                     {
                         player.mediaLibrary.Add(track);
-                        
+                        if(player.currentPlaylist == player.mediaLibrary)
+                        {
+                            addTrackThumbnail(track, playlistListView);
+                        }
+                       
+                       
 
                     }
 
@@ -664,7 +703,8 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void savePlaylist(string playlistName, List<Track> list)
         {
-
+            
+            File.Delete(playlistName + "plst");
             System.IO.StreamWriter playlist = new System.IO.StreamWriter(playlistName + ".plst");
 
             foreach (var track in list)
@@ -690,12 +730,14 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void closeApp()
         {
+            
             savePlaylist("library");
             foreach(Playlist playlist in player.playlistCollection)
             {
                 savePlaylist(playlist.Name, playlist.playlist);
+            
             }        
-            Close();
+ 
             
            
 
@@ -747,21 +789,31 @@ namespace UnderwaterAudioMusicManagerApp
 
 
 
-
+            
 
 
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            
+
             showLibraryPage();
+            player.selectedPlaylist = player.playlistCollection.Where(playlists => playlists.playlist == player.currentPlaylist).ToList().FirstOrDefault();
+            foreach(Grid icon in playlistView.Children)
+            {
+                highlightFunction(icon, playlistView);
+            }
+
+
+
             //foreach (Grid item in playlistListView.Children)
             //{
             //    item.Children.RemoveRange(0, playlistListView.Children.Count);
             //}
         }
 
-       
+
         private void repeatButton_Click(object sender, RoutedEventArgs e)
         {
             toggleRepeat();
@@ -788,7 +840,99 @@ namespace UnderwaterAudioMusicManagerApp
 
        private void deleteTrack()
         {
-            playlistListView.Children.Clear();
+
+            if(player.currentlySelectedSongIndexInCurrentPlaylist >= 0)
+            {
+                if (playlistListView.Children.Count > 0)
+                {
+                    playlistListView.Children.RemoveAt(player.currentlySelectedSongIndexInCurrentPlaylist);
+                    if (player.currentlySelectedSongIndexInCurrentPlaylist == 0)
+                    {
+
+                        player.selectedTrack = player.selectedPlaylist.playlist[player.currentlySelectedSongIndexInCurrentPlaylist];
+
+                    }
+                    player.selectedPlaylist.playlist.Remove(player.selectedPlaylist.playlist.Where(track => track.fileName == player.selectedTrack.fileName).ToList().FirstOrDefault());
+                    if (player.currentlySelectedSongIndexInCurrentPlaylist == 0)
+                    {
+
+
+
+                    }
+                    else
+                    {
+                        if (player.currentlySelectedSongIndexInCurrentPlaylist < playlistListView.Children.Count && player.currentlySelectedSongIndexInCurrentPlaylist > 0)
+                        {
+                            player.currentlySelectedSongIndexInCurrentPlaylist--;
+
+                            player.selectedTrack = player.selectedPlaylist.playlist[player.currentlySelectedSongIndexInCurrentPlaylist];
+
+
+                        }
+                        else if (player.currentlySelectedSongIndexInCurrentPlaylist == 1)
+                        {
+
+                            player.selectedTrack = player.selectedPlaylist.playlist[player.currentlySelectedSongIndexInCurrentPlaylist];
+
+
+                        }
+
+                        else
+                        {
+                            player.currentlySelectedSongIndexInCurrentPlaylist--;
+                            player.selectedTrack = player.selectedPlaylist.playlist[player.currentlySelectedSongIndexInCurrentPlaylist];
+
+                        }
+                    }
+                }
+
+
+               
+
+               
+
+
+
+
+            }
+
+           
+
+
+            foreach(Grid icon in  playlistListView.Children)
+            {
+                highlightFunction(icon, playlistListView);
+            }
+
+
+        }
+
+        private void deletePlaylist()
+        {
+            if (playlistView.Children.Count > 0)
+            {
+
+               
+                playlistView.Children.RemoveAt(player.currentPlaylistIndex);
+
+                player.playlistCollection.Remove(player.selectedPlaylist);
+
+                File.Delete(player.selectedPlaylist.Name.ToString());
+                if(player.selectedPlaylist.Name == "Library.plst")
+                {
+                    File.Delete(player.selectedPlaylist.Name.ToString().ToLower());
+
+                }
+
+            }
+
+
+
+
+            foreach (Grid icon in playlistListView.Children)
+            {
+                highlightFunction(icon, playlistView);
+            }
         }
 
 
@@ -942,27 +1086,86 @@ namespace UnderwaterAudioMusicManagerApp
 
             }
         }
+        private void addNoPlaylistIcon(WrapPanel wrapPanel)
+        {
+            Grid albumStack = createAlbumIcon();
+            albumStack.SetValue(HorizontalAlignmentProperty, HorizontalAlignment.Center);
+            albumStack.SetValue(VerticalAlignmentProperty, VerticalAlignment.Center);
+            albumStack.Margin = new Thickness(10, 10, 10, 10);
+            TextBlock textblock = new TextBlock() { Text = "Add Music", VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center, FontSize = 14, TextTrimming = TextTrimming.CharacterEllipsis };
+            textblock.SetValue(Grid.RowProperty, 1);
+            albumStack.Children.Add(textblock);       
+        
+
+           
+
+           
+           
+                //Image albumImage = getRandomImageFromWeb();
+                //albumImage.SetValue(Grid.RowProperty, 1);
+                //albumStack.Children.Add(albumImage);
+
+            
+
+
+            wrapPanel.Children.Add(albumStack);
+            foreach (Grid noMusicIcon in wrapPanel.Children)
+            {
+                noMusicIcon.MouseEnter += NoMusicIcon_MouseEnter; ;
+                noMusicIcon.MouseLeave += NoMusicIcon_MouseLeave;
+                noMusicIcon.MouseDown += NoMusicIcon_MouseDown;
+
+            }
+        }
+
+        private void NoMusicIcon_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            openImportDialog();
+            if(player.mediaLibrary.Count > 0)
+            {
+                Playlist playlist = new Playlist();
+                playlist.playlist = player.mediaLibrary;
+                playlist.Name = "Library";
+                playlistView.Children.RemoveAt(0);
+                player.playlistCollection.Add(playlist);
+                addAlbumThumbnail(playlist, playlistView);
+            }
+           
+        }
+
+        private void NoMusicIcon_MouseLeave(object sender, MouseEventArgs e)
+        {
+            iconHoverEffectMouseLeave(sender);
+        }
+
+        private void NoMusicIcon_MouseEnter(object sender, MouseEventArgs e)
+        {
+            iconHoverEffect(sender);
+        }
 
         private void PlaylistIcon_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            player.currentPlaylistIndex = playlistView.Children.IndexOf((Grid)sender);
 
             Grid panel = (Grid)sender;
             var albumArtImage = panel.Children[2];
             TextBlock nameText = (TextBlock)panel.Children[1];
             var border = panel.Children[0];
+            player.selectedPlaylist = player.playlistCollection.Where(playlists => playlists.Name == nameText.Text).ToList().FirstOrDefault();
+            player.currentMediaIndex = -1;
+
+
+
             foreach (Grid icon in playlistView.Children)
             {
                 highlightFunction(icon, playlistView);
 
             }
-            panel.Background = secondBlue;
-            Playlist playlist = player.playlistCollection.Where(playlists => playlists.Name == nameText.Text).ToList().FirstOrDefault();
-            if (playlist == null)
-            {
-                playlist = new Playlist();
-                playlist.playlist = player.mediaLibrary;
-            }
-            player.selectedPlaylist = playlist;
+            
+
+           
+
+
        
 
 
@@ -973,21 +1176,24 @@ namespace UnderwaterAudioMusicManagerApp
             //double click activates playing
             if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
             {
-              
+
                 
-                player.currentPlaylist = playlist.playlist;
-                foreach(Track track in player.currentPlaylist)
+                //player.currentMediaIndex = player.currentPlaylist.IndexOf(player.currentMedia);
+
+                foreach (Track track in player.selectedPlaylist.playlist)
                 {
                     
                     addTrackThumbnail(track, playlistListView);
             
 
                 }
+
                 showPlaylistPage();
+                
+
                 foreach (Grid icon in playlistListView.Children)
                 {
                     highlightFunction(icon, playlistListView);
-
                 }
 
 
@@ -1005,15 +1211,20 @@ namespace UnderwaterAudioMusicManagerApp
         {
 
             Grid panel = (Grid)sender;
-            var albumArtImage = panel.Children[2];
             var nameText = panel.Children[1];
             var border = panel.Children[0];
-            
-            albumArtImage.RenderTransform = new ScaleTransform(scaleX: 1.2, scaleY: 1.2);
-            albumArtImage.RenderTransformOrigin = new Point(x: .5, y: .5);
+            if(panel.Children.Count > 2)
+            {
+                var albumArtImage = panel.Children[2];
 
-            
-         
+
+                albumArtImage.RenderTransform = new ScaleTransform(scaleX: 1.2, scaleY: 1.2);
+                albumArtImage.RenderTransformOrigin = new Point(x: .5, y: .5);
+
+            }
+
+
+
 
 
 
@@ -1026,11 +1237,14 @@ namespace UnderwaterAudioMusicManagerApp
         private void iconHoverEffectMouseLeave(object sender)
         {
             Grid panel = (Grid)sender;
-            var albumArtImage = panel.Children[2];
             var nameText = panel.Children[1];
             var border = panel.Children[0];
+            if (panel.Children.Count >2 )
+            {
+                var albumArtImage = panel.Children[2];
+                albumArtImage.RenderTransform = new ScaleTransform(scaleX: 1, scaleY: 1);
 
-            albumArtImage.RenderTransform = new ScaleTransform(scaleX: 1, scaleY: 1);     
+            }
 
         }
 
@@ -1146,10 +1360,7 @@ namespace UnderwaterAudioMusicManagerApp
            
         }
 
-        private void MainWindow_MouseEnter(object sender, MouseEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
+    
 
         private void addToPlaylistButton_Click(object sender, RoutedEventArgs e)
         {
@@ -1200,24 +1411,76 @@ namespace UnderwaterAudioMusicManagerApp
             }
         }
 
+
+
         private void highlightFunction(Grid icon, WrapPanel panel)
         {
+            
 
-
-            var albumArtImage = icon.Children[2];
             TextBlock nameText = (TextBlock)icon.Children[1];
             var border = icon.Children[0];
-            icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
-
-            if (playlistListView.Children.IndexOf(icon) == player.currentMediaIndex)
+            if (nameText.Text != "Add Music")
             {
-                icon.Background = blueGreen;
-                border.SetValue(BorderThicknessProperty, new Thickness(2,2,2,2));
+                var albumArtImage = icon.Children[2];
+
             }
-         
+
+            var playlist = player.playlistCollection.Where(playlist => playlist.Name == nameText.Text).ToList().FirstOrDefault();
+
+            // for track icons
+
+            if (playlistPage.Visibility == Visibility.Visible)
+            {
+
+               if (playlistListView.Children.IndexOf(icon) == player.currentMediaIndex && player.currentPlaylist == player.selectedPlaylist.playlist)
+                {
+                    icon.Background = blueGreen;
+                }
+                else if (playlistListView.Children.IndexOf(icon) == player.currentlySelectedSongIndexInCurrentPlaylist)
+                {
+                    icon.Background = mainBlue;
+
+                }
+                else
+                {
+                    icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
+
+                }
+            }
+
+            //for library view icons
+
+            else if(libraryPage.Visibility == Visibility.Visible)
+            {
+                if(player.currentPlaylist != null && player.currentPlaylist == playlist.playlist)
+                {
+                    icon.Background = blueGreen;
+
+                }
+                else if(player.selectedPlaylist != null && playlist.playlist == player.selectedPlaylist.playlist)
+                {
+                    icon.Background = mainBlue;
+
+                }         
+          
+                else
+                {
+                    icon.Background = new SolidColorBrush(Color.FromArgb(0, 0, 100, 200));
+
+                }
+            }
+           
+
 
 
         }
+
+
+
+
+    
+
+
 
 
         private void Element_MouseDown(object sender, MouseButtonEventArgs e)
@@ -1227,7 +1490,7 @@ namespace UnderwaterAudioMusicManagerApp
             var albumArtImage = panel.Children[2];
             TextBlock nameText = (TextBlock)panel.Children[1];
             var border = panel.Children[0];
-            var selectedTrack = player.currentPlaylist.Where(track => track.fileName == nameText.Text).ToList().FirstOrDefault();
+            var selectedTrack = player.selectedPlaylist.playlist.Where(track => track.fileName == nameText.Text).ToList().FirstOrDefault();
             player.selectedTrack = selectedTrack;
             player.currentlySelectedSongIndexInCurrentPlaylist = playlistListView.Children.IndexOf(panel);
             foreach (Grid icon in playlistListView.Children)
@@ -1235,40 +1498,28 @@ namespace UnderwaterAudioMusicManagerApp
                 highlightFunction(icon, playlistListView);
 
             }
-            panel.Background = secondBlue;
-            
-            
-           
-
-           
-
-
-
-
+        
 
 
 
             //double click activates playing
             if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
             {
-                    panel.Background = blueGreen;
-                
-
-
+                  
                 player.currentMedia = selectedTrack;
-                if (player.Source != new Uri(player.currentMedia.filePath))
+                player.currentMediaIndex = playlistListView.Children.IndexOf(panel);
+                Playlist tempPlayist = player.playlistCollection.Where(playlist => playlist == player.selectedPlaylist).ToList().FirstOrDefault();
+                player.currentPlaylist = tempPlayist.playlist;
+              
+                player.loadSongIntoPlayer(selectedTrack);
+                startPlaying();
+                foreach (Grid icon in playlistListView.Children)
                 {
-                    player.loadSongIntoPlayer(selectedTrack);
-                    player.currentMediaIndex = player.currentPlaylist.IndexOf(selectedTrack);
+                    highlightFunction(icon, playlistListView);
+
+                }
 
 
-                    startPlaying();
-                }
-                else
-                {
-                    startPlaying();
-                }
-             
 
             }
            
@@ -1288,7 +1539,7 @@ namespace UnderwaterAudioMusicManagerApp
         {
             for (int i = 0; i < 20; i++)
             {
-                    string playlistName = string.Format("Playlist{0}.plst", i.ToString());
+                    string playlistName = string.Format("Playlist{0}", i.ToString());
 
 
                     if (File.Exists(playlistName))
@@ -1304,7 +1555,7 @@ namespace UnderwaterAudioMusicManagerApp
                         playlist1.playlist = playlist;
                         playlist1.Name = playlistName;
                         player.playlistCollection.Add(playlist1);
-                       addAlbumThumbnail(playlist1, playlistListView);
+                       addAlbumThumbnail(playlist1, playlistView);
                        
                     }
 
@@ -1433,8 +1684,17 @@ namespace UnderwaterAudioMusicManagerApp
 
         private void deleteButton_Click(object sender, RoutedEventArgs e)
         {
-            //removeSongFromLibrary();
-            deleteTrack();
+            if(libraryPage.Visibility == Visibility.Visible)
+            {
+                deletePlaylist();
+
+            }
+            if (playlistPage.Visibility == Visibility.Visible)
+            {
+                deleteTrack();
+
+
+            }
         }
 
         private void TabItem_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -1449,22 +1709,21 @@ namespace UnderwaterAudioMusicManagerApp
         }
 
         private void playlistView_Loaded(object sender, RoutedEventArgs e)
-        {
-            Playlist playlist = new Playlist();
-            playlist.playlist = player.mediaLibrary;
-            playlist.Name = "Library";
-            addAlbumThumbnail(playlist, playlistView);
-            //addTrackThumbnail();
+        {   
+            
         }
 
         private void playlistListView_Loaded(object sender, RoutedEventArgs e)
-        {
+        {    
             
-            
-            //importSavedPlaylistFiles();
+     
             
         }
 
+        private void mainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            closeApp();
+        }
     }
     
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UnderwaterAudioMusicManagerApp"
         mc:Ignorable="d"
-        Title="Music Manager"  Height="769" Width="1152" ResizeMode="CanResize" Icon="/logo.png" SizeChanged="mainWindow_SizeChanged" Background="{x:Null}" SizeToContent="Manual" WindowStyle="SingleBorderWindow">
+        Title="Music Manager"  Height="769" Width="1152" ResizeMode="CanResize" Icon="/logo.png" SizeChanged="mainWindow_SizeChanged" Background="{x:Null}" SizeToContent="Manual" WindowStyle="SingleBorderWindow" Closing="mainWindow_Closing">
     <Window.Resources>
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
@@ -465,24 +465,19 @@
 
                     <Grid x:Name="libraryPage">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="881*"/>
-                            <ColumnDefinition Width="191*"/>
+                            <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <DataGrid AutoGenerateColumns="True" CanUserSortColumns="True"  IsReadOnly="True"  x:Name="libraryListView" MouseDoubleClick="libraryListView_MouseDoubleClick" Loaded="libraryListView_Loaded" Background="{x:Null}" BorderBrush="{x:Null}" Visibility="Collapsed" Margin="0,0,690,0"  >
+                        <DataGrid AutoGenerateColumns="True" CanUserSortColumns="True"  IsReadOnly="True"  x:Name="libraryListView" MouseDoubleClick="libraryListView_MouseDoubleClick" Loaded="libraryListView_Loaded" Background="{x:Null}" BorderBrush="{x:Null}" Visibility="Collapsed" Margin="0,0,881,0"  >
 
                         </DataGrid>
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <ScrollViewer.Effect>
                                 <DropShadowEffect/>
                             </ScrollViewer.Effect>
                             <WrapPanel x:Name="playlistView" Loaded="playlistView_Loaded"/>
                         </ScrollViewer>
 
-                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
-                            <StackPanel  Grid.Column="1" x:Name="playlistPanel">
 
-                            </StackPanel>
-                        </ScrollViewer>
 
 
 
@@ -493,11 +488,21 @@
 
 
                     <Grid Visibility="Collapsed" x:Name="playlistPage">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="881*"/>
+                            <ColumnDefinition Width="191*"/>
+                        </Grid.ColumnDefinitions>
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"  >
                             <ScrollViewer.Effect>
                                 <DropShadowEffect/>
                             </ScrollViewer.Effect>
                             <WrapPanel x:Name="playlistListView" Loaded="playlistListView_Loaded" />
+                            
+                        </ScrollViewer>
+                        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                            <StackPanel  Grid.Column="1" x:Name="playlistPanel">
+
+                            </StackPanel>
                         </ScrollViewer>
 
 

@@ -34,6 +34,7 @@ namespace UnderwaterAudioMusicManagerApp
         public  System.TimeSpan pausedPosition;
         public int currentlySelectedSongIndexInCurrentPlaylist;
         public int currentMediaIndex;
+        public int currentPlaylistIndex;
         public Track selectedTrack;
         public List<Track> currentPlaylist;
         public Playlist selectedPlaylist;
@@ -41,7 +42,6 @@ namespace UnderwaterAudioMusicManagerApp
 
         public UnderwaterAudioMediaPlayer()
         {
-            loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
             loadPreviousLibrary();
         }
 
@@ -82,7 +82,7 @@ namespace UnderwaterAudioMusicManagerApp
             if (File.Exists("library.plst"))
             {
                 string[] savedPlaylist = File.ReadAllLines("library.plst");
-
+             if(savedPlaylist.Length > 0) { 
                 Dictionary<string, Track> dic = new Dictionary<string, Track>();
                 foreach (Track song in mediaLibrary)
                 {
@@ -93,38 +93,51 @@ namespace UnderwaterAudioMusicManagerApp
                     Track track = new Track();
                     track.fileName = System.IO.Path.GetFileNameWithoutExtension(savedPlaylist[i]);
                     track.filePath = savedPlaylist[i];
-                    var tag = TagLib.File.Create(track.filePath);
-                    track.artist = tag.Tag.FirstPerformer;
-                    track.duration = tag.Properties.Duration;
-                    track.genre = tag.Tag.FirstGenre;
-                    track.album = tag.Tag.Album;
-                    track.songName = tag.Tag.Title;
-                    if(tag.Tag.Pictures.FirstOrDefault() != null )
-                    {
-                        var pic = tag.Tag.Pictures[0];
-                        MemoryStream ms = new MemoryStream(pic.Data.Data);
-                        ms.Seek(0, SeekOrigin.Begin);
-                        BitmapImage bitmap = new BitmapImage();
-                        bitmap.BeginInit();
-                        bitmap.StreamSource = ms;
-                        bitmap.EndInit();
-                        track.albumArt = bitmap;
-                    }
-                    else
-                    {
-                        track.albumArt = null;
-                    }
-                   
-                   
-                    if (dic.ContainsKey(track.filePath) != true)
-                    {
-                        mediaLibrary.Add(track); // sets up library database
-                    }
-                    else
-                    {
+                        if (File.Exists(track.filePath))
+                        {
+                            var tag = TagLib.File.Create(track.filePath);
+                            track.artist = tag.Tag.FirstPerformer;
+                            track.duration = tag.Properties.Duration;
+                            track.genre = tag.Tag.FirstGenre;
+                            track.album = tag.Tag.Album;
+                            track.songName = tag.Tag.Title;
+                            if (tag.Tag.Pictures.FirstOrDefault() != null)
+                            {
+                                var pic = tag.Tag.Pictures[0];
+                                MemoryStream ms = new MemoryStream(pic.Data.Data);
+                                ms.Seek(0, SeekOrigin.Begin);
+                                BitmapImage bitmap = new BitmapImage();
+                                bitmap.BeginInit();
+                                bitmap.StreamSource = ms;
+                                bitmap.EndInit();
+                                track.albumArt = bitmap;
+                            }
+                            else
+                            {
+                                track.albumArt = null;
+                            }
 
+
+                            if (dic.ContainsKey(track.filePath) != true)
+                            {
+                                mediaLibrary.Add(track); // sets up library database
+                            }
+                            else
+                            {
+
+                            }
+                        }
                     }
+                   
                 }
+                else
+                {
+                    loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
+                }
+            }
+            else
+            {
+                loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
 
             }
 
