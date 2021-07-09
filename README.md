@@ -16,9 +16,15 @@ select song
 add song to library
 volume slider (needs adjusted)
 track scrubbing
-
 responsive up to mobile size
 
 
 ![Capture](https://user-images.githubusercontent.com/46287392/124175555-99633d00-da62-11eb-9309-ee2ac91341a5.PNG)
 ![Capture2](https://user-images.githubusercontent.com/46287392/124175556-99fbd380-da62-11eb-887c-20d2af36fcd0.PNG)
+=======
+things to add:
+
+many much more to come
+
+VOLUME BUTTON ONLY APPEARS ON LESS THAN 500PX screen width
+![Capture](https://user-images.githubusercontent.com/46287392/122842183-ab4e1e80-d2b1-11eb-81b6-455a150556c4.PNG)
