@@ -30,5 +30,9 @@ currently just gets a random placeholder from the web if there is no album image
 add functionality to pull album image from web instead of random image
 
 
-![Capture](https://user-images.githubusercontent.com/46287392/125150844-b39eba00-e0f7-11eb-9ec6-a2abc9861137.PNG)![Capture2](https://user-images.githubusercontent.com/46287392/125150845-b4375080-e0f7-11eb-985c-e0b759c52147.PNG)
+![Capture](https://user-images.githubusercontent.com/46287392/125151131-c914e380-e0f9-11eb-93de-00b60e26058d.PNG)
+![Capture2](https://user-images.githubusercontent.com/46287392/125151132-c9ad7a00-e0f9-11eb-906c-5dce3e9f6a1e.PNG)
+![Capture3](https://user-images.githubusercontent.com/46287392/125151133-ca461080-e0f9-11eb-994b-7deffacc843c.PNG)
+![Capture4](https://user-images.githubusercontent.com/46287392/125151142-dfbb3a80-e0f9-11eb-8828-990e77413680.PNG)
+
 
