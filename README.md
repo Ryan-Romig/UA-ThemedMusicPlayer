@@ -19,12 +19,11 @@ track scrubbing
 responsive up to mobile size
 
 
-![Capture](https://user-images.githubusercontent.com/46287392/124175555-99633d00-da62-11eb-9309-ee2ac91341a5.PNG)
-![Capture2](https://user-images.githubusercontent.com/46287392/124175556-99fbd380-da62-11eb-887c-20d2af36fcd0.PNG)
 =======
 things to add:
 
 many much more to come
 
 VOLUME BUTTON ONLY APPEARS ON LESS THAN 500PX screen width
-![Capture](https://user-images.githubusercontent.com/46287392/122842183-ab4e1e80-d2b1-11eb-81b6-455a150556c4.PNG)
+![Capture](https://user-images.githubusercontent.com/46287392/125150844-b39eba00-e0f7-11eb-9ec6-a2abc9861137.PNG)![Capture2](https://user-images.githubusercontent.com/46287392/125150845-b4375080-e0f7-11eb-985c-e0b759c52147.PNG)
+
