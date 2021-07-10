@@ -317,17 +317,30 @@ namespace UnderwaterAudioMusicManagerApp
         }
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
-           if (libraryPage.Visibility == Visibility.Collapsed)
+            if (delphinPage.Visibility == Visibility.Visible)
             {
+                //player.selectedPlaylist = player.playlistCollection.FirstOrDefault();
                 showLibraryPage();
-                //player.selectedPlaylist = player.playlistCollection.Where(playlists => playlists.playlist == player.currentPlaylist).ToList().FirstOrDefault();
-                foreach (Grid icon in playlistView.Children)
-                {
-                    highlightFunction(icon, playlistView);
-                }
-
 
             }
+            else
+            {
+                if (libraryPage.Visibility == Visibility.Collapsed)
+                {
+                    showLibraryPage();
+                    //player.selectedPlaylist = player.playlistCollection.Where(playlists => playlists.playlist == player.currentPlaylist).ToList().FirstOrDefault();
+                    foreach (Grid icon in playlistView.Children)
+                    {
+                        highlightFunction(icon, playlistView);
+                    }
+
+
+                }
+
+            }
+            
+            
+          
 
 
 
@@ -1370,25 +1383,28 @@ namespace UnderwaterAudioMusicManagerApp
 
             else if(libraryPage.Visibility == Visibility.Visible)
             {
-                if(player.currentPlaylist == playlist.playlist)
-                {
-                    border.BorderBrush = yellow;
-                    border.BorderThickness = new Thickness(3, 3, 3, 3);
+            
+                    if (player.currentPlaylist == playlist.playlist)
+                    {
+                        border.BorderBrush = yellow;
+                        border.BorderThickness = new Thickness(3, 3, 3, 3);
 
-                }
-                else if(playlist.playlist == player.selectedPlaylist.playlist)
-                {
-                    border.BorderBrush = green;
-                    border.BorderThickness = new Thickness(3, 3, 3, 3);
+                    }
+                    else if (playlist.playlist == player.selectedPlaylist.playlist)
+                    {
+                        border.BorderBrush = green;
+                        border.BorderThickness = new Thickness(3, 3, 3, 3);
 
-                }         
-          
-                else
-                {
-                    border.BorderBrush = null;
-                   
+                    }
 
-                }
+                    else
+                    {
+                        border.BorderBrush = null;
+
+
+                    }
+               
+                
             }
            
 
