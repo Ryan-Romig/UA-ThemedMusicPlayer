@@ -26,5 +26,9 @@ naming of playlist
 edit mode for playlists and tracks
 better nav styling
 
+currently just gets a random placeholder from the web if there is no album image data from track tags
+add functionality to pull album image from web instead of random image
+
+
 ![Capture](https://user-images.githubusercontent.com/46287392/125150844-b39eba00-e0f7-11eb-9ec6-a2abc9861137.PNG)![Capture2](https://user-images.githubusercontent.com/46287392/125150845-b4375080-e0f7-11eb-985c-e0b759c52147.PNG)
 
