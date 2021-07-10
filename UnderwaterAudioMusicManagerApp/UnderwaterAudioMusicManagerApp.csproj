@@ -14,6 +14,7 @@
     <None Remove="DelphinFrame.png" />
     <None Remove="forward.png" />
     <None Remove="headerLogo.png" />
+    <None Remove="icons8-back-64.png" />
     <None Remove="icons8-circled-play-64.png" />
     <None Remove="icons8-delete-24.png" />
     <None Remove="icons8-forward-64.png" />
@@ -53,6 +54,7 @@
     <Resource Include="DelphinFrame.png" />
     <Resource Include="forward.png" />
     <Resource Include="headerLogo.png" />
+    <Resource Include="icons8-back-64.png" />
     <Resource Include="icons8-circled-play-64.png" />
     <Resource Include="icons8-delete-24.png" />
     <Resource Include="icons8-forward-64.png" />

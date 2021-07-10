@@ -442,10 +442,14 @@
 
 
 
-                <Button Style="{DynamicResource navButtonStyle}" Grid.Column="1" HorizontalAlignment="Left"  Click="Button_Click"  Content="Back"  />
+                <Button x:Name="backButton" Style="{DynamicResource iconButtonStyle}" Grid.Column="1" HorizontalAlignment="Left"  Click="backButton_Click" Background="#FF0589A6" Margin="5,5,0,5" Width="45"  >
+                    <Button.OpacityMask>
+                        <ImageBrush ImageSource="/icons8-back-64.png"/>
+                    </Button.OpacityMask>
+                </Button>
 
                 <StackPanel  Grid.Column="1" x:Name="navigationPanel" Orientation="Horizontal" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.Row="0"  >
-                    <Button Style="{DynamicResource navButtonStyle}"   Click="Button_Click_1"  Content="Playlist" Visibility="Collapsed" />
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="pplaylistButton_Click"  Content="Playlist" Visibility="Collapsed" />
                     <Button Style="{DynamicResource navButtonStyle}"  x:Name="delphinNavTab"  Click="delphinNavTab_Click" Content="Delphin"/>
 
                     <Button Style="{DynamicResource navButtonStyle}"   Click="addToPlaylistButton_Click" Content="Add to Playlist" />
@@ -467,9 +471,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <DataGrid AutoGenerateColumns="True" CanUserSortColumns="True"  IsReadOnly="True"  x:Name="libraryListView" MouseDoubleClick="libraryListView_MouseDoubleClick" Loaded="libraryListView_Loaded" Background="{x:Null}" BorderBrush="{x:Null}" Visibility="Collapsed" Margin="0,0,881,0"  >
-
-                        </DataGrid>
+                        <DataGrid AutoGenerateColumns="True" CanUserSortColumns="True"  IsReadOnly="True"  x:Name="libraryListView" MouseDoubleClick="libraryListView_MouseDoubleClick" Loaded="libraryListView_Loaded" Background="{x:Null}" BorderBrush="{x:Null}" Visibility="Collapsed" Margin="0,0,881,0"  />
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
                             <ScrollViewer.Effect>
                                 <DropShadowEffect/>
@@ -497,7 +499,7 @@
                                 <DropShadowEffect/>
                             </ScrollViewer.Effect>
                             <WrapPanel x:Name="playlistListView" Loaded="playlistListView_Loaded" />
-                            
+
                         </ScrollViewer>
                         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
                             <StackPanel  Grid.Column="1" x:Name="playlistPanel">
