@@ -28,6 +28,7 @@ better nav styling
 sorting function (sort by album, artist, etc for playlist)
 currently just gets a random placeholder from the web if there is no album image data from track tags
 add functionality to pull album image from web instead of random image
+add functionality to add folders to library instead of just files
 
 
 ![Capture](https://user-images.githubusercontent.com/46287392/125151131-c914e380-e0f9-11eb-93de-00b60e26058d.PNG)
