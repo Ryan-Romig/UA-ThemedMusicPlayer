@@ -25,7 +25,7 @@ drag and drop reorder of playlist
 naming of playlist
 edit mode for playlists and tracks
 better nav styling
-
+sorting function (sort by album, artist, etc for playlist)
 currently just gets a random placeholder from the web if there is no album image data from track tags
 add functionality to pull album image from web instead of random image
 
