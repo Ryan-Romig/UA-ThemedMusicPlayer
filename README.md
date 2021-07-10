@@ -11,20 +11,20 @@ resume playing
 close button
 import songs into list
 shuffle toggle on/off
-repeat
+repeat toggle on/off
 select song
 add song to library
-volume slider (needs adjusted)
+volume slider (60% scale)
 track scrubbing
-responsive up to mobile size
+responsive up to mobile size(500px)
 
 
-![Capture](https://user-images.githubusercontent.com/46287392/124175555-99633d00-da62-11eb-9309-ee2ac91341a5.PNG)
-![Capture2](https://user-images.githubusercontent.com/46287392/124175556-99fbd380-da62-11eb-887c-20d2af36fcd0.PNG)
 =======
 things to add:
+drag and drop reorder of playlist
+naming of playlist
+edit mode for playlists and tracks
+better nav styling
 
-many much more to come
+![Capture](https://user-images.githubusercontent.com/46287392/125150844-b39eba00-e0f7-11eb-9ec6-a2abc9861137.PNG)![Capture2](https://user-images.githubusercontent.com/46287392/125150845-b4375080-e0f7-11eb-985c-e0b759c52147.PNG)
 
-VOLUME BUTTON ONLY APPEARS ON LESS THAN 500PX screen width
-![Capture](https://user-images.githubusercontent.com/46287392/122842183-ab4e1e80-d2b1-11eb-81b6-455a150556c4.PNG)
