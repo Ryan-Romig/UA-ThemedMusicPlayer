@@ -10,6 +10,7 @@ using System.Windows;
 using System.ComponentModel;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls;
+using System.Xml.Serialization;
 
 namespace UnderwaterAudioMusicManagerApp
 {
@@ -17,7 +18,7 @@ namespace UnderwaterAudioMusicManagerApp
     {
         //public  List<List<Track>> playlist = new List<List<Track>>();
         public List<Playlist> playlistCollection = new List<Playlist>();
-        public List<Track> mediaLibrary = new List<Track>();
+        public Playlist mediaLibrary = new Playlist();
         //public BindingList<Track> mediaLibrary = new BindingList<Track>();
         public static string playerStopped = "stopped";
         public static string playerPaused = "paused";
@@ -32,20 +33,24 @@ namespace UnderwaterAudioMusicManagerApp
         public DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Normal);
         public static string supportedMusicFileTypes = "Music(.mp3) (.wav) (.aac) (.mp4) (.flac) (.wma) |*.mp3;*.wav;*.aac;*.mp4;*.m4a;*.flac;*.wma";
         public  System.TimeSpan pausedPosition;
-        public  int currentlySelectedSongIndexInCurrentPlaylist;
+        public  int selectedSongIndex;
         public int currentMediaIndex;
         public int currentPlaylistIndex;
         public Track selectedTrack;
         public List<Track> currentPlaylist;
         public Playlist selectedPlaylist;
         public int previouslyPlayedSongIndex;
+        public int selectedPlaylistIndex;
 
 
         public UnderwaterAudioMediaPlayer()
         {
-            loadPreviousLibrary();
-        }
+            //loadPreviousLibrary();
+           
 
+        }
+   
+        
 
 
         //used for getting tags when adding media using the add to library button
@@ -85,7 +90,7 @@ namespace UnderwaterAudioMusicManagerApp
                 string[] savedPlaylist = File.ReadAllLines("library.plst");
              if(savedPlaylist.Length > 0) { 
                 Dictionary<string, Track> dic = new Dictionary<string, Track>();
-                foreach (Track song in mediaLibrary)
+                foreach (Track song in mediaLibrary.playlist)
                 {
                     dic.Add(song.filePath, song);
                 }
@@ -121,7 +126,7 @@ namespace UnderwaterAudioMusicManagerApp
 
                             if (dic.ContainsKey(track.filePath) != true)
                             {
-                                mediaLibrary.Add(track); // sets up library database
+                                mediaLibrary.playlist.Add(track); // sets up library database
                             }
                             else
                             {
@@ -165,7 +170,7 @@ namespace UnderwaterAudioMusicManagerApp
                 track.genre = tag.Tag.FirstGenre;
                 track.album = tag.Tag.Album;
                 track.songName = tag.Tag.Title;
-                mediaLibrary.Add(track);
+                mediaLibrary.playlist.Add(track);
                 if (tag.Tag.Pictures.FirstOrDefault() != null)
                 {
                     var pic = tag.Tag.Pictures[0];

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:UnderwaterAudioMusicManagerApp"
         mc:Ignorable="d"
-        Title="Music Manager"  Height="769" Width="1152" ResizeMode="CanResize" Icon="/logo.png" SizeChanged="mainWindow_SizeChanged" Background="{x:Null}" SizeToContent="Manual" WindowStyle="SingleBorderWindow" Closing="mainWindow_Closing">
+        Title="Music Manager"  Height="769" Width="1152" ResizeMode="CanResize" Icon="/logo.png" SizeChanged="mainWindow_SizeChanged" Background="{x:Null}" SizeToContent="Manual" WindowStyle="SingleBorderWindow" Closing="mainWindow_Closing" Loaded="mainWindow_Loaded">
     <Window.Resources>
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
@@ -449,7 +449,7 @@
                 </Button>
 
                 <StackPanel  Grid.Column="1" x:Name="navigationPanel" Orientation="Horizontal" HorizontalAlignment="Center"  VerticalAlignment="Top" Grid.Row="0"  >
-                    <Button Style="{DynamicResource navButtonStyle}"   Click="pplaylistButton_Click"  Content="Playlist" Visibility="Collapsed" />
+                    <Button Style="{DynamicResource navButtonStyle}"   Click="playlistButton_Click"  Content="Playlist" Visibility="Collapsed" />
                     <Button Style="{DynamicResource navButtonStyle}"  x:Name="delphinNavTab"  Click="delphinNavTab_Click" Content="Delphin"/>
 
                     <Button Style="{DynamicResource navButtonStyle}"   Click="addToPlaylistButton_Click" Content="Add to Playlist" />

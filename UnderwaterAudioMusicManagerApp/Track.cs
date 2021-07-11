@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Threading;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
+using System.Xml.Serialization;
 
 namespace UnderwaterAudioMusicManagerApp
 {
@@ -17,7 +18,9 @@ namespace UnderwaterAudioMusicManagerApp
         public string artist { get; set; }
         public string genre { get; set; }
         public string album { get; set; }
+        [XmlIgnoreAttribute]
         public TimeSpan duration;
+        [XmlIgnoreAttribute]
         public BitmapImage albumArt {get;set;}
         
 
