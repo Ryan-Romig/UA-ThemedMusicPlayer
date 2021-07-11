@@ -792,67 +792,24 @@ namespace UnderwaterAudioMusicManagerApp
 
             if (player.selectedSongIndex >= 0)
             {
-                if (playlistListView.Children.Count > 0)
+              
+                if(playlistListView.Children.Count > 0)
                 {
-                    player.selectedPlaylist.playlist.RemoveAt(player.selectedSongIndex);
+                    player.playlistCollection[player.selectedPlaylistIndex].playlist.RemoveAt(player.selectedSongIndex);
                     playlistListView.Children.RemoveAt(player.selectedSongIndex);
-
-                    if (player.selectedSongIndex == 0)
-                    {
-
-                        player.selectedTrack = player.selectedPlaylist.playlist[player.selectedSongIndex];
-
-                    }
-                    if (player.selectedSongIndex == 0)
-                    {
-
-
-
-                    }
-                    else
-                    {
-                        if (player.selectedSongIndex < playlistListView.Children.Count && player.selectedSongIndex > 0)
-                        {
-                            player.selectedSongIndex--;
-
-                            player.selectedTrack = player.selectedPlaylist.playlist[player.selectedSongIndex];
-
-
-                        }
-                        else if (player.selectedSongIndex == 0)
-                        {
-
-                            //player.selectedTrack = player.selectedPlaylist.playlist[player.selectedSongIndex];
-
-
-                        }
-
-                        else
-                        {
-                            player.selectedSongIndex--;
-                            player.selectedTrack = player.selectedPlaylist.playlist[player.selectedSongIndex];
-
-                        }
-                    }
+                }
+                if (player.selectedSongIndex > player.playlistCollection[player.selectedPlaylistIndex].playlist.Count - 1)
+                {
+                    player.selectedSongIndex = player.playlistCollection[player.selectedPlaylistIndex].playlist.Count - 1;
+                }
+                foreach (Grid icon in playlistListView.Children)
+                {
+                    highlightFunction(icon, playlistListView);
                 }
 
-
-
-
-
-
-
-
-
             }
 
-
-
-
-            foreach (Grid icon in playlistListView.Children)
-            {
-                highlightFunction(icon, playlistListView);
-            }
+            
 
 
         }
