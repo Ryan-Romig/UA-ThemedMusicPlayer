@@ -652,6 +652,11 @@ namespace UnderwaterAudioMusicManagerApp
             //openFilePopup.Filter = "Music |*.mp3;*.wav";
             if (openFilePopup.ShowDialog() == true)
             {
+                List<string> ignoreList = new List<string>();
+                foreach(Track track1 in player.mediaLibrary.playlist)
+                {
+                    ignoreList.Add(track1.filePath);
+                }
 
                 string[] songFileName = openFilePopup.SafeFileNames;
                string[] songFilePath = openFilePopup.FileNames;
@@ -660,38 +665,36 @@ namespace UnderwaterAudioMusicManagerApp
                 {
                     Track track = new Track();
                     getTrackTags(track, i, songFileName, songFilePath);
-                    if (player.mediaLibrary.playlist.Contains(track) != true)
+                    if (!ignoreList.Contains(songFilePath[i]))
                     {
                         player.mediaLibrary.playlist.Add(track);
+                        if (playlistPage.Visibility == Visibility.Visible)
+                        {
+                            if (player.selectedPlaylist == player.mediaLibrary)
+                            {
+                                addTrackThumbnail(track, playlistListView);
+                            }
+                        }
 
-                    }
-
+                    }                   
+             
+                    //updates library playlist in the collection. they must stay the same for proper functionality
                     if (player.playlistCollection.Where(playlist => playlist.Name == "Library") != null)
                     {
                         int index = player.playlistCollection.IndexOf(player.playlistCollection.Where(playlist => playlist.Name == "Library").ToList().First());
                         player.playlistCollection[index] = player.mediaLibrary;
-                    }
-                   
-                   //only does this if you are currently in the Library playlist
-                    if (playlistPage.Visibility == Visibility.Visible)
-                    {
-                        if (player.selectedPlaylist == player.mediaLibrary)
-                        {
-                            addTrackThumbnail(track, playlistListView);
-
-                        }
-
-                    }
-
+                    }              
 
                 }
 
-            }
-            //libraryListView.ItemsSource = null;
-            //libraryListView.ItemsSource = player.mediaLibrary;
+            }           
             
-            
-        }        
+        }   
+        
+
+
+
+
         private void getTrackTags(Track track, int i,string[] songFileName, string[] songFilePath)
         {
             track.fileName = System.IO.Path.GetFileNameWithoutExtension(songFileName[i]);
@@ -969,7 +972,7 @@ namespace UnderwaterAudioMusicManagerApp
             {
 
                
-                playlistView.Children.RemoveAt(player.currentPlaylistIndex);
+                playlistView.Children.RemoveAt(player.selectedPlaylistIndex);
                 player.playlistCollection.Remove(player.selectedPlaylist);
                 
                 if(player.selectedPlaylist.Name == "Library")
