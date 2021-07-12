@@ -503,6 +503,7 @@
                         </ScrollViewer>
                         <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
                             <StackPanel  Grid.Column="1" x:Name="playlistPanel">
+                              
 
                             </StackPanel>
                         </ScrollViewer>
