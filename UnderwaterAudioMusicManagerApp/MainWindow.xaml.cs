@@ -127,6 +127,13 @@ namespace UnderwaterAudioMusicManagerApp
             if (File.Exists("data.xml"))
             {
                 deserializeXmlData("data.xml");
+                foreach(Playlist playlist in data.playlistCollection)
+                {
+                    foreach(Track track in playlist.playlist)
+                    {
+                        setTrackAlbumArt(track);
+                    }
+                }
                 player.playlistCollection = data.playlistCollection;
                 player.mediaLibrary = data.mediaLibrary;
             }
@@ -1129,6 +1136,14 @@ namespace UnderwaterAudioMusicManagerApp
             BitmapImage image = new BitmapImage();
             if(firstTrack != null)
             {
+                try
+                {
+                    getAlbumImageFromTag(firstTrack);
+                }
+                catch
+                {
+
+                }
                 if (firstTrack.albumArt != null)
                 {
                     image = firstTrack.albumArt;
@@ -1153,6 +1168,14 @@ namespace UnderwaterAudioMusicManagerApp
             }
             else
             {
+                try
+                {
+                    getAlbumImageFromTag(firstTrack);
+                }
+                catch
+                {
+
+                }
                 Image albumImage = getRandomImageFromWeb();
                 albumImage.SetValue(Grid.RowProperty, 1);
                 albumStack.Children.Add(albumImage);
@@ -1265,8 +1288,16 @@ namespace UnderwaterAudioMusicManagerApp
             var textBlock = new TextBlock() { Text = selectedItem.fileName, VerticalAlignment = VerticalAlignment.Top, FontSize = 12 };
             textBlock.SetValue(Grid.RowProperty, 0);
             albumStack.Children.Add(textBlock);
-            
 
+            try
+            {
+                setTrackAlbumArt(track);
+
+            }
+            catch
+            {
+
+            }
             if (selectedItem.albumArt != null)
             {
 
@@ -1282,10 +1313,12 @@ namespace UnderwaterAudioMusicManagerApp
                 albumStack.Children.Add(albumImage);
             }
             else
-            {
-                Image albumImage = getRandomImageFromWeb();
-                albumImage.SetValue(Grid.RowProperty, 1);
-                albumStack.Children.Add(albumImage);
+            {            
+                
+                    Image albumImage = getRandomImageFromWeb();
+                    albumImage.SetValue(Grid.RowProperty, 1);
+                    albumStack.Children.Add(albumImage);
+                
 
             }
 
