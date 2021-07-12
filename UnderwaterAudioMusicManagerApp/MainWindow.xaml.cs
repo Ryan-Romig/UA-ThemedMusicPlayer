@@ -1020,17 +1020,22 @@ namespace UnderwaterAudioMusicManagerApp
         private void deletePlaylist()
         {
             if (playlistView.Children.Count > 0)
-            {
-
-               
-                playlistView.Children.RemoveAt(player.selectedPlaylistIndex);
-                player.playlistCollection.Remove(player.selectedPlaylist);
+            {     
+                
                 
                 if(player.selectedPlaylist.Name == "Library")
                 {
-                    player.mediaLibrary = new Playlist();
-                    player.mediaLibrary.Name = "Library";
+                    //player.mediaLibrary = new Playlist();
+                    //player.mediaLibrary.Name = "Library";
+                    //player.playlistCollection.RemoveAt(player.playlistCollection.IndexOf(player.playlistCollection.Where(playlist => playlist.Name == "Library").ToList().FirstOrDefault()));
+                    //playlistView.Children.RemoveAt(player.selectedPlaylistIndex);
 
+
+                }
+                else
+                {
+                    playlistView.Children.RemoveAt(player.selectedPlaylistIndex);
+                    player.playlistCollection.Remove(player.selectedPlaylist);
                 }
 
             }
@@ -1042,6 +1047,15 @@ namespace UnderwaterAudioMusicManagerApp
             
 
             foreach (Grid icon in playlistListView.Children)
+            {
+                highlightFunction(icon, playlistView);
+            }
+            if(player.selectedPlaylistIndex > playlistView.Children.Count - 1)
+            {
+                player.selectedPlaylistIndex = playlistView.Children.Count - 1;
+                player.selectedPlaylist = player.playlistCollection[player.selectedPlaylistIndex];
+            }
+            foreach(Grid icon in playlistView.Children)
             {
                 highlightFunction(icon, playlistView);
             }
