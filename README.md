@@ -20,7 +20,7 @@ responsive up to mobile size(500px)
 
 
 =======
-things to add:
+things to add:</br>
 drag and drop reorder of playlist
 naming of playlist
 edit mode for playlists and tracks
