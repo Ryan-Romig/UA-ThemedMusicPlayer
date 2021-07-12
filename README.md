@@ -3,32 +3,32 @@
 Music Player for Underwater Audio Project
 
 What works:
-Play songs
-skip to next track
-previous track
-pause
-resume playing
-close button
-import songs into list
-shuffle toggle on/off
-repeat toggle on/off
-select song
-add song to library
-volume slider (60% scale)
-track scrubbing
-responsive up to mobile size(500px)
+Play songs</br>
+skip to next track</br>
+previous track</br>
+pause</br>
+resume playing</br>
+close button</br>
+import songs into list</br>
+shuffle toggle on/off</br>
+repeat toggle on/off</br>
+select song</br>
+add song to library</br>
+volume slider (60% scale)</br>
+track scrubbing</br>
+responsive up to mobile size(500px)</br>
 
 
-=======
+=======</br>
 things to add:</br>
-drag and drop reorder of playlist
-naming of playlist
-edit mode for playlists and tracks
-better nav styling
-sorting function (sort by album, artist, etc for playlist)
-currently just gets a random placeholder from the web if there is no album image data from track tags
-add functionality to pull album image from web instead of random image
-add functionality to add folders to library instead of just files
+drag and drop reorder of playlist</br>
+naming of playlist</br>
+edit mode for playlists and tracks</br>
+better nav styling</br>
+sorting function (sort by album, artist, etc for playlist)</br>
+currently just gets a random placeholder from the web if there is no album image data from track tags</br>
+add functionality to pull album image from web instead of random image</br>
+add functionality to add folders to library instead of just files</br>
 
 
 ![Capture](https://user-images.githubusercontent.com/46287392/125151131-c914e380-e0f9-11eb-93de-00b60e26058d.PNG)
