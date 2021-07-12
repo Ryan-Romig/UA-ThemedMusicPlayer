@@ -17,6 +17,8 @@ add song to library</br>
 volume slider (60% scale)</br>
 track scrubbing</br>
 responsive up to mobile size(500px)</br>
+added save library/playlist functionality on close/load on open via serialization/deserialization</br>
+
 
 
 =======</br>
