@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Music Manager"  Height="769" Width="1152" ResizeMode="CanResize" Icon="/logo.png" SizeChanged="mainWindow_SizeChanged" Background="{x:Null}" SizeToContent="Manual" WindowStyle="SingleBorderWindow" Closing="mainWindow_Closing" Loaded="mainWindow_Loaded">
     <Window.Resources>
+
         <SolidColorBrush x:Key="Button.Static.Background" Color="#FFDDDDDD"/>
         <SolidColorBrush x:Key="Button.Static.Border" Color="#FF707070"/>
         <SolidColorBrush x:Key="Button.MouseOver.Background" Color="#009BD8" Opacity="0.5" />
@@ -26,9 +27,6 @@
             </Setter>
         </Style>
 
-
-
-
         <SolidColorBrush x:Key="Button.Static.Background3" Color="#FFDDDDDD"/>
         <SolidColorBrush x:Key="Button.Static.Border3" Color="#FF707070"/>
         <SolidColorBrush x:Key="Button.MouseOver.Background3" Color="#009BD8"/>
@@ -38,7 +36,6 @@
         <SolidColorBrush x:Key="Button.Disabled.Background3" Color="#FFF4F4F4"/>
         <SolidColorBrush x:Key="Button.Disabled.Border3" Color="#FFADB2B5"/>
         <SolidColorBrush x:Key="Button.Disabled.Foreground3" Color="#FF838383"/>
-
 
         <Style x:Key="iconButtonStyle" TargetType="{x:Type Button}">
             <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual4}"/>
@@ -78,11 +75,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-
-
-
-
+        
         <Style x:Key="FocusVisual5">
             <Setter Property="Control.Template">
                 <Setter.Value>

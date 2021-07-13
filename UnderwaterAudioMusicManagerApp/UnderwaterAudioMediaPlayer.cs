@@ -67,88 +67,88 @@ namespace UnderwaterAudioMusicManagerApp
 
         }
         //used with importing new songs from saved library.plst
-        private void getTrackTags(Track track, int i, string[] songFilePath)
-        {
-            track.fileName = System.IO.Path.GetFileNameWithoutExtension(songFilePath[i]);
-            track.filePath = songFilePath[i];
-            var tag = TagLib.File.Create(track.filePath);
-            track.artist = tag.Tag.FirstPerformer;
-            track.duration = tag.Properties.Duration;
-            track.genre = tag.Tag.FirstGenre;
-            track.album = tag.Tag.Album;
-            track.songName = tag.Tag.Title;
+        //private void getTrackTags(Track track, int i, string[] songFilePath)
+        //{
+        //    track.fileName = System.IO.Path.GetFileNameWithoutExtension(songFilePath[i]);
+        //    track.filePath = songFilePath[i];
+        //    var tag = TagLib.File.Create(track.filePath);
+        //    track.artist = tag.Tag.FirstPerformer;
+        //    track.duration = tag.Properties.Duration;
+        //    track.genre = tag.Tag.FirstGenre;
+        //    track.album = tag.Tag.Album;
+        //    track.songName = tag.Tag.Title;
 
-        }
+        //}
 
 
         //takes a text file with extention .plst and reads each lines to an array
-        public void loadPreviousLibrary()
-        {
+        //public void loadPreviousLibrary()
+        //{
 
-            if (File.Exists("library.plst"))
-            {
-                string[] savedPlaylist = File.ReadAllLines("library.plst");
-             if(savedPlaylist.Length > 0) { 
-                Dictionary<string, Track> dic = new Dictionary<string, Track>();
-                foreach (Track song in mediaLibrary.playlist)
-                {
-                    dic.Add(song.filePath, song);
-                }
-                for (int i = 0; i < savedPlaylist.Length; i++)
-                {
-                    Track track = new Track();
-                    track.fileName = System.IO.Path.GetFileNameWithoutExtension(savedPlaylist[i]);
-                    track.filePath = savedPlaylist[i];
-                        if (File.Exists(track.filePath))
-                        {
-                            var tag = TagLib.File.Create(track.filePath);
-                            track.artist = tag.Tag.FirstPerformer;
-                            track.duration = tag.Properties.Duration;
-                            track.genre = tag.Tag.FirstGenre;
-                            track.album = tag.Tag.Album;
-                            track.songName = tag.Tag.Title;
-                            if (tag.Tag.Pictures.FirstOrDefault() != null)
-                            {
-                                var pic = tag.Tag.Pictures[0];
-                                MemoryStream ms = new MemoryStream(pic.Data.Data);
-                                ms.Seek(0, SeekOrigin.Begin);
-                                BitmapImage bitmap = new BitmapImage();
-                                bitmap.BeginInit();
-                                bitmap.StreamSource = ms;
-                                bitmap.EndInit();
-                                track.albumArt = bitmap;
-                            }
-                            else
-                            {
-                                track.albumArt = null;
-                            }
+        //    if (File.Exists("library.plst"))
+        //    {
+        //        string[] savedPlaylist = File.ReadAllLines("library.plst");
+        //     if(savedPlaylist.Length > 0) { 
+        //        Dictionary<string, Track> dic = new Dictionary<string, Track>();
+        //        foreach (Track song in mediaLibrary.playlist)
+        //        {
+        //            dic.Add(song.filePath, song);
+        //        }
+        //        for (int i = 0; i < savedPlaylist.Length; i++)
+        //        {
+        //            Track track = new Track();
+        //            track.fileName = System.IO.Path.GetFileNameWithoutExtension(savedPlaylist[i]);
+        //            track.filePath = savedPlaylist[i];
+        //                if (File.Exists(track.filePath))
+        //                {
+        //                    var tag = TagLib.File.Create(track.filePath);
+        //                    track.artist = tag.Tag.FirstPerformer;
+        //                    track.duration = tag.Properties.Duration;
+        //                    track.genre = tag.Tag.FirstGenre;
+        //                    track.album = tag.Tag.Album;
+        //                    track.songName = tag.Tag.Title;
+        //                    if (tag.Tag.Pictures.FirstOrDefault() != null)
+        //                    {
+        //                        var pic = tag.Tag.Pictures[0];
+        //                        MemoryStream ms = new MemoryStream(pic.Data.Data);
+        //                        ms.Seek(0, SeekOrigin.Begin);
+        //                        BitmapImage bitmap = new BitmapImage();
+        //                        bitmap.BeginInit();
+        //                        bitmap.StreamSource = ms;
+        //                        bitmap.EndInit();
+        //                        track.albumArt = bitmap;
+        //                    }
+        //                    else
+        //                    {
+        //                        track.albumArt = null;
+        //                    }
 
 
-                            if (dic.ContainsKey(track.filePath) != true)
-                            {
-                                mediaLibrary.playlist.Add(track); // sets up library database
-                            }
-                            else
-                            {
+        //                    if (dic.ContainsKey(track.filePath) != true)
+        //                    {
+        //                        mediaLibrary.playlist.Add(track); // sets up library database
+        //                    }
+        //                    else
+        //                    {
 
-                            }
-                        }
-                    }
+        //                    }
+        //                }
+        //            }
                    
-                }
-                else
-                {
-                    loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
-                }
-            }
-            else
-            {
-                loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
+        //        }
+        //        else
+        //        {
+        //            loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        loadMusicFromDefaultMusicFolderIntoLibraryOnProgramStart();
 
-            }
+        //    }
 
 
-        }
+        //}
 
 
         //loads songs from default music folder. 
