@@ -1,6 +1,7 @@
 
-# UnderwaterAudioMusicManager
-Music Player for Underwater Audio Project
+# Music player
+Music player with Underwater Audio Theme
+based on the System.Windows.Media.MediaPlayer class
 
 What works:
 Play songs</br>
