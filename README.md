@@ -24,6 +24,7 @@ added save library/playlist functionality on close/load on open via serializatio
 
 =======</br>
 things to add:</br>
+some songs have large album art which takes long time for some things</br>
 drag and drop reorder of playlist</br>
 naming of playlist</br>
 edit mode for playlists and tracks</br>
